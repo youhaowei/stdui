@@ -1,3 +1,5 @@
+"use client";
+
 // Views barrel
 export { ColorPicker, type UsedColorSet } from "./color-picker";
 export { NeutralPicker } from "./neutral-picker";

@@ -1,3 +1,5 @@
+"use client";
+
 // OKLCH utilities
 export { parseOklch, formatOklch, oklchToHex, hexToOklch } from "./oklch";
 
