@@ -1,0 +1,24 @@
+{
+  "name": "stdui",
+  "private": true,
+  "type": "module",
+  "packageManager": "bun@1.3.5",
+  "workspaces": ["packages/*", "apps/*"],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "check": "turbo check",
+    "typecheck": "turbo typecheck",
+    "lint": "turbo lint",
+    "storybook": "turbo storybook",
+    "format": "prettier --check .",
+    "format:write": "prettier --write ."
+  },
+  "devDependencies": {
+    "turbo": "^2.7.3",
+    "typescript": "~5.7.2",
+    "prettier": "^3.5.0",
+    "prettier-plugin-organize-imports": "^4.0.0",
+    "prettier-plugin-tailwindcss": "^0.6.0"
+  }
+}

@@ -1,0 +1,80 @@
+import { createContext, useContext, useEffect, useRef } from "react";
+import type { StoreApi, UseBoundStore } from "zustand";
+import { createThemeStore, resolveIsDark } from "./store";
+import type { ThemeMode, ResolvedMode, ThemeOverrides, ModeOverrides } from "./tokens";
+
+// -- Types -----------------------------------------------------------------
+
+interface ThemeContextValue {
+  mode: ThemeMode;
+  resolvedMode: ResolvedMode;
+  isDark: boolean;
+  overrides: ThemeOverrides;
+  previewMode: ResolvedMode | null;
+  setMode: (mode: ThemeMode) => void;
+  setOverrides: (overrides: ThemeOverrides) => void;
+  resetOverrides: () => void;
+  setPreviewMode: (preview: ResolvedMode | null) => void;
+}
+
+interface StduiProviderProps {
+  children: React.ReactNode;
+  defaultMode?: ThemeMode;
+  storageKey?: string;
+}
+
+// -- Context ---------------------------------------------------------------
+
+const ThemeContext = createContext<ThemeContextValue | null>(null);
+
+// -- Provider --------------------------------------------------------------
+
+export function StduiProvider({ children, defaultMode, storageKey }: StduiProviderProps) {
+  const storeRef = useRef<UseBoundStore<StoreApi<ReturnType<typeof createThemeStore> extends UseBoundStore<StoreApi<infer S>> ? S : never>> | null>(null);
+
+  if (!storeRef.current) {
+    storeRef.current = createThemeStore({ storageKey }) as any;
+  }
+
+  const store = storeRef.current!;
+  const state = store();
+
+  // Set default mode on mount if provided
+  useEffect(() => {
+    if (defaultMode && state.mode === "system") {
+      // Only apply default if no stored preference exists
+      const key = `${storageKey ?? "stdui"}-theme`;
+      try {
+        if (!localStorage.getItem(key)) {
+          state.setMode(defaultMode);
+        }
+      } catch {
+        /* ignore */
+      }
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const isDark = resolveIsDark(state.mode, state.previewMode);
+
+  const value: ThemeContextValue = {
+    mode: state.mode,
+    resolvedMode: isDark ? "dark" : "light",
+    isDark,
+    overrides: state.overrides,
+    previewMode: state.previewMode,
+    setMode: state.setMode,
+    setOverrides: state.setOverrides,
+    resetOverrides: state.resetOverrides,
+    setPreviewMode: state.setPreviewMode,
+  };
+
+  return <ThemeContext value={value}>{children}</ThemeContext>;
+}
+
+// -- Hook ------------------------------------------------------------------
+
+export function useTheme(): ThemeContextValue {
+  const ctx = useContext(ThemeContext);
+  if (!ctx) throw new Error("useTheme must be used within a StduiProvider");
+  return ctx;
+}

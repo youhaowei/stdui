@@ -1,0 +1,26 @@
+node_modules
+
+# Turborepo
+.turbo
+
+# Env files
+.env
+.env.*
+
+# System / IDE
+.DS_Store
+.idea
+.vscode
+
+# Build artifacts
+dist
+*.tsbuildinfo
+
+# Storybook
+storybook-static
+
+# Coverage
+coverage
+
+# Test artifacts
+.*-test
