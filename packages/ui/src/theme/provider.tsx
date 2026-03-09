@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useRef } from "react";
-import type { StoreApi, UseBoundStore } from "zustand";
 import { createThemeStore, resolveIsDark } from "./store";
-import type { ThemeMode, ResolvedMode, ThemeOverrides, ModeOverrides } from "./tokens";
+import type { ThemeMode, ResolvedMode, ThemeOverrides } from "./tokens";
 
 // -- Types -----------------------------------------------------------------
 
@@ -30,10 +29,11 @@ const ThemeContext = createContext<ThemeContextValue | null>(null);
 // -- Provider --------------------------------------------------------------
 
 export function StduiProvider({ children, defaultMode, storageKey }: StduiProviderProps) {
-  const storeRef = useRef<UseBoundStore<StoreApi<ReturnType<typeof createThemeStore> extends UseBoundStore<StoreApi<infer S>> ? S : never>> | null>(null);
+  type ThemeStore = ReturnType<typeof createThemeStore>;
+  const storeRef = useRef<ThemeStore | null>(null);
 
   if (!storeRef.current) {
-    storeRef.current = createThemeStore({ storageKey }) as any;
+    storeRef.current = createThemeStore({ storageKey });
   }
 
   const store = storeRef.current!;
@@ -52,7 +52,7 @@ export function StduiProvider({ children, defaultMode, storageKey }: StduiProvid
         /* ignore */
       }
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const isDark = resolveIsDark(state.mode, state.previewMode);
 

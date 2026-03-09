@@ -11,7 +11,7 @@ const meta = {
   argTypes: {
     variant: {
       control: "select",
-      options: ["solid", "soft", "outline", "ghost", "link"],
+      options: ["solid", "outline", "ghost", "link"],
     },
     color: {
       control: "select",
@@ -38,7 +38,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    variant: "soft",
+    variant: "solid",
     color: "primary",
   },
 };
@@ -71,7 +71,7 @@ export const IconVariations: Story = {
     <div className="flex flex-wrap items-center gap-3">
       <Button icon={PlusIcon} label="Create" />
       <Button icon={SearchIcon} label="Search" variant="outline" />
-      <Button icon={CheckIcon} label="Done" variant="soft" color="success" />
+      <Button icon={CheckIcon} label="Done" variant="solid" color="success" />
       <Button icon={PlusIcon} label="Add" iconOnly variant="ghost" tooltip="Add" />
     </div>
   ),

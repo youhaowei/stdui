@@ -156,7 +156,7 @@ export function ThemePanel({ isOpen, onClose }: ThemePanelProps) {
                 <Button
                   key={value}
                   variant={mode === value ? "solid" : "outline"}
-                  color={mode === value ? "primary" : "neutral"}
+                  color={mode === value ? "primary" : "secondary"}
                   size="sm"
                   className="flex-1 gap-1.5"
                   onClick={() => setMode(value)}
@@ -342,7 +342,7 @@ function ModeControls({
             <Button
               key={value}
               variant={surfaceTintStyle === value ? "soft" : "outline"}
-              color={surfaceTintStyle === value ? "primary" : "neutral"}
+              color={surfaceTintStyle === value ? "primary" : "secondary"}
               size="sm"
               className="flex-1"
               onClick={() => updateModeOverride({ surfaceTintStyle: value })}

@@ -10,10 +10,10 @@ import {
 } from "./dialog";
 import { Button } from "./button";
 
-const meta = {
+const meta: Meta<typeof Dialog> = {
   title: "Primitives/Dialog",
   component: Dialog,
-} satisfies Meta<typeof Dialog>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

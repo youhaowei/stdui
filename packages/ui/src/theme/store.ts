@@ -4,7 +4,6 @@ import {
   type ThemeMode,
   type ResolvedMode,
   type SurfaceTintStyle,
-  type PaletteColor,
   type ModeOverrides,
   type ThemeOverrides,
   NEUTRAL_TOKENS,

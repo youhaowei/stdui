@@ -24,6 +24,10 @@ export const Default: Story = {
 };
 
 export const Positions: Story = {
+  args: {
+    content: "Tooltip",
+    children: null,
+  },
   render: () => (
     <div className="flex items-center justify-center gap-4 p-20">
       <Tooltip content="Top tooltip" side="top">

@@ -21,7 +21,14 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+const defaultArgs = {
+  value: "",
+  options: [] as { value: string; label?: string }[],
+  onValueChange: () => {},
+};
+
 export const Default: Story = {
+  args: defaultArgs,
   render: () => {
     const [value, setValue] = useState("chart");
     return (
@@ -38,6 +45,7 @@ export const Default: Story = {
 };
 
 export const WithBadges: Story = {
+  args: defaultArgs,
   render: () => {
     const [value, setValue] = useState("all");
     return (
@@ -55,6 +63,7 @@ export const WithBadges: Story = {
 };
 
 export const OutlineVariant: Story = {
+  args: defaultArgs,
   render: () => {
     const [value, setValue] = useState("list");
     return (
@@ -72,6 +81,7 @@ export const OutlineVariant: Story = {
 };
 
 export const SmallSize: Story = {
+  args: defaultArgs,
   render: () => {
     const [value, setValue] = useState("chart");
     return (
@@ -89,6 +99,7 @@ export const SmallSize: Story = {
 };
 
 export const WithDisabledOption: Story = {
+  args: defaultArgs,
   render: () => {
     const [value, setValue] = useState("active");
     return (

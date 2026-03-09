@@ -38,6 +38,7 @@ export const Vertical: Story = {
   args: {
     direction: "vertical",
     spacing: "md",
+    children: null,
   },
   render: (args) => (
     <Stack {...args}>
@@ -53,6 +54,7 @@ export const Horizontal: Story = {
     direction: "horizontal",
     spacing: "md",
     align: "center",
+    children: null,
   },
   render: (args) => (
     <Stack {...args}>
@@ -64,6 +66,10 @@ export const Horizontal: Story = {
 };
 
 export const SpacingVariants: Story = {
+  args: {
+    spacing: "lg",
+    children: null,
+  },
   render: () => (
     <Stack spacing="lg">
       {(["xs", "sm", "md", "lg", "xl"] as const).map((spacing) => (
@@ -87,6 +93,7 @@ export const CenteredContent: Story = {
     align: "center",
     justify: "center",
     className: "h-48",
+    children: null,
   },
   render: (args) => (
     <Stack {...args}>
@@ -101,6 +108,7 @@ export const SpaceBetween: Story = {
     direction: "horizontal",
     justify: "between",
     align: "center",
+    children: null,
   },
   render: (args) => (
     <Stack {...args}>
