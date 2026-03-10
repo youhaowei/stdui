@@ -42,13 +42,15 @@ export function CollapsibleSection({
       <CollapsibleContent>{children}</CollapsibleContent>
 
       <div className="relative -mt-px flex justify-center">
-        <CollapsibleTrigger asChild>
-          <CollapseHandle
-            direction="down"
-            isOpen={isOpen}
-            onClick={() => setIsOpen(!isOpen)}
-          />
-        </CollapsibleTrigger>
+        <CollapsibleTrigger
+          render={
+            <CollapseHandle
+              direction="down"
+              isOpen={isOpen}
+              onClick={() => setIsOpen(!isOpen)}
+            />
+          }
+        />
       </div>
     </Collapsible>
   )

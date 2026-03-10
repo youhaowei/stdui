@@ -28,7 +28,7 @@ export interface TooltipProps {
 export function Tooltip({ content, children, side, className }: TooltipProps) {
   return (
     <TooltipPrimitive>
-      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipTrigger render={<span className="inline-flex">{children}</span>} />
       <TooltipContent side={side} className={className}>
         {content}
       </TooltipContent>

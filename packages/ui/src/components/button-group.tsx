@@ -61,17 +61,19 @@ function DropdownAction({
 }) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          label={action.label}
-          icon={action.icon}
-          variant={action.variant}
-          size={action.size}
-          iconOnly={action.iconOnly ?? iconOnly}
-          className={action.className}
-          tooltip={action.tooltip}
-        />
-      </DropdownMenuTrigger>
+      <DropdownMenuTrigger
+        render={
+          <Button
+            label={action.label}
+            icon={action.icon}
+            variant={action.variant}
+            size={action.size}
+            iconOnly={action.iconOnly ?? iconOnly}
+            className={action.className}
+            tooltip={action.tooltip}
+          />
+        }
+      />
       <DropdownMenuContent align="end">
         {action.actions?.map((nestedAction, nestedIndex) => (
           <DropdownMenuItem key={nestedIndex} onClick={nestedAction.onClick}>

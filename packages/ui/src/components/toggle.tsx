@@ -1,9 +1,8 @@
 import React, { type ReactNode } from "react"
-import { Tooltip as TooltipPrimitive } from "radix-ui"
+import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip"
 import { cn } from "../lib/utils"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../primitives/tabs"
 import { Badge } from "../primitives/badge"
-import { TooltipContent } from "../primitives/tooltip"
 
 function TriggerWithTooltip({
   tooltip,
@@ -14,10 +13,16 @@ function TriggerWithTooltip({
 }) {
   return (
     <TooltipPrimitive.Root>
-      <TooltipPrimitive.Trigger asChild>
-        <span className="inline-flex">{children}</span>
-      </TooltipPrimitive.Trigger>
-      <TooltipContent>{tooltip}</TooltipContent>
+      <TooltipPrimitive.Trigger render={<span className="inline-flex">{children}</span>} />
+      <TooltipPrimitive.Portal>
+        <TooltipPrimitive.Positioner>
+          <TooltipPrimitive.Popup
+            className="z-50 overflow-hidden rounded-md border bg-neutral-bg-emphasis px-3 py-1.5 text-sm text-neutral-fg shadow-md"
+          >
+            {tooltip}
+          </TooltipPrimitive.Popup>
+        </TooltipPrimitive.Positioner>
+      </TooltipPrimitive.Portal>
     </TooltipPrimitive.Root>
   )
 }
@@ -66,7 +71,7 @@ export function Toggle<T extends string>({
                 value={option.value}
                 disabled={option.disabled}
                 aria-label={option.ariaLabel || option.tooltip || option.label}
-                activeClassName="data-[state=active]:bg-palette-primary/10 data-[state=active]:text-palette-primary data-[state=active]:border-transparent data-[state=active]:shadow-none"
+                activeClassName="data-[active]:bg-palette-primary/10 data-[active]:text-palette-primary data-[active]:border-transparent data-[active]:shadow-none"
                 className={cn(
                   "rounded-full",
                   size === "sm" ? "px-2 py-1 text-xs gap-1" : "px-3 py-1.5 text-sm gap-1.5",
