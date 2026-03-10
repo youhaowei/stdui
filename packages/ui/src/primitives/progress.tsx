@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Progress as ProgressPrimitive } from "radix-ui"
+import { Progress as ProgressPrimitive } from "@base-ui/react/progress"
 import { cva } from "class-variance-authority"
 
 import { cn } from "../lib/utils"
@@ -54,13 +54,16 @@ function Progress({
   return (
     <ProgressPrimitive.Root
       ref={ref}
+      value={value}
       className={cn(progressVariants({ color }), className)}
       {...props}
     >
-      <ProgressPrimitive.Indicator
-        className={indicatorVariants({ color })}
-        style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
-      />
+      <ProgressPrimitive.Track className="relative h-full w-full overflow-hidden rounded-full">
+        <ProgressPrimitive.Indicator
+          className={indicatorVariants({ color })}
+          style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
+        />
+      </ProgressPrimitive.Track>
     </ProgressPrimitive.Root>
   )
 }

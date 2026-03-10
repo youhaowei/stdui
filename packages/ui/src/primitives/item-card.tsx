@@ -69,16 +69,18 @@ function ActionsMenu({ actions }: { actions: ItemAction[] }) {
   return (
     <div className="shrink-0" onClick={(e) => e.stopPropagation()}>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-neutral-fg-subtle hover:text-neutral-fg"
-          >
-            <MoreIcon className="h-4 w-4" />
-            <span className="sr-only">Actions</span>
-          </Button>
-        </DropdownMenuTrigger>
+        <DropdownMenuTrigger
+          render={
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-neutral-fg-subtle hover:text-neutral-fg"
+            >
+              <MoreIcon className="h-4 w-4" />
+              <span className="sr-only">Actions</span>
+            </Button>
+          }
+        />
         <DropdownMenuContent align="end">
           {actions.map((action, index) => (
             <DropdownMenuItem

@@ -21,9 +21,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="soft" color="primary">Open Dialog</Button>
-      </DialogTrigger>
+      <DialogTrigger render={<Button variant="soft" color="primary">Open Dialog</Button>} />
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Dialog Title</DialogTitle>
@@ -43,9 +41,7 @@ export const Default: Story = {
 export const Large: Story = {
   render: () => (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="soft" color="primary">Open Large Dialog</Button>
-      </DialogTrigger>
+      <DialogTrigger render={<Button variant="soft" color="primary">Open Large Dialog</Button>} />
       <DialogContent size="lg">
         <DialogHeader>
           <DialogTitle>Large Dialog</DialogTitle>
@@ -60,9 +56,7 @@ export const Large: Story = {
 export const ExtraLarge: Story = {
   render: () => (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="soft" color="primary">Open XL Dialog</Button>
-      </DialogTrigger>
+      <DialogTrigger render={<Button variant="soft" color="primary">Open XL Dialog</Button>} />
       <DialogContent size="xl">
         <DialogHeader>
           <DialogTitle>Extra Large Dialog</DialogTitle>
@@ -77,9 +71,7 @@ export const ExtraLarge: Story = {
 export const FullScreen: Story = {
   render: () => (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="soft" color="primary">Open Full Dialog</Button>
-      </DialogTrigger>
+      <DialogTrigger render={<Button variant="soft" color="primary">Open Full Dialog</Button>} />
       <DialogContent size="full">
         <DialogHeader>
           <DialogTitle>Full Screen Dialog</DialogTitle>
@@ -94,9 +86,7 @@ export const FullScreen: Story = {
 export const NoCloseButton: Story = {
   render: () => (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="soft" color="primary">Open (No Close Button)</Button>
-      </DialogTrigger>
+      <DialogTrigger render={<Button variant="soft" color="primary">Open (No Close Button)</Button>} />
       <DialogContent showCloseButton={false}>
         <DialogHeader>
           <DialogTitle>No Close Button</DialogTitle>

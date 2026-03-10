@@ -116,7 +116,7 @@ function FieldLabel({
         "group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50",
         "text-xs font-medium text-neutral-fg-subtle",
         "has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col has-[>[data-slot=field]]:rounded-md has-[>[data-slot=field]]:border *:data-[slot=field]:p-4",
-        "has-data-[state=checked]:border-palette-primary has-data-[state=checked]:bg-palette-primary/5 dark:has-data-[state=checked]:bg-palette-primary/10",
+        "has-data-[checked]:border-palette-primary has-data-[checked]:bg-palette-primary/5 dark:has-data-[checked]:bg-palette-primary/10",
         className,
       )}
       {...props}

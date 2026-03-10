@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Slot } from "radix-ui"
+import { Slot } from "../lib/slot"
 import { ChevronRightIcon, MoreIcon } from "@stdui/icons"
 
 import { cn } from "../lib/utils"
@@ -42,7 +42,7 @@ function BreadcrumbLink({
 }: React.ComponentProps<"a"> & {
   asChild?: boolean
 }) {
-  const Comp = asChild ? Slot.Slot : "a"
+  const Comp = asChild ? Slot : "a"
 
   return (
     <Comp

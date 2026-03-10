@@ -124,66 +124,68 @@ function MultiSelect({
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <button
-          type="button"
-          disabled={disabled}
-          className={cn(
-            "border-neutral-border text-neutral-fg shadow-xs focus-visible:border-neutral-ring focus-visible:ring-neutral-ring/50",
-            "flex w-full items-center justify-between gap-2 rounded-md border bg-transparent px-3 py-2 text-sm transition-[color,box-shadow] outline-none",
-            "focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50",
-            "h-auto min-h-9",
-            !value.length && "text-neutral-fg-subtle",
-            className,
-          )}
-        >
-          <div className="flex min-w-0 flex-1 items-center gap-1.5 py-0.5">
-            {selectedOptions.length > 0 ? (
-              <>
-                <div
-                  ref={containerRef}
-                  className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5 overflow-hidden"
-                  style={{
-                    maxHeight: `calc(${maxLines} * 1.5rem + ${maxLines - 1} * 0.375rem)`,
-                  }}
-                >
-                  {selectedOptions.map((opt) => {
-                    const TypeIcon = getTypeIcon(opt.type)
-                    return (
-                      <Badge
-                        key={opt.value}
-                        variant="soft"
-                        className="max-w-[200px] gap-1 px-2 py-0.5 text-xs font-normal"
-                      >
-                        {opt.type && (
-                          <TypeIcon className="h-3 w-3 shrink-0 text-neutral-fg-subtle" />
-                        )}
-                        <span className="truncate">{opt.label}</span>
-                        <CloseIcon
-                          className="h-3 w-3 shrink-0 cursor-pointer hover:text-neutral-fg"
-                          onClick={(e: React.MouseEvent) => handleRemove(e, opt.value)}
-                        />
-                      </Badge>
-                    )
-                  })}
-                </div>
-                {hiddenCount > 0 && (
-                  <span className="shrink-0 text-sm text-neutral-fg-subtle">
-                    +{hiddenCount} more
-                  </span>
-                )}
-              </>
-            ) : (
-              <span className="text-sm text-neutral-fg-subtle">
-                {placeholder}
-              </span>
+      <DropdownMenuTrigger
+        render={
+          <button
+            type="button"
+            disabled={disabled}
+            className={cn(
+              "border-neutral-border text-neutral-fg shadow-xs focus-visible:border-neutral-ring focus-visible:ring-neutral-ring/50",
+              "flex w-full items-center justify-between gap-2 rounded-md border bg-transparent px-3 py-2 text-sm transition-[color,box-shadow] outline-none",
+              "focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50",
+              "h-auto min-h-9",
+              !value.length && "text-neutral-fg-subtle",
+              className,
             )}
-          </div>
-          <ChevronDownIcon className="h-4 w-4 shrink-0 opacity-50" />
-        </button>
-      </DropdownMenuTrigger>
+          >
+            <div className="flex min-w-0 flex-1 items-center gap-1.5 py-0.5">
+              {selectedOptions.length > 0 ? (
+                <>
+                  <div
+                    ref={containerRef}
+                    className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5 overflow-hidden"
+                    style={{
+                      maxHeight: `calc(${maxLines} * 1.5rem + ${maxLines - 1} * 0.375rem)`,
+                    }}
+                  >
+                    {selectedOptions.map((opt) => {
+                      const TypeIcon = getTypeIcon(opt.type)
+                      return (
+                        <Badge
+                          key={opt.value}
+                          variant="soft"
+                          className="max-w-[200px] gap-1 px-2 py-0.5 text-xs font-normal"
+                        >
+                          {opt.type && (
+                            <TypeIcon className="h-3 w-3 shrink-0 text-neutral-fg-subtle" />
+                          )}
+                          <span className="truncate">{opt.label}</span>
+                          <CloseIcon
+                            className="h-3 w-3 shrink-0 cursor-pointer hover:text-neutral-fg"
+                            onClick={(e: React.MouseEvent) => handleRemove(e, opt.value)}
+                          />
+                        </Badge>
+                      )
+                    })}
+                  </div>
+                  {hiddenCount > 0 && (
+                    <span className="shrink-0 text-sm text-neutral-fg-subtle">
+                      +{hiddenCount} more
+                    </span>
+                  )}
+                </>
+              ) : (
+                <span className="text-sm text-neutral-fg-subtle">
+                  {placeholder}
+                </span>
+              )}
+            </div>
+            <ChevronDownIcon className="h-4 w-4 shrink-0 opacity-50" />
+          </button>
+        }
+      />
       <DropdownMenuContent
-        className="max-h-80 w-(--radix-dropdown-menu-trigger-width) overflow-y-auto"
+        className="max-h-80 w-(--anchor-width) overflow-y-auto"
         align="start"
       >
         {options.map((option) => {

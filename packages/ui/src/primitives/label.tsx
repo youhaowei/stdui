@@ -1,5 +1,4 @@
 import * as React from "react"
-import { Label as LabelPrimitive } from "radix-ui"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "../lib/utils"
@@ -12,10 +11,10 @@ function Label({
   className,
   ref,
   ...props
-}: React.ComponentProps<typeof LabelPrimitive.Root> &
+}: React.ComponentProps<"label"> &
   VariantProps<typeof labelVariants>) {
   return (
-    <LabelPrimitive.Root
+    <label
       ref={ref}
       className={cn(labelVariants(), className)}
       {...props}
