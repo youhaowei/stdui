@@ -56,14 +56,16 @@ export function TintPicker({ value, onChange, showHexValue = true }: TintPickerP
   return (
     <div className="flex items-center gap-2">
       <Popover onOpenChange={handleOpenChange}>
-        <PopoverTrigger asChild>
-          <button
-            type="button"
-            className="w-7 h-7 rounded-md border border-neutral-border shrink-0 cursor-pointer transition-shadow hover:ring-2 hover:ring-neutral-ring/30"
-            style={{ background: previewBackground }}
-            aria-label="Pick surface tint"
-          />
-        </PopoverTrigger>
+        <PopoverTrigger
+          render={
+            <button
+              type="button"
+              className="w-7 h-7 rounded-md border border-neutral-border shrink-0 cursor-pointer transition-shadow hover:ring-2 hover:ring-neutral-ring/30"
+              style={{ background: previewBackground }}
+              aria-label="Pick surface tint"
+            />
+          }
+        />
         <PopoverContent
           side="left"
           align="start"

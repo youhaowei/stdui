@@ -148,14 +148,16 @@ export function ColorPicker({
         <span className="text-[11px] text-neutral-fg-subtle w-20 shrink-0">{label}</span>
       )}
       <Popover onOpenChange={handleOpenChange}>
-        <PopoverTrigger asChild>
-          <button
-            type="button"
-            className="w-7 h-7 rounded-md border border-neutral-border shrink-0 cursor-pointer transition-shadow hover:ring-2 hover:ring-neutral-ring/30"
-            style={{ background: previewBg }}
-            aria-label={`Pick ${label ?? "color"}`}
-          />
-        </PopoverTrigger>
+        <PopoverTrigger
+          render={
+            <button
+              type="button"
+              className="w-7 h-7 rounded-md border border-neutral-border shrink-0 cursor-pointer transition-shadow hover:ring-2 hover:ring-neutral-ring/30"
+              style={{ background: previewBg }}
+              aria-label={`Pick ${label ?? "color"}`}
+            />
+          }
+        />
         <PopoverContent
           side="left"
           align="start"
