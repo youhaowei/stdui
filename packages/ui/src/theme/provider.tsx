@@ -29,6 +29,20 @@ const ThemeContext = createContext<ThemeContextValue | null>(null);
 // -- Provider --------------------------------------------------------------
 
 export function StduiProvider({ children, defaultMode, storageKey }: StduiProviderProps) {
+  // Skip creating a new store if a parent provider already exists
+  const parentCtx = useContext(ThemeContext);
+  if (parentCtx) {
+    return <>{children}</>;
+  }
+
+  return (
+    <StduiProviderInner defaultMode={defaultMode} storageKey={storageKey}>
+      {children}
+    </StduiProviderInner>
+  );
+}
+
+function StduiProviderInner({ children, defaultMode, storageKey }: StduiProviderProps) {
   type ThemeStore = ReturnType<typeof createThemeStore>;
   const storeRef = useRef<ThemeStore | null>(null);
 

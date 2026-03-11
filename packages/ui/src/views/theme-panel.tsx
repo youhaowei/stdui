@@ -14,6 +14,7 @@ import {
   ChevronRightIcon,
 } from "@stdui/icons";
 import { Button } from "../primitives/button";
+import { Surface } from "../primitives/surface";
 import { useTheme } from "../theme/provider";
 import { hasModeOverrides } from "../theme/store";
 import type {
@@ -110,14 +111,12 @@ export function ThemePanel({ isOpen, onClose }: ThemePanelProps) {
     ? ["light", "dark"]
     : [mode as ResolvedMode];
 
+  if (!isOpen) return null;
+
   return (
-    <div
-      data-collapsed={!isOpen}
-      className={`flex-shrink-0 flex flex-col select-none rounded-lg bg-neutral-bg border border-neutral-border transition-[width,margin,opacity] duration-200 ease-in-out ${
-        isOpen ? "w-72 opacity-100" : "w-0 opacity-0 overflow-hidden"
-      }`}
-      aria-hidden={!isOpen}
-      inert={!isOpen ? true : undefined}
+    <Surface
+      elevation="raised"
+      className="flex-shrink-0 flex flex-col select-none w-72 animate-[panel-in_200ms_ease-out]"
     >
       {/* Header */}
       <div className="flex items-center h-10 px-3 gap-2 shrink-0">
@@ -208,7 +207,7 @@ export function ThemePanel({ isOpen, onClose }: ThemePanelProps) {
           ))}
         </div>
       </div>
-    </div>
+    </Surface>
   );
 }
 
@@ -232,8 +231,8 @@ function ModeControls({
   const surfaceTintStyle = modeOverrides.surfaceTintStyle ?? "solid";
   const surfaceTintBounds = modeKey === "dark"
     ? { maxChroma: 0.07, hueStripChroma: 0.06, minLightness: 0.16, maxLightness: 0.42 }
-    : { maxChroma: 0.07, hueStripChroma: 0.06, minLightness: 0.62, maxLightness: 0.95 };
-  const surfaceTintPreviewBackground = "var(--surface-bg, var(--neutral-bg))";
+    : { maxChroma: 0.04, hueStripChroma: 0.03, minLightness: 0.88, maxLightness: 0.96 };
+  const surfaceTintPreviewBackground = "var(--shell-bg)";
 
   const neutralHue = modeOverrides.neutralHue ?? 0;
   const neutralChroma = modeOverrides.neutralChroma ?? 0;
@@ -313,6 +312,7 @@ function ModeControls({
           chroma={neutralChroma}
           onHueChange={(v) => updateModeOverride({ neutralHue: v })}
           onChromaChange={(v) => updateModeOverride({ neutralChroma: v })}
+          onBatchChange={(h, c) => updateModeOverride({ neutralHue: h, neutralChroma: c })}
           previewLevels={previewLevels}
           isDark={modeKey === "dark"}
         />

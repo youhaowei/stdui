@@ -26,7 +26,7 @@ interface TintPickerProps {
 }
 
 export function TintPicker({ value, onChange, showHexValue = true }: TintPickerProps) {
-  const previewBackground = "var(--surface-bg, var(--neutral-bg))";
+  const previewBackground = "var(--shell-bg)";
 
   let lch = { l: 0.8, c: TINT_CHROMA, h: 0 };
   try { lch = parseOklch(value); } catch { /* keep default */ }

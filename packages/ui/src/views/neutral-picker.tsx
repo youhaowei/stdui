@@ -14,6 +14,8 @@ interface NeutralPickerProps {
   chroma: number;
   onHueChange: (hue: number) => void;
   onChromaChange: (chroma: number) => void;
+  /** Batch update both hue and chroma in a single call to avoid stale-closure overwrites */
+  onBatchChange?: (hue: number, chroma: number) => void;
   /** Lightness levels for the tonal preview strip */
   previewLevels: number[];
   /** Whether this picker is for dark mode (affects canvas rendering lightness) */
@@ -38,6 +40,7 @@ export function NeutralPicker({
   chroma,
   onHueChange,
   onChromaChange,
+  onBatchChange,
   previewLevels,
   isDark = false,
 }: NeutralPickerProps) {
@@ -74,10 +77,16 @@ export function NeutralPicker({
       if (!rect) return;
       const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
       const y = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
-      onHueChange(x * 360);
-      onChromaChange((1 - y) * MAX_CHROMA);
+      const newHue = x * 360;
+      const newChroma = (1 - y) * MAX_CHROMA;
+      if (onBatchChange) {
+        onBatchChange(newHue, newChroma);
+      } else {
+        onHueChange(newHue);
+        onChromaChange(newChroma);
+      }
     },
-    [onHueChange, onChromaChange],
+    [onHueChange, onChromaChange, onBatchChange],
   );
 
   const startDrag = useCallback(
@@ -91,10 +100,14 @@ export function NeutralPicker({
 
   const handlePreset = useCallback(
     (preset: typeof PRESETS[number]) => {
-      onHueChange(preset.hue);
-      onChromaChange(preset.chroma);
+      if (onBatchChange) {
+        onBatchChange(preset.hue, preset.chroma);
+      } else {
+        onHueChange(preset.hue);
+        onChromaChange(preset.chroma);
+      }
     },
-    [onHueChange, onChromaChange],
+    [onHueChange, onChromaChange, onBatchChange],
   );
 
   // Handle position as percentages

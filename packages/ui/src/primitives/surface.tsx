@@ -2,22 +2,20 @@ import * as React from "react"
 
 import { cn } from "../lib/utils"
 
-export type SurfaceElevation = "plain" | "raised" | "floating" | "inset"
+export type SurfaceElevation = "flat" | "raised" | "floating" | "inset"
 
 export interface SurfaceProps extends React.ComponentProps<"div"> {
   /**
-   * The elevation variant determining the surface's visual depth and shadow.
+   * Visual depth level. Each maps to a shadow token from tokens.css.
    *
-   * - `plain`: Minimal flat surface with border only, no shadow
-   * - `raised`: Standard elevated surface with subtle shadow (default)
-   * - `floating`: Prominent elevation with backdrop blur and stronger shadow
-   * - `inset`: Sunken appearance with inset shadow for recessed areas
-   *
-   * @default "raised"
+   * - `flat`: No shadow, subtle border. Inline sections, table containers.
+   * - `raised`: Light lift with --shadow-md ring+layers. Cards, panels, main content areas. (default)
+   * - `floating`: Dramatic depth with --shadow-lg. Dropdowns, modals, popovers.
+   * - `inset`: Recessed with --inner-shadow. Code blocks, input wells.
    */
   elevation?: SurfaceElevation
   /**
-   * Adds hover interaction states for clickable or interactive surfaces.
+   * Adds hover interaction states for clickable surfaces.
    *
    * @default false
    */
@@ -34,25 +32,19 @@ function Surface({
     <div
       data-slot="surface"
       className={cn(
-        // Base styles
-        "rounded-xl border transition-colors",
-        // Elevation variants
+        "rounded-[var(--radius)] bg-neutral-bg transition-colors",
         {
-          // Plain: Minimal flat surface, border only
-          "border-neutral-border bg-neutral-bg": elevation === "plain",
-          // Raised: Standard card appearance
-          "border-neutral-border/60 bg-neutral-bg-subtle/80 shadow-sm":
+          "border border-neutral-border-subtle":
+            elevation === "flat",
+          "shadow-[var(--shadow-md)]":
             elevation === "raised",
-          // Floating: Elevated panel with glassmorphism
-          "border-neutral-border/60 bg-neutral-bg-subtle/70 shadow-lg backdrop-blur supports-backdrop-filter:bg-neutral-bg-subtle/60":
+          "shadow-[var(--shadow-lg)]":
             elevation === "floating",
-          // Inset: Sunken surface with inset shadow
-          "border-neutral-border bg-neutral-bg-dim/30 shadow-inner":
+          "shadow-[var(--inner-shadow)] bg-neutral-bg-dim/30":
             elevation === "inset",
         },
-        // Interactive states
         interactive &&
-          "cursor-pointer hover:border-neutral-border hover:bg-neutral-bg-subtle/50",
+          "cursor-pointer hover:shadow-[var(--shadow-lg)] hover:bg-neutral-bg-subtle/50",
         className,
       )}
       {...props}

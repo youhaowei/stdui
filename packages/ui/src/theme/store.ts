@@ -127,10 +127,10 @@ function buildSurfaceBg(
   mid: string,
   end: string,
 ): string {
-  const dir = "to bottom right";
+  const dir = "to bottom";
   if (tintStyle === "gradient3") return `linear-gradient(${dir}, ${start} 0%, ${mid} 50%, ${end} 100%)`;
-  if (tintStyle === "gradient2") return `linear-gradient(${dir}, ${mid} 0%, ${end} 100%)`;
-  return mid;
+  if (tintStyle === "gradient2") return `linear-gradient(${dir}, ${start} 0%, ${end} 100%)`;
+  return start;
 }
 
 function applySurfaceOverrides(
@@ -141,7 +141,7 @@ function applySurfaceOverrides(
 ) {
   if (!surfaceBase) {
     style.removeProperty("--surface-base");
-    style.removeProperty("--surface-bg");
+    style.removeProperty("--shell-bg");
     return;
   }
 
@@ -160,20 +160,21 @@ function applySurfaceOverrides(
   const rawL = parsedSurface?.l ?? (isDark ? 0.3 : 0.8);
   const rawC = parsedSurface?.c ?? 0;
   const rawH = parsedSurface?.h ?? 0;
-  const minL = isDark ? 0.16 : 0.62;
-  const maxL = isDark ? 0.42 : 0.95;
+  const minL = isDark ? 0.16 : 0.88;
+  const maxL = isDark ? 0.42 : 0.96;
+  const maxC = isDark ? 0.07 : 0.04;
   const baseL = clamp(rawL, minL, maxL);
-  const baseC = clamp(rawC, 0, 0.07);
+  const baseC = clamp(rawC, 0, maxC);
   const baseH = rawH;
-  const startL = clamp(baseL + (isDark ? 0.06 : 0.08), minL, maxL);
-  const midL = baseL;
-  const endMinL = isDark ? 0.1 : 0.56;
-  const endL = clamp(baseL - (isDark ? 0.1 : 0.14), endMinL, maxL);
-  const start = formatOklch(startL, baseC, baseH);
+  // All variants start from the same color (top anchor), gradients go darker toward bottom
+  const topL = clamp(baseL - (isDark ? 0.03 : 0.02), isDark ? 0.1 : 0.82, maxL);
+  const midL = clamp(baseL - (isDark ? 0.06 : 0.04), isDark ? 0.1 : 0.82, maxL);
+  const endL = clamp(baseL - (isDark ? 0.1 : 0.06), isDark ? 0.1 : 0.82, maxL);
+  const start = formatOklch(topL, baseC, baseH);
   const mid = formatOklch(midL, baseC, baseH);
   const end = formatOklch(endL, baseC, baseH);
 
-  style.setProperty("--surface-bg", buildSurfaceBg(tintStyle, start, mid, end));
+  style.setProperty("--shell-bg", buildSurfaceBg(tintStyle, start, mid, end));
 }
 
 function applyOverrides(
@@ -203,7 +204,7 @@ function clearAllOverrideStyles(target: HTMLElement) {
   }
   style.removeProperty("--neutral-ring-glow");
   style.removeProperty("--surface-base");
-  style.removeProperty("--surface-bg");
+  style.removeProperty("--shell-bg");
 }
 
 // -- Store factory ---------------------------------------------------------

@@ -7,7 +7,7 @@ const meta = {
   argTypes: {
     elevation: {
       control: "select",
-      options: ["plain", "raised", "floating", "inset"],
+      options: ["flat", "raised", "floating", "inset"],
     },
     interactive: { control: "boolean" },
   },
@@ -27,17 +27,17 @@ export const Default: Story = {
 export const Elevations: Story = {
   render: () => (
     <div className="flex flex-wrap gap-4">
-      <Surface elevation="plain" className="p-6 w-[200px]">
-        <p className="text-sm font-medium">Plain</p>
-        <p className="text-xs mt-1 opacity-60">Flat, border only</p>
+      <Surface elevation="flat" className="p-6 w-[200px]">
+        <p className="text-sm font-medium">Flat</p>
+        <p className="text-xs mt-1 opacity-60">No shadow, subtle border</p>
       </Surface>
       <Surface elevation="raised" className="p-6 w-[200px]">
         <p className="text-sm font-medium">Raised</p>
-        <p className="text-xs mt-1 opacity-60">Subtle shadow</p>
+        <p className="text-xs mt-1 opacity-60">Ring + layered shadow</p>
       </Surface>
       <Surface elevation="floating" className="p-6 w-[200px]">
         <p className="text-sm font-medium">Floating</p>
-        <p className="text-xs mt-1 opacity-60">Strong shadow + blur</p>
+        <p className="text-xs mt-1 opacity-60">Dramatic depth</p>
       </Surface>
       <Surface elevation="inset" className="p-6 w-[200px]">
         <p className="text-sm font-medium">Inset</p>
@@ -50,8 +50,8 @@ export const Elevations: Story = {
 export const Interactive: Story = {
   render: () => (
     <div className="flex flex-wrap gap-4">
-      <Surface elevation="plain" interactive className="p-6 w-[200px]">
-        <p className="text-sm font-medium">Plain Interactive</p>
+      <Surface elevation="flat" interactive className="p-6 w-[200px]">
+        <p className="text-sm font-medium">Flat Interactive</p>
         <p className="text-xs mt-1 opacity-60">Hover to see effect</p>
       </Surface>
       <Surface elevation="raised" interactive className="p-6 w-[200px]">

@@ -57,3 +57,16 @@ export type { ToggleProps, ToggleOption } from "./toggle"
 // Tooltip - convenience wrapper
 export { Tooltip } from "./tooltip"
 export type { TooltipProps } from "./tooltip"
+
+// Layout - App shell components
+export { AppShell, useAppShell } from "./app-shell"
+export type { AppShellProps } from "./app-shell"
+
+export { Sidebar, useSidebar } from "./sidebar"
+export type { SidebarProps } from "./sidebar"
+
+export { SidebarItem } from "./sidebar-item"
+export type { SidebarItemProps } from "./sidebar-item"
+
+export { TopBar } from "./topbar"
+export type { TopBarProps } from "./topbar"
