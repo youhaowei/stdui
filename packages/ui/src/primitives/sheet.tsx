@@ -1,5 +1,5 @@
 import * as React from "react"
-import { DrawerPreview as DrawerPrimitive } from "@base-ui/react/drawer"
+import { Drawer as DrawerPrimitive } from "@base-ui/react/drawer"
 import { cva, type VariantProps } from "class-variance-authority"
 import { CloseIcon } from "@stdui/icons"
 
