@@ -9,14 +9,25 @@ const alertVariants = cva(
     variants: {
       color: {
         info:
-          "[--alert-color:var(--palette-info)] border-[var(--palette-info)]/30 bg-[var(--palette-info)]/5",
+          "[--alert-color:var(--palette-info)] border-[var(--palette-info)]/30 text-[var(--alert-color)]",
         success:
-          "[--alert-color:var(--palette-success)] border-[var(--palette-success)]/30 bg-[var(--palette-success)]/5",
+          "[--alert-color:var(--palette-success)] border-[var(--palette-success)]/30 text-[var(--alert-color)]",
         warning:
-          "[--alert-color:var(--palette-warning)] border-[var(--palette-warning)]/30 bg-[var(--palette-warning)]/5",
+          "[--alert-color:var(--palette-warning)] border-[var(--palette-warning)]/30 text-[var(--alert-color)]",
         danger:
-          "[--alert-color:var(--palette-danger)] border-[var(--palette-danger)]/30 bg-[var(--palette-danger)]/5",
+          "[--alert-color:var(--palette-danger)] border-[var(--palette-danger)]/30 text-[var(--alert-color)]",
       },
+      surface: {
+        subtle:
+          "before:absolute before:inset-0 before:-z-10 before:rounded-[inherit] before:bg-[var(--alert-color)]/5 before:pointer-events-none",
+        glass:
+          "bg-neutral-bg/80 backdrop-blur-xl before:absolute before:inset-0 before:-z-10 before:rounded-[inherit] before:bg-[var(--alert-color)]/12 before:pointer-events-none",
+        solid:
+          "before:absolute before:inset-0 before:-z-10 before:rounded-[inherit] before:bg-[var(--alert-color)]/20 before:pointer-events-none",
+      },
+    },
+    defaultVariants: {
+      surface: "subtle",
     },
   },
 )
@@ -24,6 +35,7 @@ const alertVariants = cva(
 function Alert({
   className,
   color,
+  surface,
   ...props
 }: Omit<React.ComponentProps<"div">, "color"> & VariantProps<typeof alertVariants>) {
   return (
@@ -31,7 +43,7 @@ function Alert({
       data-slot="alert"
       data-color={color}
       role="alert"
-      className={cn(alertVariants({ color }), className)}
+      className={cn(alertVariants({ color, surface }), className)}
       {...props}
     />
   )
