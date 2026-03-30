@@ -10,10 +10,9 @@ export interface TopBarProps {
   center?: ReactNode
   /** Right section — actions, buttons, etc. */
   right?: ReactNode
-  /** Enable native window drag region. Renders an overlay with the `drag-region`
-   *  class and `data-drag-region` attribute that consumers can target with
-   *  platform-specific styles (e.g. `-webkit-app-region: drag`). */
-  dragRegion?: boolean
+  /** CSS class for the drag region overlay. When provided, renders a
+   *  full-size overlay with this class for native window dragging. */
+  dragRegionClassName?: string
   /** Height in px (default: 40) */
   height?: number
   className?: string
@@ -23,7 +22,7 @@ export function TopBar({
   left,
   center,
   right,
-  dragRegion = false,
+  dragRegionClassName,
   height = 40,
   className,
 }: TopBarProps) {
@@ -35,13 +34,8 @@ export function TopBar({
         className,
       )}
     >
-      {/* Drag overlay — consumers target .drag-region or [data-drag-region]
-         with platform-specific styles. */}
-      {dragRegion && (
-        <div
-          className="absolute inset-0 z-0 drag-region"
-          data-drag-region=""
-        />
+      {dragRegionClassName && (
+        <div className={cn("absolute inset-0 z-0", dragRegionClassName)} />
       )}
 
       {/* Left */}
