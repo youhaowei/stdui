@@ -10,7 +10,9 @@ export interface TopBarProps {
   center?: ReactNode
   /** Right section — actions, buttons, etc. */
   right?: ReactNode
-  /** Enable native window drag region (Electron/Tauri) */
+  /** Enable native window drag region. Renders an overlay with the `drag-region`
+   *  class and `data-drag-region` attribute that consumers can target with
+   *  platform-specific styles (e.g. `-webkit-app-region: drag`). */
   dragRegion?: boolean
   /** Height in px (default: 40) */
   height?: number
@@ -33,14 +35,12 @@ export function TopBar({
         className,
       )}
     >
-      {/* Optional drag overlay for native window dragging.
-         Electron: consumer must define .titlebar-drag-region { -webkit-app-region: drag }
-         in a raw <style> tag (Lightning CSS / Tailwind strip the property).
-         Tauri: the data-tauri-drag-region attribute is recognised natively. */}
+      {/* Drag overlay — consumers target .drag-region or [data-drag-region]
+         with platform-specific styles. */}
       {dragRegion && (
         <div
-          className="absolute inset-0 z-0 titlebar-drag-region"
-          data-tauri-drag-region=""
+          className="absolute inset-0 z-0 drag-region"
+          data-drag-region=""
         />
       )}
 
