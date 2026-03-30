@@ -33,10 +33,14 @@ export function TopBar({
         className,
       )}
     >
-      {/* Optional drag overlay for native window dragging */}
+      {/* Optional drag overlay for native window dragging.
+         Electron: consumer must define .titlebar-drag-region { -webkit-app-region: drag }
+         in a raw <style> tag (Lightning CSS / Tailwind strip the property).
+         Tauri: the data-tauri-drag-region attribute is recognised natively. */}
       {dragRegion && (
         <div
           className="absolute inset-0 z-0 titlebar-drag-region"
+          data-tauri-drag-region=""
         />
       )}
 
