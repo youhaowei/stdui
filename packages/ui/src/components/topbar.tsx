@@ -26,7 +26,7 @@ export function TopBar({
     <header
       style={{ height }}
       className={cn(
-        "relative flex shrink-0 items-center gap-3 px-3 select-none",
+        "relative flex shrink-0 items-center select-none",
         className,
       )}
     >
