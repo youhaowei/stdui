@@ -10,7 +10,7 @@ export interface TopBarProps {
   center?: ReactNode
   /** Right section — actions, buttons, etc. */
   right?: ReactNode
-  /** Enable Tauri window drag region */
+  /** Enable native window drag region (Electron/Tauri) */
   dragRegion?: boolean
   /** Height in px (default: 40) */
   height?: number
@@ -33,11 +33,10 @@ export function TopBar({
         className,
       )}
     >
-      {/* Optional drag overlay for Tauri */}
+      {/* Optional drag overlay for native window dragging */}
       {dragRegion && (
         <div
-          className="absolute inset-0 z-0"
-          data-tauri-drag-region=""
+          className="absolute inset-0 z-0 titlebar-drag-region"
         />
       )}
 
