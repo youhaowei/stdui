@@ -10,9 +10,6 @@ export interface TopBarProps {
   center?: ReactNode
   /** Right section — actions, buttons, etc. */
   right?: ReactNode
-  /** CSS class for the drag region overlay. When provided, renders a
-   *  full-size overlay with this class for native window dragging. */
-  dragRegionClassName?: string
   /** Height in px (default: 40) */
   height?: number
   className?: string
@@ -22,7 +19,6 @@ export function TopBar({
   left,
   center,
   right,
-  dragRegionClassName,
   height = 40,
   className,
 }: TopBarProps) {
@@ -34,10 +30,6 @@ export function TopBar({
         className,
       )}
     >
-      {dragRegionClassName && (
-        <div className={cn("absolute inset-0 z-0", dragRegionClassName)} />
-      )}
-
       {/* Left */}
       <div className="flex items-center gap-2 min-w-0 flex-1 relative z-10 pointer-events-none [&_button]:pointer-events-auto [&_input]:pointer-events-auto [&_a]:pointer-events-auto">
         {left}
