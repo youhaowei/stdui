@@ -26,26 +26,13 @@ export function TopBar({
     <header
       style={{ height }}
       className={cn(
-        "relative z-50 flex shrink-0 items-center gap-3 px-3 select-none",
+        "relative flex shrink-0 items-center gap-3 px-3 select-none",
         className,
       )}
     >
-      {/* Left */}
-      <div className="flex items-center gap-2 min-w-0 flex-1 relative z-10 pointer-events-none [&_button]:pointer-events-auto [&_input]:pointer-events-auto [&_a]:pointer-events-auto">
-        {left}
-      </div>
-
-      {/* Center */}
-      {center && (
-        <div className="relative z-10 pointer-events-auto">
-          {center}
-        </div>
-      )}
-
-      {/* Right */}
-      <div className="flex items-center gap-0.5 shrink-0 relative z-10 pointer-events-none [&_button]:pointer-events-auto [&_a]:pointer-events-auto [&_input]:pointer-events-auto">
-        {right}
-      </div>
+      <div className="flex items-center gap-2 min-w-0 flex-1">{left}</div>
+      {center && <div>{center}</div>}
+      <div className="flex items-center gap-0.5 shrink-0">{right}</div>
     </header>
   )
 }
