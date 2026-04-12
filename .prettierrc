@@ -1,7 +1,0 @@
-{
-  "plugins": [
-    "prettier-plugin-organize-imports",
-    "prettier-plugin-tailwindcss"
-  ],
-  "tailwindStylesheet": "./packages/ui/src/styles/tokens.css"
-}
