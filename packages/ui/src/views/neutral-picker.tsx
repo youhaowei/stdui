@@ -99,7 +99,7 @@ export function NeutralPicker({
   );
 
   const handlePreset = useCallback(
-    (preset: typeof PRESETS[number]) => {
+    (preset: (typeof PRESETS)[number]) => {
       if (onBatchChange) {
         onBatchChange(preset.hue, preset.chroma);
       } else {
@@ -129,7 +129,9 @@ export function NeutralPicker({
           className="relative cursor-crosshair rounded-md overflow-hidden border border-neutral-border-subtle"
           style={{ width: AREA_W, height: AREA_H }}
           onPointerDown={startDrag}
-          onPointerMove={(e) => { if (e.buttons > 0) handlePointer(e); }}
+          onPointerMove={(e) => {
+            if (e.buttons > 0) handlePointer(e);
+          }}
         >
           <canvas
             ref={canvasRef as React.RefObject<HTMLCanvasElement>}
@@ -150,8 +152,8 @@ export function NeutralPicker({
       {/* Presets */}
       <div className="flex gap-1">
         {PRESETS.map((preset) => {
-          const active = Math.round(hue) === preset.hue &&
-            Math.abs(chroma - preset.chroma) < 0.0005;
+          const active =
+            Math.round(hue) === preset.hue && Math.abs(chroma - preset.chroma) < 0.0005;
           return (
             <button
               key={preset.label}
@@ -171,13 +173,15 @@ export function NeutralPicker({
 
       {/* Tonal preview strip — sorted light→dark or dark→light for a clean gradient */}
       <div className="flex gap-px rounded-md overflow-hidden border border-neutral-border-subtle">
-        {[...previewLevels].sort((a, b) => isDark ? a - b : b - a).map((lightness) => (
-          <div
-            key={lightness}
-            className="h-5 flex-1 transition-colors duration-150"
-            style={{ background: formatOklch(lightness, chroma, hue) }}
-          />
-        ))}
+        {[...previewLevels]
+          .sort((a, b) => (isDark ? a - b : b - a))
+          .map((lightness) => (
+            <div
+              key={lightness}
+              className="h-5 flex-1 transition-colors duration-150"
+              style={{ background: formatOklch(lightness, chroma, hue) }}
+            />
+          ))}
       </div>
     </div>
   );

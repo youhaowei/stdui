@@ -1,23 +1,23 @@
-import type { ReactNode } from "react"
-import { cn } from "../lib/utils"
+import type { ReactNode } from "react";
+import { cn } from "../lib/utils";
 
 export interface StackProps {
   /** Child elements to stack */
-  children: ReactNode
+  children: ReactNode;
   /** Stack direction - vertical (column) or horizontal (row) */
-  direction?: "vertical" | "horizontal"
+  direction?: "vertical" | "horizontal";
   /** Spacing between items - maps to gap-* classes */
-  spacing?: "none" | "xs" | "sm" | "md" | "lg" | "xl"
+  spacing?: "none" | "xs" | "sm" | "md" | "lg" | "xl";
   /** Alignment along cross axis */
-  align?: "start" | "center" | "end" | "stretch"
+  align?: "start" | "center" | "end" | "stretch";
   /** Justification along main axis */
-  justify?: "start" | "center" | "end" | "between" | "around"
+  justify?: "start" | "center" | "end" | "between" | "around";
   /** Whether to wrap items */
-  wrap?: boolean
+  wrap?: boolean;
   /** Additional CSS classes */
-  className?: string
+  className?: string;
   /** HTML element to render as */
-  as?: "div" | "section" | "article" | "main" | "aside" | "nav"
+  as?: "div" | "section" | "article" | "main" | "aside" | "nav";
 }
 
 const spacingMap = {
@@ -27,14 +27,14 @@ const spacingMap = {
   md: "gap-4",
   lg: "gap-6",
   xl: "gap-8",
-} as const
+} as const;
 
 const alignMap = {
   start: "items-start",
   center: "items-center",
   end: "items-end",
   stretch: "items-stretch",
-} as const
+} as const;
 
 const justifyMap = {
   start: "justify-start",
@@ -42,7 +42,7 @@ const justifyMap = {
   end: "justify-end",
   between: "justify-between",
   around: "justify-around",
-} as const
+} as const;
 
 /**
  * Stack - Flexible layout component for vertical or horizontal stacking
@@ -87,5 +87,5 @@ export function Stack({
     >
       {children}
     </Component>
-  )
+  );
 }

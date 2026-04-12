@@ -74,13 +74,14 @@ export function ColorPicker({
     (l: number) => Math.max(lightnessLow, Math.min(lightnessHigh, l)),
     [lightnessLow, lightnessHigh],
   );
-  const clampChroma = useCallback(
-    (c: number) => Math.max(0, Math.min(maxChroma, c)),
-    [maxChroma],
-  );
+  const clampChroma = useCallback((c: number) => Math.max(0, Math.min(maxChroma, c)), [maxChroma]);
 
   let lch = { l: 0.5, c: 0.1, h: 0 };
-  try { lch = parseOklch(value); } catch { /* keep default */ }
+  try {
+    lch = parseOklch(value);
+  } catch {
+    /* keep default */
+  }
   const uiLch = {
     l: clampLightness(lch.l),
     c: clampChroma(lch.c),
@@ -88,13 +89,16 @@ export function ColorPicker({
   };
 
   const [hexText, setHexText] = useState(hex);
-  useEffect(() => { setHexText(hex); }, [hex]);
+  useEffect(() => {
+    setHexText(hex);
+  }, [hex]);
 
   const [recentColors, setRecentColors] = useState<string[]>([]);
   const snapshotRef = useRef<string | null>(null);
 
   const emit = useCallback(
-    (l: number, c: number, h: number) => onChange(formatOklch(clampLightness(l), clampChroma(c), h)),
+    (l: number, c: number, h: number) =>
+      onChange(formatOklch(clampLightness(l), clampChroma(c), h)),
     [onChange, clampLightness, clampChroma],
   );
 
@@ -110,30 +114,30 @@ export function ColorPicker({
     [emit],
   );
 
-  const handleSwatchClick = useCallback(
-    (oklch: string) => onChange(oklch),
-    [onChange],
-  );
+  const handleSwatchClick = useCallback((oklch: string) => onChange(oklch), [onChange]);
 
   const handleReset = useCallback(() => {
     if (snapshotRef.current != null) onChange(snapshotRef.current);
   }, [onChange]);
 
-  const handleOpenChange = useCallback((open: boolean) => {
-    if (open) {
-      snapshotRef.current = value;
-      if (showRecentColors) {
-        setRecentColors(getRecentColors());
+  const handleOpenChange = useCallback(
+    (open: boolean) => {
+      if (open) {
+        snapshotRef.current = value;
+        if (showRecentColors) {
+          setRecentColors(getRecentColors());
+        } else {
+          setRecentColors([]);
+        }
       } else {
-        setRecentColors([]);
+        if (showRecentColors) {
+          addRecentColor(value);
+          setRecentColors(getRecentColors());
+        }
       }
-    } else {
-      if (showRecentColors) {
-        addRecentColor(value);
-        setRecentColors(getRecentColors());
-      }
-    }
-  }, [value, showRecentColors]);
+    },
+    [value, showRecentColors],
+  );
 
   // Used colors minus current value; recent minus anything already in used/current
   const dedupedLight = usedColors?.light.filter((c) => c !== value);
@@ -144,9 +148,7 @@ export function ColorPicker({
 
   return (
     <div className="flex items-center gap-2">
-      {label && (
-        <span className="text-[11px] text-neutral-fg-subtle w-20 shrink-0">{label}</span>
-      )}
+      {label && <span className="text-[11px] text-neutral-fg-subtle w-20 shrink-0">{label}</span>}
       <Popover onOpenChange={handleOpenChange}>
         <PopoverTrigger
           render={
@@ -158,11 +160,7 @@ export function ColorPicker({
             />
           }
         />
-        <PopoverContent
-          side="left"
-          align="start"
-          className="w-auto p-2 space-y-2"
-        >
+        <PopoverContent side="left" align="start" className="w-auto p-2 space-y-2">
           <GradientArea
             lightness={uiLch.l}
             chroma={uiLch.c}
@@ -212,7 +210,15 @@ export function ColorPicker({
 
 // ── Swatch Row ──────────────────────────────────────────────────────────────
 
-function SwatchRow({ label, colors, onPick }: { label: string; colors: string[]; onPick: (c: string) => void }) {
+function SwatchRow({
+  label,
+  colors,
+  onPick,
+}: {
+  label: string;
+  colors: string[];
+  onPick: (c: string) => void;
+}) {
   return (
     <div className="space-y-1">
       <span className="text-[10px] text-neutral-fg-subtle">{label}</span>
@@ -260,8 +266,8 @@ function PopoverControls({
           className="w-6 h-6 rounded-[4px] border border-neutral-border shrink-0"
           style={{ background: previewBg }}
         />
-        {previewBackground && (
-          onPreviewClick ? (
+        {previewBackground &&
+          (onPreviewClick ? (
             <button
               type="button"
               onClick={onPreviewClick}
@@ -275,8 +281,7 @@ function PopoverControls({
               style={{ background: previewBg }}
               title="Applied preview"
             />
-          )
-        )}
+          ))}
         {showHexValue && (
           <input
             type="text"
@@ -404,10 +409,7 @@ function GradientArea({
   // Handle position as percentages
   const handleX = Math.min(100, Math.max(0, (chroma / maxChroma) * 100));
   const lightnessRange = Math.max(0.0001, maxLightness - minLightness);
-  const handleY = Math.min(
-    100,
-    Math.max(0, ((maxLightness - lightness) / lightnessRange) * 100),
-  );
+  const handleY = Math.min(100, Math.max(0, ((maxLightness - lightness) / lightnessRange) * 100));
 
   return (
     <div
@@ -415,7 +417,9 @@ function GradientArea({
       className="relative cursor-crosshair rounded-md overflow-hidden border border-neutral-border"
       style={{ width: AREA_W, height: AREA_H }}
       onPointerDown={startDrag}
-      onPointerMove={(e) => { if (e.buttons > 0) handlePointer(e); }}
+      onPointerMove={(e) => {
+        if (e.buttons > 0) handlePointer(e);
+      }}
     >
       <canvas
         ref={canvasRef as React.RefObject<HTMLCanvasElement>}
@@ -478,7 +482,9 @@ function HueStrip({
       className="relative cursor-pointer rounded-full overflow-hidden border border-neutral-border"
       style={{ width: AREA_W, height: HUE_H, background: `linear-gradient(to right, ${stops})` }}
       onPointerDown={startDrag}
-      onPointerMove={(e) => { if (e.buttons > 0) handlePointer(e); }}
+      onPointerMove={(e) => {
+        if (e.buttons > 0) handlePointer(e);
+      }}
     >
       <div
         className="absolute top-0 pointer-events-none"

@@ -68,9 +68,15 @@ export const FullWidth: Story = {
   render: () => (
     <Tabs defaultValue="overview" className="w-[500px]">
       <TabsList className="w-full">
-        <TabsTrigger value="overview" className="flex-1">Overview</TabsTrigger>
-        <TabsTrigger value="analytics" className="flex-1">Analytics</TabsTrigger>
-        <TabsTrigger value="reports" className="flex-1">Reports</TabsTrigger>
+        <TabsTrigger value="overview" className="flex-1">
+          Overview
+        </TabsTrigger>
+        <TabsTrigger value="analytics" className="flex-1">
+          Analytics
+        </TabsTrigger>
+        <TabsTrigger value="reports" className="flex-1">
+          Reports
+        </TabsTrigger>
       </TabsList>
       <TabsContent value="overview">
         <p className="text-sm p-4">Overview content with key metrics.</p>
@@ -90,7 +96,9 @@ export const DisabledTab: Story = {
     <Tabs defaultValue="active" className="w-[400px]">
       <TabsList>
         <TabsTrigger value="active">Active</TabsTrigger>
-        <TabsTrigger value="disabled" disabled>Disabled</TabsTrigger>
+        <TabsTrigger value="disabled" disabled>
+          Disabled
+        </TabsTrigger>
         <TabsTrigger value="other">Other</TabsTrigger>
       </TabsList>
       <TabsContent value="active">

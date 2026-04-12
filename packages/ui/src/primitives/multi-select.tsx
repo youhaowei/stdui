@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 import {
   ChevronDownIcon,
   CloseIcon,
@@ -7,57 +7,51 @@ import {
   NumberTypeIcon,
   TextTypeIcon,
   DotIcon,
-} from "@stdui/icons"
-import { cn } from "../lib/utils"
-import { Badge } from "./badge"
-import { Checkbox } from "./checkbox"
+} from "@stdui/icons";
+import { cn } from "../lib/utils";
+import { Badge } from "./badge";
+import { Checkbox } from "./checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "./dropdown-menu"
+} from "./dropdown-menu";
 
-type MultiSelectColumnType =
-  | "string"
-  | "number"
-  | "date"
-  | "boolean"
-  | "object"
-  | "array"
+type MultiSelectColumnType = "string" | "number" | "date" | "boolean" | "object" | "array";
 
 export interface MultiSelectOption {
-  value: string
-  label: string
-  description?: string
-  type?: MultiSelectColumnType
+  value: string;
+  label: string;
+  description?: string;
+  type?: MultiSelectColumnType;
 }
 
 function getTypeIcon(type?: MultiSelectColumnType) {
   switch (type) {
     case "string":
-      return TextTypeIcon
+      return TextTypeIcon;
     case "number":
-      return NumberTypeIcon
+      return NumberTypeIcon;
     case "date":
-      return DateTypeIcon
+      return DateTypeIcon;
     case "boolean":
-      return BooleanTypeIcon
+      return BooleanTypeIcon;
     case "object":
     case "array":
     default:
-      return DotIcon
+      return DotIcon;
   }
 }
 
 interface MultiSelectProps {
-  options: MultiSelectOption[]
-  value: string[]
-  onChange: (value: string[]) => void
-  placeholder?: string
-  disabled?: boolean
-  className?: string
-  maxLines?: number
+  options: MultiSelectOption[];
+  value: string[];
+  onChange: (value: string[]) => void;
+  placeholder?: string;
+  disabled?: boolean;
+  className?: string;
+  maxLines?: number;
 }
 
 function MultiSelect({
@@ -69,58 +63,58 @@ function MultiSelect({
   className,
   maxLines = 3,
 }: MultiSelectProps) {
-  const selectedOptions = options.filter((opt) => value.includes(opt.value))
-  const containerRef = React.useRef<HTMLDivElement | null>(null)
-  const [hiddenCount, setHiddenCount] = React.useState(0)
+  const selectedOptions = options.filter((opt) => value.includes(opt.value));
+  const containerRef = React.useRef<HTMLDivElement | null>(null);
+  const [hiddenCount, setHiddenCount] = React.useState(0);
 
   React.useEffect(() => {
-    const container = containerRef.current
+    const container = containerRef.current;
     if (!container || selectedOptions.length === 0) {
-      setHiddenCount(0)
-      return
+      setHiddenCount(0);
+      return;
     }
 
     const checkOverflow = () => {
-      const isOverflowing = container.scrollHeight > container.clientHeight
+      const isOverflowing = container.scrollHeight > container.clientHeight;
 
       if (isOverflowing) {
-        const badges = Array.from(container.children) as HTMLElement[]
-        const containerBottom = container.clientHeight
+        const badges = Array.from(container.children) as HTMLElement[];
+        const containerBottom = container.clientHeight;
 
-        let hidden = 0
+        let hidden = 0;
         badges.forEach((badge) => {
-          const rect = badge.getBoundingClientRect()
-          const containerRect = container.getBoundingClientRect()
-          const relativeBottom = rect.bottom - containerRect.top
+          const rect = badge.getBoundingClientRect();
+          const containerRect = container.getBoundingClientRect();
+          const relativeBottom = rect.bottom - containerRect.top;
 
           if (relativeBottom > containerBottom) {
-            hidden++
+            hidden++;
           }
-        })
+        });
 
-        setHiddenCount(hidden)
+        setHiddenCount(hidden);
       } else {
-        setHiddenCount(0)
+        setHiddenCount(0);
       }
-    }
+    };
 
-    checkOverflow()
+    checkOverflow();
 
-    window.addEventListener("resize", checkOverflow)
-    return () => window.removeEventListener("resize", checkOverflow)
-  }, [selectedOptions])
+    window.addEventListener("resize", checkOverflow);
+    return () => window.removeEventListener("resize", checkOverflow);
+  }, [selectedOptions]);
 
   const handleToggle = (optionValue: string) => {
     const newValue = value.includes(optionValue)
       ? value.filter((v) => v !== optionValue)
-      : [...value, optionValue]
-    onChange(newValue)
-  }
+      : [...value, optionValue];
+    onChange(newValue);
+  };
 
   const handleRemove = (e: React.MouseEvent, optionValue: string) => {
-    e.stopPropagation()
-    onChange(value.filter((v) => v !== optionValue))
-  }
+    e.stopPropagation();
+    onChange(value.filter((v) => v !== optionValue));
+  };
 
   return (
     <DropdownMenu>
@@ -149,7 +143,7 @@ function MultiSelect({
                     }}
                   >
                     {selectedOptions.map((opt) => {
-                      const TypeIcon = getTypeIcon(opt.type)
+                      const TypeIcon = getTypeIcon(opt.type);
                       return (
                         <Badge
                           key={opt.value}
@@ -165,7 +159,7 @@ function MultiSelect({
                             onClick={(e: React.MouseEvent) => handleRemove(e, opt.value)}
                           />
                         </Badge>
-                      )
+                      );
                     })}
                   </div>
                   {hiddenCount > 0 && (
@@ -175,27 +169,22 @@ function MultiSelect({
                   )}
                 </>
               ) : (
-                <span className="text-sm text-neutral-fg-subtle">
-                  {placeholder}
-                </span>
+                <span className="text-sm text-neutral-fg-subtle">{placeholder}</span>
               )}
             </div>
             <ChevronDownIcon className="h-4 w-4 shrink-0 opacity-50" />
           </button>
         }
       />
-      <DropdownMenuContent
-        className="max-h-80 w-(--anchor-width) overflow-y-auto"
-        align="start"
-      >
+      <DropdownMenuContent className="max-h-80 w-(--anchor-width) overflow-y-auto" align="start">
         {options.map((option) => {
-          const isSelected = value.includes(option.value)
+          const isSelected = value.includes(option.value);
           return (
             <DropdownMenuItem
               key={option.value}
               onSelect={(e) => {
-                e.preventDefault()
-                handleToggle(option.value)
+                e.preventDefault();
+                handleToggle(option.value);
               }}
               className={cn(
                 "flex cursor-pointer items-start gap-2.5",
@@ -209,9 +198,7 @@ function MultiSelect({
                 className="mt-0.5"
               />
               <div className="flex min-w-0 flex-1 flex-col gap-1">
-                <span className="truncate text-sm leading-tight">
-                  {option.label}
-                </span>
+                <span className="truncate text-sm leading-tight">{option.label}</span>
                 {option.description && (
                   <span className="truncate font-mono text-[11px] leading-tight text-neutral-fg-subtle">
                     {option.description}
@@ -219,12 +206,12 @@ function MultiSelect({
                 )}
               </div>
             </DropdownMenuItem>
-          )
+          );
         })}
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }
 
-export { MultiSelect }
-export type { MultiSelectProps, MultiSelectColumnType }
+export { MultiSelect };
+export type { MultiSelectProps, MultiSelectColumnType };

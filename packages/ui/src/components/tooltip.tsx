@@ -1,15 +1,11 @@
-import type { ReactNode } from "react"
-import {
-  TooltipContent,
-  Tooltip as TooltipPrimitive,
-  TooltipTrigger,
-} from "../primitives/tooltip"
+import type { ReactNode } from "react";
+import { TooltipContent, Tooltip as TooltipPrimitive, TooltipTrigger } from "../primitives/tooltip";
 
 export interface TooltipProps {
-  content: ReactNode
-  children: ReactNode
-  side?: "top" | "right" | "bottom" | "left"
-  className?: string
+  content: ReactNode;
+  children: ReactNode;
+  side?: "top" | "right" | "bottom" | "left";
+  className?: string;
 }
 
 /**
@@ -33,5 +29,5 @@ export function Tooltip({ content, children, side, className }: TooltipProps) {
         {content}
       </TooltipContent>
     </TooltipPrimitive>
-  )
+  );
 }

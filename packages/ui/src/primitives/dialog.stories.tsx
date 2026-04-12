@@ -21,17 +21,23 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => (
     <Dialog>
-      <DialogTrigger render={<Button variant="soft" color="primary">Open Dialog</Button>} />
+      <DialogTrigger
+        render={
+          <Button variant="soft" color="primary">
+            Open Dialog
+          </Button>
+        }
+      />
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Dialog Title</DialogTitle>
-          <DialogDescription>
-            This is a description of the dialog content.
-          </DialogDescription>
+          <DialogDescription>This is a description of the dialog content.</DialogDescription>
         </DialogHeader>
         <p className="text-sm">Dialog body content goes here.</p>
         <DialogFooter>
-          <Button variant="soft" color="primary">Confirm</Button>
+          <Button variant="soft" color="primary">
+            Confirm
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -41,7 +47,13 @@ export const Default: Story = {
 export const Large: Story = {
   render: () => (
     <Dialog>
-      <DialogTrigger render={<Button variant="soft" color="primary">Open Large Dialog</Button>} />
+      <DialogTrigger
+        render={
+          <Button variant="soft" color="primary">
+            Open Large Dialog
+          </Button>
+        }
+      />
       <DialogContent size="lg">
         <DialogHeader>
           <DialogTitle>Large Dialog</DialogTitle>
@@ -56,7 +68,13 @@ export const Large: Story = {
 export const ExtraLarge: Story = {
   render: () => (
     <Dialog>
-      <DialogTrigger render={<Button variant="soft" color="primary">Open XL Dialog</Button>} />
+      <DialogTrigger
+        render={
+          <Button variant="soft" color="primary">
+            Open XL Dialog
+          </Button>
+        }
+      />
       <DialogContent size="xl">
         <DialogHeader>
           <DialogTitle>Extra Large Dialog</DialogTitle>
@@ -71,7 +89,13 @@ export const ExtraLarge: Story = {
 export const FullScreen: Story = {
   render: () => (
     <Dialog>
-      <DialogTrigger render={<Button variant="soft" color="primary">Open Full Dialog</Button>} />
+      <DialogTrigger
+        render={
+          <Button variant="soft" color="primary">
+            Open Full Dialog
+          </Button>
+        }
+      />
       <DialogContent size="full">
         <DialogHeader>
           <DialogTitle>Full Screen Dialog</DialogTitle>
@@ -86,7 +110,13 @@ export const FullScreen: Story = {
 export const NoCloseButton: Story = {
   render: () => (
     <Dialog>
-      <DialogTrigger render={<Button variant="soft" color="primary">Open (No Close Button)</Button>} />
+      <DialogTrigger
+        render={
+          <Button variant="soft" color="primary">
+            Open (No Close Button)
+          </Button>
+        }
+      />
       <DialogContent showCloseButton={false}>
         <DialogHeader>
           <DialogTitle>No Close Button</DialogTitle>
@@ -95,7 +125,9 @@ export const NoCloseButton: Story = {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="soft" color="primary">Done</Button>
+          <Button variant="soft" color="primary">
+            Done
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

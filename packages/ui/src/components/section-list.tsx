@@ -1,31 +1,31 @@
-import * as React from "react"
-import { cn } from "../lib/utils"
+import * as React from "react";
+import { cn } from "../lib/utils";
 
 export interface SectionListProps {
   /**
    * Section title displayed above the content
    */
-  title: string
+  title: string;
   /**
    * Content to display (usually a list of items)
    */
-  children: React.ReactNode
+  children: React.ReactNode;
   /**
    * Optional message to show when there are no items
    */
-  emptyMessage?: string
+  emptyMessage?: string;
   /**
    * Additional CSS classes for the container
    */
-  className?: string
+  className?: string;
   /**
    * Additional CSS classes for the title
    */
-  titleClassName?: string
+  titleClassName?: string;
   /**
    * Additional CSS classes for the content grid
    */
-  contentClassName?: string
+  contentClassName?: string;
 }
 
 /**
@@ -57,18 +57,11 @@ export function SectionList({
 }: SectionListProps) {
   return (
     <section className={cn("space-y-3", className)}>
-      <h4
-        className={cn(
-          "text-sm font-medium text-neutral-fg-subtle",
-          titleClassName,
-        )}
-      >
-        {title}
-      </h4>
+      <h4 className={cn("text-sm font-medium text-neutral-fg-subtle", titleClassName)}>{title}</h4>
       <div className={cn("grid gap-3", contentClassName)}>{children}</div>
       {emptyMessage && !React.Children.count(children) && (
         <p className="text-sm text-neutral-fg-subtle">{emptyMessage}</p>
       )}
     </section>
-  )
+  );
 }

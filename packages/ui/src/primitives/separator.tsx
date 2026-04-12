@@ -1,7 +1,7 @@
-import * as React from "react"
-import { Separator as SeparatorPrimitive } from "@base-ui/react/separator"
+import * as React from "react";
+import { Separator as SeparatorPrimitive } from "@base-ui/react/separator";
 
-import { cn } from "../lib/utils"
+import { cn } from "../lib/utils";
 
 function Separator({
   className,
@@ -9,7 +9,7 @@ function Separator({
   ref,
   ...props
 }: React.ComponentProps<typeof SeparatorPrimitive> & {
-  decorative?: boolean
+  decorative?: boolean;
 }) {
   return (
     <SeparatorPrimitive
@@ -18,11 +18,11 @@ function Separator({
       className={cn(
         "shrink-0 bg-neutral-border",
         orientation === "horizontal" ? "h-[1px] w-full" : "h-full w-[1px]",
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
-export { Separator }
+export { Separator };

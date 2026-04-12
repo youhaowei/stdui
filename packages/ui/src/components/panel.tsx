@@ -1,6 +1,6 @@
-import type { ReactNode } from "react"
-import { cn } from "../lib/utils"
-import { Surface, type SurfaceElevation } from "../primitives/surface"
+import type { ReactNode } from "react";
+import { cn } from "../lib/utils";
+import { Surface, type SurfaceElevation } from "../primitives/surface";
 
 export interface PanelProps extends React.ComponentProps<"div"> {
   /**
@@ -9,13 +9,13 @@ export interface PanelProps extends React.ComponentProps<"div"> {
    *
    * @default "raised"
    */
-  elevation?: SurfaceElevation
+  elevation?: SurfaceElevation;
   /** Optional header content (fixed at top, doesn't scroll) */
-  header?: ReactNode
+  header?: ReactNode;
   /** Scrollable main content */
-  children: ReactNode
+  children: ReactNode;
   /** Optional footer content (fixed at bottom, doesn't scroll) */
-  footer?: ReactNode
+  footer?: ReactNode;
 }
 
 /**
@@ -53,32 +53,24 @@ export function Panel({
       {...props}
     >
       {/* Fixed header */}
-      {header && (
-        <div className="shrink-0 border-b border-neutral-border/60">
-          {header}
-        </div>
-      )}
+      {header && <div className="shrink-0 border-b border-neutral-border/60">{header}</div>}
 
       {/* Scrollable content */}
       <div className="min-w-0 flex-1 overflow-y-auto">{children}</div>
 
       {/* Fixed footer */}
-      {footer && (
-        <div className="shrink-0 border-t border-neutral-border/60">
-          {footer}
-        </div>
-      )}
+      {footer && <div className="shrink-0 border-t border-neutral-border/60">{footer}</div>}
     </Surface>
-  )
+  );
 }
 
 export interface PanelSectionProps extends React.ComponentProps<"div"> {
   /** Optional section title */
-  title?: string
+  title?: string;
   /** Optional section description */
-  description?: string
+  description?: string;
   /** Section content */
-  children: ReactNode
+  children: ReactNode;
 }
 
 /**
@@ -108,23 +100,16 @@ export function PanelSection({
 }: PanelSectionProps) {
   return (
     <div
-      className={cn(
-        "border-neutral-border/60 [&:not(:last-child)]:border-b",
-        className,
-      )}
+      className={cn("border-neutral-border/60 [&:not(:last-child)]:border-b", className)}
       {...props}
     >
       {(title || description) && (
         <div className="mb-4">
-          {title && (
-            <h3 className="text-base font-semibold text-neutral-fg">{title}</h3>
-          )}
-          {description && (
-            <p className="mt-1 text-sm text-neutral-fg-subtle">{description}</p>
-          )}
+          {title && <h3 className="text-base font-semibold text-neutral-fg">{title}</h3>}
+          {description && <p className="mt-1 text-sm text-neutral-fg-subtle">{description}</p>}
         </div>
       )}
       {children}
     </div>
-  )
+  );
 }

@@ -65,9 +65,9 @@ cd libs/stdui && git log --oneline HEAD...origin/main
 Import paths in consuming apps:
 
 ```typescript
-import { Button, Card, Badge } from "@stdui/react"           // Components
-import { StduiProvider, useTheme } from "@stdui/react/theme"  // Theme
-import "@stdui/react/styles"                                   // CSS tokens
+import { Button, Card, Badge } from "@stdui/react"; // Components
+import { StduiProvider, useTheme } from "@stdui/react/theme"; // Theme
+import "@stdui/react/styles"; // CSS tokens
 ```
 
 The `@stdui/react` package resolves via workspace linking (bun workspace or npm workspaces). No need to publish — the submodule IS the package.

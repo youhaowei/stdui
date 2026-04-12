@@ -122,15 +122,15 @@ export {
 };
 
 // Theme & Appearance
-export { Moon as DarkModeIcon, Sun as LightModeIcon, Monitor as SystemModeIcon, RotateCcw as ResetIcon };
+export {
+  Moon as DarkModeIcon,
+  Sun as LightModeIcon,
+  Monitor as SystemModeIcon,
+  RotateCcw as ResetIcon,
+};
 
 // Data Visualization
-export {
-  TrendingUp as ChartIcon,
-  Layers as LayersIcon,
-  List as ListIcon,
-  Table as TableIcon,
-};
+export { TrendingUp as ChartIcon, Layers as LayersIcon, List as ListIcon, Table as TableIcon };
 
 // Data Sources & Files
 export {
@@ -165,18 +165,10 @@ export {
 };
 
 // UI Elements
-export {
-  Circle as CircleIcon,
-  CircleDot as DataPointIcon,
-  Dot as DotIcon,
-};
+export { Circle as CircleIcon, CircleDot as DataPointIcon, Dot as DotIcon };
 
 // People & Notifications
-export {
-  Bell as BellIcon,
-  User as UserIcon,
-  Users as UsersIcon,
-};
+export { Bell as BellIcon, User as UserIcon, Users as UsersIcon };
 
 // Utilities
 export {

@@ -1,24 +1,24 @@
-import type { ReactNode, ElementType } from "react"
-import { cn } from "../lib/utils"
-import { Tooltip } from "./tooltip"
-import { useSidebar } from "./sidebar"
+import type { ReactNode, ElementType } from "react";
+import { cn } from "../lib/utils";
+import { Tooltip } from "./tooltip";
+import { useSidebar } from "./sidebar";
 
 // ---------- SidebarItem ----------
 
 export interface SidebarItemProps {
   /** Display label */
-  label: string
+  label: string;
   /** Icon component (e.g., Lucide icon) */
-  icon?: ElementType<{ className?: string }>
+  icon?: ElementType<{ className?: string }>;
   /** Whether this item is currently active */
-  active?: boolean
+  active?: boolean;
   /** Optional badge (e.g., count indicator) */
-  badge?: ReactNode
+  badge?: ReactNode;
   /** Render as a different element (e.g., router Link) */
-  as?: ElementType
-  className?: string
+  as?: ElementType;
+  className?: string;
   /** Pass-through props for the `as` component (e.g., `to` for router Link) */
-  [key: string]: unknown
+  [key: string]: unknown;
 }
 
 export function SidebarItem({
@@ -30,7 +30,7 @@ export function SidebarItem({
   className,
   ...rest
 }: SidebarItemProps) {
-  const { collapsed } = useSidebar()
+  const { collapsed } = useSidebar();
 
   const item = (
     <Comp
@@ -48,15 +48,15 @@ export function SidebarItem({
       <span className={cn("truncate", collapsed && "sr-only")}>{label}</span>
       {badge && !collapsed && badge}
     </Comp>
-  )
+  );
 
   if (collapsed) {
     return (
       <Tooltip content={label} side="right">
         {item}
       </Tooltip>
-    )
+    );
   }
 
-  return item
+  return item;
 }

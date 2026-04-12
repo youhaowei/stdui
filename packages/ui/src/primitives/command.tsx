@@ -1,30 +1,27 @@
-import * as React from "react"
-import { Command as CommandPrimitive } from "cmdk"
-import { SearchIcon } from "@stdui/icons"
+import * as React from "react";
+import { Command as CommandPrimitive } from "cmdk";
+import { SearchIcon } from "@stdui/icons";
 
-import { cn } from "../lib/utils"
-import { Dialog, DialogContent } from "./dialog"
+import { cn } from "../lib/utils";
+import { Dialog, DialogContent } from "./dialog";
 
-function Command({
-  className,
-  ...props
-}: React.ComponentProps<typeof CommandPrimitive>) {
+function Command({ className, ...props }: React.ComponentProps<typeof CommandPrimitive>) {
   return (
     <CommandPrimitive
       className={cn(
         "flex h-full w-full flex-col overflow-hidden rounded-md bg-neutral-bg-subtle text-neutral-fg",
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 function CommandDialog({
   children,
   ...props
 }: Omit<React.ComponentProps<typeof Dialog>, "children"> & {
-  children?: React.ReactNode
+  children?: React.ReactNode;
 }) {
   return (
     <Dialog {...props}>
@@ -34,7 +31,7 @@ function CommandDialog({
         </Command>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
 
 function CommandInput({
@@ -47,38 +44,25 @@ function CommandInput({
       <CommandPrimitive.Input
         className={cn(
           "flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-neutral-fg-subtle disabled:cursor-not-allowed disabled:opacity-50",
-          className
+          className,
         )}
         {...props}
       />
     </div>
-  )
+  );
 }
 
-function CommandList({
-  className,
-  ...props
-}: React.ComponentProps<typeof CommandPrimitive.List>) {
+function CommandList({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.List>) {
   return (
     <CommandPrimitive.List
-      className={cn(
-        "max-h-[300px] overflow-y-auto overflow-x-hidden",
-        className
-      )}
+      className={cn("max-h-[300px] overflow-y-auto overflow-x-hidden", className)}
       {...props}
     />
-  )
+  );
 }
 
-function CommandEmpty(
-  props: React.ComponentProps<typeof CommandPrimitive.Empty>
-) {
-  return (
-    <CommandPrimitive.Empty
-      className="py-6 text-center text-sm"
-      {...props}
-    />
-  )
+function CommandEmpty(props: React.ComponentProps<typeof CommandPrimitive.Empty>) {
+  return <CommandPrimitive.Empty className="py-6 text-center text-sm" {...props} />;
 }
 
 function CommandGroup({
@@ -89,11 +73,11 @@ function CommandGroup({
     <CommandPrimitive.Group
       className={cn(
         "overflow-hidden p-1 text-neutral-fg [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-neutral-fg-subtle",
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 function CommandSeparator({
@@ -105,37 +89,28 @@ function CommandSeparator({
       className={cn("-mx-1 h-px bg-neutral-border", className)}
       {...props}
     />
-  )
+  );
 }
 
-function CommandItem({
-  className,
-  ...props
-}: React.ComponentProps<typeof CommandPrimitive.Item>) {
+function CommandItem({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.Item>) {
   return (
     <CommandPrimitive.Item
       className={cn(
         "relative flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected='true']:bg-neutral-bg-subtle data-[selected=true]:text-neutral-fg data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
-function CommandShortcut({
-  className,
-  ...props
-}: React.ComponentProps<"span">) {
+function CommandShortcut({ className, ...props }: React.ComponentProps<"span">) {
   return (
     <span
-      className={cn(
-        "ml-auto text-xs tracking-widest text-neutral-fg-subtle",
-        className
-      )}
+      className={cn("ml-auto text-xs tracking-widest text-neutral-fg-subtle", className)}
       {...props}
     />
-  )
+  );
 }
 
 export {
@@ -148,4 +123,4 @@ export {
   CommandItem,
   CommandShortcut,
   CommandSeparator,
-}
+};

@@ -1,16 +1,16 @@
-import * as React from "react"
-import { Dialog as DialogPrimitive } from "@base-ui/react/dialog"
-import { CloseIcon } from "@stdui/icons"
+import * as React from "react";
+import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
+import { CloseIcon } from "@stdui/icons";
 
-import { cn } from "../lib/utils"
+import { cn } from "../lib/utils";
 
-const Dialog = DialogPrimitive.Root
+const Dialog = DialogPrimitive.Root;
 
-const DialogTrigger = DialogPrimitive.Trigger
+const DialogTrigger = DialogPrimitive.Trigger;
 
-const DialogPortal = DialogPrimitive.Portal
+const DialogPortal = DialogPrimitive.Portal;
 
-const DialogClose = DialogPrimitive.Close
+const DialogClose = DialogPrimitive.Close;
 
 function DialogOverlay({
   className,
@@ -22,11 +22,11 @@ function DialogOverlay({
       ref={ref}
       className={cn(
         "fixed inset-0 z-50 bg-black/80 data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0",
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 function DialogContent({
@@ -38,9 +38,9 @@ function DialogContent({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Popup> & {
   /** Whether to show the close button in the top right corner */
-  showCloseButton?: boolean
+  showCloseButton?: boolean;
   /** Dialog size preset */
-  size?: "default" | "lg" | "xl" | "full"
+  size?: "default" | "lg" | "xl" | "full";
 }) {
   return (
     <DialogPortal>
@@ -55,7 +55,7 @@ function DialogContent({
             "max-w-[calc(100%-2rem)] sm:max-w-5xl": size === "xl",
             "h-[90vh] max-h-[90vh] max-w-[90vw]": size === "full",
           },
-          className
+          className,
         )}
         {...props}
       >
@@ -68,37 +68,25 @@ function DialogContent({
         )}
       </DialogPrimitive.Popup>
     </DialogPortal>
-  )
+  );
 }
 
-function DialogHeader({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn(
-        "flex flex-col space-y-1.5 text-center sm:text-left",
-        className
-      )}
+      className={cn("flex flex-col space-y-1.5 text-center sm:text-left", className)}
       {...props}
     />
-  )
+  );
 }
 
-function DialogFooter({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn(
-        "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
-        className
-      )}
+      className={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className)}
       {...props}
     />
-  )
+  );
 }
 
 function DialogTitle({
@@ -109,13 +97,10 @@ function DialogTitle({
   return (
     <DialogPrimitive.Title
       ref={ref}
-      className={cn(
-        "text-lg font-semibold leading-none tracking-tight",
-        className
-      )}
+      className={cn("text-lg font-semibold leading-none tracking-tight", className)}
       {...props}
     />
-  )
+  );
 }
 
 function DialogDescription({
@@ -129,7 +114,7 @@ function DialogDescription({
       className={cn("text-sm text-neutral-fg-subtle", className)}
       {...props}
     />
-  )
+  );
 }
 
 export {
@@ -143,4 +128,4 @@ export {
   DialogFooter,
   DialogTitle,
   DialogDescription,
-}
+};

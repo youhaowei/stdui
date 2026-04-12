@@ -1,16 +1,12 @@
-import { useState } from "react"
-import { cn } from "../lib/utils"
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "../primitives/collapsible"
-import { CollapseHandle } from "./collapse-handle"
+import { useState } from "react";
+import { cn } from "../lib/utils";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../primitives/collapsible";
+import { CollapseHandle } from "./collapse-handle";
 
 export interface CollapsibleSectionProps {
-  defaultOpen?: boolean
-  children: React.ReactNode
-  className?: string
+  defaultOpen?: boolean;
+  children: React.ReactNode;
+  className?: string;
 }
 
 /**
@@ -31,27 +27,19 @@ export function CollapsibleSection({
   children,
   className,
 }: CollapsibleSectionProps) {
-  const [isOpen, setIsOpen] = useState(defaultOpen)
+  const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <Collapsible
-      open={isOpen}
-      onOpenChange={setIsOpen}
-      className={cn("relative", className)}
-    >
+    <Collapsible open={isOpen} onOpenChange={setIsOpen} className={cn("relative", className)}>
       <CollapsibleContent>{children}</CollapsibleContent>
 
       <div className="relative -mt-px flex justify-center">
         <CollapsibleTrigger
           render={
-            <CollapseHandle
-              direction="down"
-              isOpen={isOpen}
-              onClick={() => setIsOpen(!isOpen)}
-            />
+            <CollapseHandle direction="down" isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />
           }
         />
       </div>
     </Collapsible>
-  )
+  );
 }

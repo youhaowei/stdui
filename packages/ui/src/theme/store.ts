@@ -128,7 +128,8 @@ function buildSurfaceBg(
   end: string,
 ): string {
   const dir = "to bottom";
-  if (tintStyle === "gradient3") return `linear-gradient(${dir}, ${start} 0%, ${mid} 50%, ${end} 100%)`;
+  if (tintStyle === "gradient3")
+    return `linear-gradient(${dir}, ${start} 0%, ${mid} 50%, ${end} 100%)`;
   if (tintStyle === "gradient2") return `linear-gradient(${dir}, ${start} 0%, ${end} 100%)`;
   return start;
 }
@@ -189,7 +190,13 @@ function applyOverrides(
   const modeOverrides = overrides[modeKey] ?? {};
 
   applyPaletteOverrides(style, modeOverrides.palette);
-  applyNeutralOverrides(style, modeKey, isDark, modeOverrides.neutralHue, modeOverrides.neutralChroma);
+  applyNeutralOverrides(
+    style,
+    modeKey,
+    isDark,
+    modeOverrides.neutralHue,
+    modeOverrides.neutralChroma,
+  );
   applySurfaceOverrides(style, isDark, modeOverrides.surfaceBase, modeOverrides.surfaceTintStyle);
 }
 
@@ -211,7 +218,8 @@ function clearAllOverrideStyles(target: HTMLElement) {
 
 export function createThemeStore(config: ThemeStoreConfig = {}) {
   const prefix = config.storageKey ?? "stdui";
-  const target = config.target ?? (typeof document !== "undefined" ? document.documentElement : null);
+  const target =
+    config.target ?? (typeof document !== "undefined" ? document.documentElement : null);
 
   return create<ThemeState>((set, get) => {
     const initialMode = getStoredTheme(prefix);

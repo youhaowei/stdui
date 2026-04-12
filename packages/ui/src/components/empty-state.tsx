@@ -1,28 +1,28 @@
-import type { LucideIcon } from "@stdui/icons"
-import { cn } from "../lib/utils"
-import { Button } from "../primitives/button"
+import type { LucideIcon } from "@stdui/icons";
+import { cn } from "../lib/utils";
+import { Button } from "../primitives/button";
 
 export interface EmptyStateAction {
-  label: string
-  onClick: () => void
-  variant?: "solid" | "outline" | "ghost"
-  color?: "primary" | "secondary" | "danger"
-  icon?: LucideIcon
+  label: string;
+  onClick: () => void;
+  variant?: "solid" | "outline" | "ghost";
+  color?: "primary" | "secondary" | "danger";
+  icon?: LucideIcon;
 }
 
 export interface EmptyStateProps {
   /** Icon to display (Lucide icon component) */
-  icon: LucideIcon
+  icon: LucideIcon;
   /** Main heading text */
-  title: string
+  title: string;
   /** Supporting description text */
-  description?: string
+  description?: string;
   /** Optional action button */
-  action?: EmptyStateAction
+  action?: EmptyStateAction;
   /** Additional CSS classes */
-  className?: string
+  className?: string;
   /** Size variant */
-  size?: "sm" | "md" | "lg"
+  size?: "sm" | "md" | "lg";
 }
 
 const sizeConfig = {
@@ -44,7 +44,7 @@ const sizeConfig = {
     title: "text-xl",
     description: "text-base",
   },
-} as const
+} as const;
 
 /**
  * EmptyState - Standardized empty state component
@@ -80,7 +80,7 @@ export function EmptyState({
   className,
   size = "md",
 }: EmptyStateProps) {
-  const config = sizeConfig[size]
+  const config = sizeConfig[size];
 
   return (
     <div
@@ -92,27 +92,17 @@ export function EmptyState({
       role="status"
       aria-live="polite"
     >
-      <Icon
-        className={cn(config.icon, "mb-4 text-neutral-fg-subtle")}
-        aria-hidden="true"
-      />
+      <Icon className={cn(config.icon, "mb-4 text-neutral-fg-subtle")} aria-hidden="true" />
       <h3 className={cn(config.title, "mb-2 font-medium")}>{title}</h3>
       {description && (
-        <p className={cn(config.description, "mb-4 text-neutral-fg-subtle")}>
-          {description}
-        </p>
+        <p className={cn(config.description, "mb-4 text-neutral-fg-subtle")}>{description}</p>
       )}
       {action && (
-        <Button
-          onClick={action.onClick}
-          variant={action.variant}
-          color={action.color}
-          size="sm"
-        >
+        <Button onClick={action.onClick} variant={action.variant} color={action.color} size="sm">
           {action.icon && <action.icon className="mr-2 h-4 w-4" />}
           {action.label}
         </Button>
       )}
     </div>
-  )
+  );
 }

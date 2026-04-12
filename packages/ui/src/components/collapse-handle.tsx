@@ -3,15 +3,15 @@ import {
   ChevronsLeftIcon,
   ChevronsRightIcon,
   ChevronsUpIcon,
-} from "@stdui/icons"
-import { cn } from "../lib/utils"
+} from "@stdui/icons";
+import { cn } from "../lib/utils";
 
 export interface CollapseHandleProps {
-  direction: "left" | "right" | "up" | "down"
-  isOpen: boolean
-  onClick: () => void
-  className?: string
-  ariaLabel?: string
+  direction: "left" | "right" | "up" | "down";
+  isOpen: boolean;
+  onClick: () => void;
+  className?: string;
+  ariaLabel?: string;
 }
 
 /**
@@ -65,9 +65,9 @@ export function CollapseHandle({
       closedIcon: ChevronsDownIcon,
       size: "h-6 w-12",
     },
-  }[direction]
+  }[direction];
 
-  const Icon = isOpen ? config.openIcon : config.closedIcon
+  const Icon = isOpen ? config.openIcon : config.closedIcon;
 
   return (
     <button
@@ -89,5 +89,5 @@ export function CollapseHandle({
     >
       <Icon className="h-4 w-4" />
     </button>
-  )
+  );
 }

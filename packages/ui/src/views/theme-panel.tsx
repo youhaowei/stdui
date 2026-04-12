@@ -68,31 +68,26 @@ export interface ThemePanelProps {
 }
 
 export function ThemePanel({ isOpen, onClose }: ThemePanelProps) {
-  const {
-    mode,
-    overrides,
-    setMode,
-    setOverrides,
-    resetOverrides,
-    setPreviewMode,
-  } = useTheme();
+  const { mode, overrides, setMode, setOverrides, resetOverrides, setPreviewMode } = useTheme();
 
   // For system mode, which variant tab is active
-  const [activeVariantTab, setActiveVariantTab] = useState<ResolvedMode>(
-    () => {
-      if (mode === "dark") return "dark";
-      if (mode === "light") return "light";
-      return typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light";
-    },
-  );
+  const [activeVariantTab, setActiveVariantTab] = useState<ResolvedMode>(() => {
+    if (mode === "dark") return "dark";
+    if (mode === "light") return "light";
+    return typeof window !== "undefined" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  });
 
   // Preview mode: temporarily show the selected variant when in system mode
-  const handleVariantTab = useCallback((v: ResolvedMode) => {
-    setActiveVariantTab(v);
-    setPreviewMode(v);
-  }, [setPreviewMode]);
+  const handleVariantTab = useCallback(
+    (v: ResolvedMode) => {
+      setActiveVariantTab(v);
+      setPreviewMode(v);
+    },
+    [setPreviewMode],
+  );
 
   // Clear preview mode when panel closes
   useEffect(() => {
@@ -107,9 +102,8 @@ export function ThemePanel({ isOpen, onClose }: ThemePanelProps) {
   const hasAnyOverrides = hasModeOverrides(overrides.light) || hasModeOverrides(overrides.dark);
 
   // Which modes to show controls for
-  const visibleModes: ResolvedMode[] = mode === "system"
-    ? ["light", "dark"]
-    : [mode as ResolvedMode];
+  const visibleModes: ResolvedMode[] =
+    mode === "system" ? ["light", "dark"] : [mode as ResolvedMode];
 
   if (!isOpen) return null;
 
@@ -120,12 +114,11 @@ export function ThemePanel({ isOpen, onClose }: ThemePanelProps) {
     >
       {/* Header */}
       <div className="flex items-center h-10 px-3 gap-2 shrink-0">
-        <h2 className="text-sm font-semibold text-neutral-fg flex-1 select-none">
-          Appearance
-        </h2>
+        <h2 className="text-sm font-semibold text-neutral-fg flex-1 select-none">Appearance</h2>
         {hasAnyOverrides && (
           <Button
-            variant="ghost" size="icon"
+            variant="ghost"
+            size="icon"
             className="h-6 w-6 shrink-0 text-neutral-fg-subtle hover:text-neutral-fg"
             onClick={resetOverrides}
             aria-label="Reset to defaults"
@@ -134,7 +127,8 @@ export function ThemePanel({ isOpen, onClose }: ThemePanelProps) {
           </Button>
         )}
         <Button
-          variant="ghost" size="icon"
+          variant="ghost"
+          size="icon"
           className="h-6 w-6 shrink-0 text-neutral-fg-subtle hover:text-neutral-fg"
           onClick={onClose}
           aria-label="Close theme panel"
@@ -146,7 +140,6 @@ export function ThemePanel({ isOpen, onClose }: ThemePanelProps) {
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto min-h-0 text-sm">
         <div className="p-3 space-y-4">
-
           {/* ── Theme Mode ────────────────────────────── */}
           <div>
             <SectionLabel>Theme</SectionLabel>
@@ -197,14 +190,15 @@ export function ThemePanel({ isOpen, onClose }: ThemePanelProps) {
           )}
 
           {/* ── Single mode controls ──────────────────── */}
-          {mode !== "system" && visibleModes.map((modeKey) => (
-            <ModeControls
-              key={modeKey}
-              modeKey={modeKey}
-              overrides={overrides}
-              setOverrides={setOverrides}
-            />
-          ))}
+          {mode !== "system" &&
+            visibleModes.map((modeKey) => (
+              <ModeControls
+                key={modeKey}
+                modeKey={modeKey}
+                overrides={overrides}
+                setOverrides={setOverrides}
+              />
+            ))}
         </div>
       </div>
     </Surface>
@@ -229,9 +223,10 @@ function ModeControls({
   const defaultSurface = modeKey === "light" ? DEFAULT_SURFACE_LIGHT : DEFAULT_SURFACE_DARK;
   const previewLevels = modeKey === "light" ? PREVIEW_LEVELS_LIGHT : PREVIEW_LEVELS_DARK;
   const surfaceTintStyle = modeOverrides.surfaceTintStyle ?? "solid";
-  const surfaceTintBounds = modeKey === "dark"
-    ? { maxChroma: 0.07, hueStripChroma: 0.06, minLightness: 0.16, maxLightness: 0.42 }
-    : { maxChroma: 0.04, hueStripChroma: 0.03, minLightness: 0.88, maxLightness: 0.96 };
+  const surfaceTintBounds =
+    modeKey === "dark"
+      ? { maxChroma: 0.07, hueStripChroma: 0.06, minLightness: 0.16, maxLightness: 0.42 }
+      : { maxChroma: 0.04, hueStripChroma: 0.03, minLightness: 0.88, maxLightness: 0.96 };
   const surfaceTintPreviewBackground = "var(--shell-bg)";
 
   const neutralHue = modeOverrides.neutralHue ?? 0;
@@ -272,7 +267,7 @@ function ModeControls({
   );
 
   const toggleSection = useCallback((section: string) => {
-    setExpandedSection((prev) => prev === section ? null : section);
+    setExpandedSection((prev) => (prev === section ? null : section));
   }, []);
   const cycleSurfaceTintStyle = useCallback(() => {
     const currentIndex = SURFACE_TINT_STYLE_ORDER.indexOf(surfaceTintStyle);
@@ -359,11 +354,7 @@ function ModeControls({
 // ── Sub-components ───────────────────────────────────────────────────────────
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <label className="text-xs font-medium text-neutral-fg-subtle">
-      {children}
-    </label>
-  );
+  return <label className="text-xs font-medium text-neutral-fg-subtle">{children}</label>;
 }
 
 function CollapsibleSection({
@@ -395,9 +386,7 @@ function CollapsibleSection({
         }`}
       >
         <div className="overflow-hidden">
-          <div className="pt-1 pb-2">
-            {children}
-          </div>
+          <div className="pt-1 pb-2">{children}</div>
         </div>
       </div>
     </div>

@@ -1,19 +1,19 @@
-import * as React from "react"
-import { MoreIcon } from "@stdui/icons"
-import { cn } from "../lib/utils"
-import { Button } from "./button"
+import * as React from "react";
+import { MoreIcon } from "@stdui/icons";
+import { cn } from "../lib/utils";
+import { Button } from "./button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "./dropdown-menu"
+} from "./dropdown-menu";
 
 export interface ItemAction {
-  label: string
-  icon?: React.ComponentType<{ className?: string }>
-  onClick: () => void
-  color?: "danger"
+  label: string;
+  icon?: React.ComponentType<{ className?: string }>;
+  onClick: () => void;
+  color?: "danger";
 }
 
 // ============================================================================
@@ -21,20 +21,15 @@ export interface ItemAction {
 // ============================================================================
 
 interface WrapperPropsParams {
-  isDisabled: boolean
-  useButtonWrapper: boolean
-  onClick?: () => void
-  active: boolean
+  isDisabled: boolean;
+  useButtonWrapper: boolean;
+  onClick?: () => void;
+  active: boolean;
 }
 
-function buildWrapperProps({
-  isDisabled,
-  useButtonWrapper,
-  onClick,
-  active,
-}: WrapperPropsParams) {
+function buildWrapperProps({ isDisabled, useButtonWrapper, onClick, active }: WrapperPropsParams) {
   if (isDisabled) {
-    return { "aria-disabled": true }
+    return { "aria-disabled": true };
   }
   if (useButtonWrapper) {
     return {
@@ -42,7 +37,7 @@ function buildWrapperProps({
       onClick,
       "aria-selected": active,
       role: "option",
-    }
+    };
   }
   if (onClick) {
     return {
@@ -52,13 +47,13 @@ function buildWrapperProps({
       onClick,
       onKeyDown: (e: React.KeyboardEvent) => {
         if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault()
-          onClick()
+          e.preventDefault();
+          onClick();
         }
       },
-    }
+    };
   }
-  return {}
+  return {};
 }
 
 // ============================================================================
@@ -87,8 +82,7 @@ function ActionsMenu({ actions }: { actions: ItemAction[] }) {
               key={index}
               onClick={action.onClick}
               className={cn(
-                action.color === "danger" &&
-                  "text-palette-danger focus:text-palette-danger",
+                action.color === "danger" && "text-palette-danger focus:text-palette-danger",
               )}
             >
               {action.icon && <action.icon className="h-4 w-4" />}
@@ -98,7 +92,7 @@ function ActionsMenu({ actions }: { actions: ItemAction[] }) {
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  )
+  );
 }
 
 // ============================================================================
@@ -106,17 +100,17 @@ function ActionsMenu({ actions }: { actions: ItemAction[] }) {
 // ============================================================================
 
 interface ContentSectionProps {
-  icon?: React.ReactNode
-  title?: string
-  subtitle?: string
-  content?: React.ReactNode
-  badge?: string
-  actions?: ItemAction[]
-  active: boolean
-  isDisabled: boolean
-  isActiveAndEnabled: boolean
-  disabledReason: string | null
-  hasPreview: boolean
+  icon?: React.ReactNode;
+  title?: string;
+  subtitle?: string;
+  content?: React.ReactNode;
+  badge?: string;
+  actions?: ItemAction[];
+  active: boolean;
+  isDisabled: boolean;
+  isActiveAndEnabled: boolean;
+  disabledReason: string | null;
+  hasPreview: boolean;
 }
 
 function ContentSection({
@@ -132,7 +126,7 @@ function ContentSection({
   disabledReason,
   hasPreview,
 }: ContentSectionProps) {
-  const hasActions = actions && actions.length > 0
+  const hasActions = actions && actions.length > 0;
 
   return (
     <div className={cn(hasPreview ? "p-4" : "px-3.5 py-3")}>
@@ -161,11 +155,7 @@ function ContentSection({
             {title}
           </p>
         )}
-        {subtitle && (
-          <span className="shrink-0 text-xs text-neutral-fg-subtle">
-            {subtitle}
-          </span>
-        )}
+        {subtitle && <span className="shrink-0 text-xs text-neutral-fg-subtle">{subtitle}</span>}
         {badge && (
           <span className="shrink-0 rounded-full bg-neutral-bg-dim px-2 py-0.5 text-xs text-neutral-fg-subtle">
             {badge}
@@ -175,26 +165,24 @@ function ContentSection({
         {hasActions && !isDisabled && <ActionsMenu actions={actions} />}
       </div>
       {content && <div className="mt-2">{content}</div>}
-      {disabledReason && (
-        <p className="mt-1 text-xs text-neutral-fg-subtle">{disabledReason}</p>
-      )}
+      {disabledReason && <p className="mt-1 text-xs text-neutral-fg-subtle">{disabledReason}</p>}
     </div>
-  )
+  );
 }
 
 export interface ItemCardProps {
-  icon?: React.ReactNode
-  title?: string
-  subtitle?: string
-  content?: React.ReactNode
-  badge?: string
-  onClick?: () => void
-  active?: boolean
-  className?: string
-  preview?: React.ReactNode
-  previewHeight?: number
-  actions?: ItemAction[]
-  disabled?: boolean | string
+  icon?: React.ReactNode;
+  title?: string;
+  subtitle?: string;
+  content?: React.ReactNode;
+  badge?: string;
+  onClick?: () => void;
+  active?: boolean;
+  className?: string;
+  preview?: React.ReactNode;
+  previewHeight?: number;
+  actions?: ItemAction[];
+  disabled?: boolean | string;
 }
 
 function ItemCard({
@@ -211,20 +199,20 @@ function ItemCard({
   actions,
   disabled,
 }: ItemCardProps) {
-  const hasActions = actions && actions.length > 0
-  const isDisabled = Boolean(disabled)
-  const disabledReason = typeof disabled === "string" ? disabled : null
-  const isClickable = Boolean(onClick) && !isDisabled
-  const isActiveAndEnabled = active && !isDisabled
+  const hasActions = actions && actions.length > 0;
+  const isDisabled = Boolean(disabled);
+  const disabledReason = typeof disabled === "string" ? disabled : null;
+  const isClickable = Boolean(onClick) && !isDisabled;
+  const isActiveAndEnabled = active && !isDisabled;
 
-  const useButtonWrapper = Boolean(onClick) && !hasActions && !isDisabled
-  const Wrapper = useButtonWrapper ? "button" : "div"
+  const useButtonWrapper = Boolean(onClick) && !hasActions && !isDisabled;
+  const Wrapper = useButtonWrapper ? "button" : "div";
   const wrapperProps = buildWrapperProps({
     isDisabled,
     useButtonWrapper,
     onClick,
     active,
-  })
+  });
 
   const contentSectionProps = {
     icon,
@@ -238,7 +226,7 @@ function ItemCard({
     isActiveAndEnabled,
     disabledReason,
     hasPreview: Boolean(preview),
-  }
+  };
 
   if (preview) {
     return (
@@ -249,21 +237,16 @@ function ItemCard({
           isDisabled && "cursor-not-allowed border-neutral-border/40 opacity-50",
           isClickable && "cursor-pointer hover:bg-neutral-bg-dim/50",
           isActiveAndEnabled && "border-palette-primary ring-2 ring-palette-primary",
-          !isDisabled &&
-            !active &&
-            "border-neutral-border/60 hover:border-neutral-border",
+          !isDisabled && !active && "border-neutral-border/60 hover:border-neutral-border",
           className,
         )}
       >
-        <div
-          className="w-full bg-neutral-bg-dim/30"
-          style={{ height: `${previewHeight}px` }}
-        >
+        <div className="w-full bg-neutral-bg-dim/30" style={{ height: `${previewHeight}px` }}>
           {preview}
         </div>
         <ContentSection {...contentSectionProps} />
       </Wrapper>
-    )
+    );
   }
 
   return (
@@ -282,7 +265,7 @@ function ItemCard({
     >
       <ContentSection {...contentSectionProps} />
     </Wrapper>
-  )
+  );
 }
 
-export { ItemCard }
+export { ItemCard };

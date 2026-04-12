@@ -16,10 +16,7 @@ export {
 } from "./primitives/button";
 export type { ButtonProps as ButtonPrimitiveProps } from "./primitives/button";
 
-export {
-  Badge,
-  badgeVariants,
-} from "./primitives/badge";
+export { Badge, badgeVariants } from "./primitives/badge";
 export type { BadgeProps } from "./primitives/badge";
 
 export {

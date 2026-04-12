@@ -1,24 +1,24 @@
-import * as React from "react"
-import { cn } from "../lib/utils"
-import { Skeleton } from "../primitives/skeleton"
-import { Surface, type SurfaceProps } from "../primitives/surface"
-import { ButtonGroup, type ItemAction } from "./button-group"
+import * as React from "react";
+import { cn } from "../lib/utils";
+import { Skeleton } from "../primitives/skeleton";
+import { Surface, type SurfaceProps } from "../primitives/surface";
+import { ButtonGroup, type ItemAction } from "./button-group";
 
 export interface SectionProps extends Omit<SurfaceProps, "children"> {
   /** Section title */
-  title: string
+  title: string;
   /** Optional description or metadata */
-  description?: string
+  description?: string;
   /** Optional actions shown on the right of header */
-  actions?: ItemAction[]
+  actions?: ItemAction[];
   /** Optional custom element on right side of header (alternative to actions) */
-  headerRight?: React.ReactNode
+  headerRight?: React.ReactNode;
   /** Section content */
-  children: React.ReactNode
+  children: React.ReactNode;
   /** Show loading skeleton instead of content */
-  isLoading?: boolean
+  isLoading?: boolean;
   /** Height of loading skeleton (default: 200px) */
-  loadingHeight?: number
+  loadingHeight?: number;
 }
 
 /**
@@ -56,33 +56,23 @@ export function Section({
   ...surfaceProps
 }: SectionProps) {
   return (
-    <Surface
-      elevation={elevation}
-      className={cn("space-y-3 p-6", className)}
-      {...surfaceProps}
-    >
+    <Surface elevation={elevation} className={cn("space-y-3 p-6", className)} {...surfaceProps}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-semibold text-neutral-fg">{title}</p>
-          {description && (
-            <p className="text-xs text-neutral-fg-subtle">{description}</p>
-          )}
+          {description && <p className="text-xs text-neutral-fg-subtle">{description}</p>}
         </div>
         {/* Right side: headerRight takes precedence, falls back to actions */}
-        {headerRight ??
-          (actions && actions.length > 0 && <ButtonGroup actions={actions} />)}
+        {headerRight ?? (actions && actions.length > 0 && <ButtonGroup actions={actions} />)}
       </div>
 
       {/* Content or Loading Skeleton */}
       {isLoading ? (
-        <Skeleton
-          className="w-full rounded-xl"
-          style={{ height: loadingHeight }}
-        />
+        <Skeleton className="w-full rounded-xl" style={{ height: loadingHeight }} />
       ) : (
         children
       )}
     </Surface>
-  )
+  );
 }

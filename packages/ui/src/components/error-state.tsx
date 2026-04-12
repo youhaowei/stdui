@@ -1,25 +1,25 @@
-import { AlertCircleIcon, RefreshIcon } from "@stdui/icons"
-import { cn } from "../lib/utils"
-import { Button } from "../primitives/button"
+import { AlertCircleIcon, RefreshIcon } from "@stdui/icons";
+import { cn } from "../lib/utils";
+import { Button } from "../primitives/button";
 
 export interface ErrorStateAction {
   /** Button label */
-  label: string
+  label: string;
   /** Click handler */
-  onClick: () => void
+  onClick: () => void;
 }
 
 export interface ErrorStateProps {
   /** Main heading text */
-  title: string
+  title: string;
   /** Supporting description text */
-  description?: string
+  description?: string;
   /** Optional retry action button */
-  retryAction?: ErrorStateAction
+  retryAction?: ErrorStateAction;
   /** Additional CSS classes */
-  className?: string
+  className?: string;
   /** Size variant */
-  size?: "sm" | "md" | "lg"
+  size?: "sm" | "md" | "lg";
 }
 
 const sizeConfig = {
@@ -41,7 +41,7 @@ const sizeConfig = {
     title: "text-xl",
     description: "text-base",
   },
-} as const
+} as const;
 
 /**
  * ErrorState - Standardized error state component
@@ -73,7 +73,7 @@ export function ErrorState({
   className,
   size = "md",
 }: ErrorStateProps) {
-  const config = sizeConfig[size]
+  const config = sizeConfig[size];
 
   return (
     <div
@@ -85,15 +85,10 @@ export function ErrorState({
       role="alert"
       aria-live="assertive"
     >
-      <AlertCircleIcon
-        className={cn(config.icon, "mb-4 text-palette-danger")}
-        aria-hidden="true"
-      />
+      <AlertCircleIcon className={cn(config.icon, "mb-4 text-palette-danger")} aria-hidden="true" />
       <h3 className={cn(config.title, "mb-2 font-medium")}>{title}</h3>
       {description && (
-        <p className={cn(config.description, "mb-4 text-neutral-fg-subtle")}>
-          {description}
-        </p>
+        <p className={cn(config.description, "mb-4 text-neutral-fg-subtle")}>{description}</p>
       )}
       {retryAction && (
         <Button onClick={retryAction.onClick} variant="outline" size="sm">
@@ -102,5 +97,5 @@ export function ErrorState({
         </Button>
       )}
     </div>
-  )
+  );
 }

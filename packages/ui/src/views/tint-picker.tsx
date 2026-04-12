@@ -29,7 +29,11 @@ export function TintPicker({ value, onChange, showHexValue = true }: TintPickerP
   const previewBackground = "var(--shell-bg)";
 
   let lch = { l: 0.8, c: TINT_CHROMA, h: 0 };
-  try { lch = parseOklch(value); } catch { /* keep default */ }
+  try {
+    lch = parseOklch(value);
+  } catch {
+    /* keep default */
+  }
 
   const snapshotRef = useRef<string | null>(null);
   const chromaStrength = Math.max(0, Math.min(1, lch.c / 0.08));
@@ -45,13 +49,16 @@ export function TintPicker({ value, onChange, showHexValue = true }: TintPickerP
     if (snapshotRef.current != null) onChange(snapshotRef.current);
   }, [onChange]);
 
-  const handleOpenChange = useCallback((open: boolean) => {
-    if (open) {
-      snapshotRef.current = value;
-    } else {
-      addRecentColor(value);
-    }
-  }, [value]);
+  const handleOpenChange = useCallback(
+    (open: boolean) => {
+      if (open) {
+        snapshotRef.current = value;
+      } else {
+        addRecentColor(value);
+      }
+    },
+    [value],
+  );
 
   return (
     <div className="flex items-center gap-2">
@@ -66,11 +73,7 @@ export function TintPicker({ value, onChange, showHexValue = true }: TintPickerP
             />
           }
         />
-        <PopoverContent
-          side="left"
-          align="start"
-          className="w-auto p-3 space-y-3"
-        >
+        <PopoverContent side="left" align="start" className="w-auto p-3 space-y-3">
           <HueWheel
             hue={lch.h}
             previewBackground={previewBackground}
@@ -193,7 +196,7 @@ function HueWheel({
   );
 
   // Handle position on the ring
-  const handleAngle = ((hue / 360) * Math.PI * 2) - Math.PI / 2;
+  const handleAngle = (hue / 360) * Math.PI * 2 - Math.PI / 2;
   const handleDist = INNER_RADIUS + RING_WIDTH / 2;
   const handleX = WHEEL_RADIUS + Math.cos(handleAngle) * handleDist;
   const handleY = WHEEL_RADIUS + Math.sin(handleAngle) * handleDist;
@@ -204,7 +207,9 @@ function HueWheel({
       className="relative cursor-crosshair"
       style={{ width: WHEEL_SIZE, height: WHEEL_SIZE }}
       onPointerDown={startDrag}
-      onPointerMove={(e) => { if (e.buttons > 0) handlePointer(e); }}
+      onPointerMove={(e) => {
+        if (e.buttons > 0) handlePointer(e);
+      }}
     >
       <canvas
         ref={canvasRef as React.RefObject<HTMLCanvasElement>}
@@ -282,7 +287,9 @@ function BrightnessSlider({
         background: `linear-gradient(to right, ${darkHex}, ${midHex}, ${lightHex})`,
       }}
       onPointerDown={startDrag}
-      onPointerMove={(e) => { if (e.buttons > 0) handlePointer(e); }}
+      onPointerMove={(e) => {
+        if (e.buttons > 0) handlePointer(e);
+      }}
     >
       <div
         className="absolute top-0 pointer-events-none"

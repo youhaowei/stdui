@@ -1,15 +1,15 @@
-import { cn } from "../lib/utils"
-import { Spinner } from "./spinner"
+import { cn } from "../lib/utils";
+import { Spinner } from "./spinner";
 
 export interface LoadingStateProps {
   /** Main heading text */
-  title: string
+  title: string;
   /** Supporting description text */
-  description?: string
+  description?: string;
   /** Additional CSS classes */
-  className?: string
+  className?: string;
   /** Size variant */
-  size?: "sm" | "md" | "lg"
+  size?: "sm" | "md" | "lg";
 }
 
 const sizeConfig = {
@@ -31,7 +31,7 @@ const sizeConfig = {
     title: "text-xl",
     description: "text-base",
   },
-} as const
+} as const;
 
 /**
  * LoadingState - Standardized loading state component
@@ -49,13 +49,8 @@ const sizeConfig = {
  * />
  * ```
  */
-export function LoadingState({
-  title,
-  description,
-  className,
-  size = "md",
-}: LoadingStateProps) {
-  const config = sizeConfig[size]
+export function LoadingState({ title, description, className, size = "md" }: LoadingStateProps) {
+  const config = sizeConfig[size];
 
   return (
     <div
@@ -68,16 +63,11 @@ export function LoadingState({
       aria-live="polite"
       aria-busy="true"
     >
-      <Spinner
-        className={cn(config.icon, "mb-4 text-neutral-fg-subtle")}
-        aria-hidden
-      />
+      <Spinner className={cn(config.icon, "mb-4 text-neutral-fg-subtle")} aria-hidden />
       <h3 className={cn(config.title, "mb-2 font-medium")}>{title}</h3>
       {description && (
-        <p className={cn(config.description, "mb-4 text-neutral-fg-subtle")}>
-          {description}
-        </p>
+        <p className={cn(config.description, "mb-4 text-neutral-fg-subtle")}>{description}</p>
       )}
     </div>
-  )
+  );
 }

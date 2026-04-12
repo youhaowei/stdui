@@ -1,17 +1,17 @@
-import type { ReactNode } from "react"
-import { cn } from "../lib/utils"
+import type { ReactNode } from "react";
+import { cn } from "../lib/utils";
 
 export interface ContainerProps {
   /** Child elements to contain */
-  children: ReactNode
+  children: ReactNode;
   /** Maximum width constraint */
-  maxWidth?: "sm" | "md" | "lg" | "xl" | "2xl" | "full"
+  maxWidth?: "sm" | "md" | "lg" | "xl" | "2xl" | "full";
   /** Horizontal padding */
-  padding?: "none" | "sm" | "md" | "lg"
+  padding?: "none" | "sm" | "md" | "lg";
   /** Additional CSS classes */
-  className?: string
+  className?: string;
   /** HTML element to render as */
-  as?: "div" | "section" | "article" | "main" | "aside"
+  as?: "div" | "section" | "article" | "main" | "aside";
 }
 
 const maxWidthMap = {
@@ -21,14 +21,14 @@ const maxWidthMap = {
   xl: "max-w-[1400px]",
   "2xl": "max-w-[1600px]",
   full: "max-w-full",
-} as const
+} as const;
 
 const paddingMap = {
   none: "px-0",
   sm: "px-4",
   md: "px-6",
   lg: "px-8",
-} as const
+} as const;
 
 /**
  * Container - Max-width content container with consistent padding
@@ -56,14 +56,9 @@ export function Container({
 }: ContainerProps) {
   return (
     <Component
-      className={cn(
-        "mx-auto w-full",
-        maxWidthMap[maxWidth],
-        paddingMap[padding],
-        className,
-      )}
+      className={cn("mx-auto w-full", maxWidthMap[maxWidth], paddingMap[padding], className)}
     >
       {children}
     </Component>
-  )
+  );
 }

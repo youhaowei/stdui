@@ -1,41 +1,41 @@
-import { useState, useEffect, useCallback, createContext, useContext } from "react"
-import type { ReactNode } from "react"
-import { cn } from "../lib/utils"
+import { useState, useEffect, useCallback, createContext, useContext } from "react";
+import type { ReactNode } from "react";
+import { cn } from "../lib/utils";
 
 // ---------- Context ----------
 
 interface SidebarContextValue {
-  collapsed: boolean
-  toggle: () => void
+  collapsed: boolean;
+  toggle: () => void;
 }
 
 const SidebarContext = createContext<SidebarContextValue>({
   collapsed: false,
   toggle: () => {},
-})
+});
 
 export function useSidebar() {
-  return useContext(SidebarContext)
+  return useContext(SidebarContext);
 }
 
 // ---------- Sidebar ----------
 
 export interface SidebarProps {
   /** Slot for logo/org switcher area at the top */
-  header?: ReactNode
+  header?: ReactNode;
   /** Slot for settings/user area at the bottom */
-  footer?: ReactNode
+  footer?: ReactNode;
   /** Nav items (SidebarItem components) */
-  children: ReactNode
+  children: ReactNode;
   /** localStorage key for collapse persistence */
-  storageKey?: string
+  storageKey?: string;
   /** Keyboard shortcut to toggle (default: "\\") — combined with Cmd/Ctrl */
-  shortcutKey?: string
+  shortcutKey?: string;
   /** Expanded width in px */
-  expandedWidth?: number
+  expandedWidth?: number;
   /** Collapsed width in px */
-  collapsedWidth?: number
-  className?: string
+  collapsedWidth?: number;
+  className?: string;
 }
 
 export function Sidebar({
@@ -48,33 +48,35 @@ export function Sidebar({
   collapsedWidth = 68,
   className,
 }: SidebarProps) {
-  const [collapsed, setCollapsed] = useState(false)
+  const [collapsed, setCollapsed] = useState(false);
 
   // Sync from localStorage after mount to avoid SSR hydration mismatch
   useEffect(() => {
     try {
-      if (localStorage.getItem(storageKey) === "true") setCollapsed(true)
+      if (localStorage.getItem(storageKey) === "true") setCollapsed(true);
     } catch {}
-  }, [storageKey])
+  }, [storageKey]);
 
   const toggle = useCallback(() => {
     setCollapsed((prev) => {
-      const next = !prev
-      try { localStorage.setItem(storageKey, String(next)) } catch {}
-      return next
-    })
-  }, [storageKey])
+      const next = !prev;
+      try {
+        localStorage.setItem(storageKey, String(next));
+      } catch {}
+      return next;
+    });
+  }, [storageKey]);
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key === shortcutKey) {
-        e.preventDefault()
-        toggle()
+        e.preventDefault();
+        toggle();
       }
     }
-    window.addEventListener("keydown", handleKeyDown)
-    return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [toggle, shortcutKey])
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [toggle, shortcutKey]);
 
   return (
     <SidebarContext value={{ collapsed, toggle }}>
@@ -107,5 +109,5 @@ export function Sidebar({
         )}
       </nav>
     </SidebarContext>
-  )
+  );
 }

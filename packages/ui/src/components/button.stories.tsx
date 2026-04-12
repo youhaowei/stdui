@@ -15,14 +15,7 @@ const meta = {
     },
     color: {
       control: "select",
-      options: [
-        "primary",
-        "secondary",
-        "success",
-        "danger",
-        "warning",
-        "info",
-      ],
+      options: ["primary", "secondary", "success", "danger", "warning", "info"],
     },
     size: {
       control: "select",

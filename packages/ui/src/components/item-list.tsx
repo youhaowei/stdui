@@ -1,110 +1,110 @@
-import * as React from "react"
-import type { LucideIcon } from "@stdui/icons"
-import { cn } from "../lib/utils"
-import { ItemCard, type ItemAction } from "../primitives/item-card"
-import { ScrollArea, ScrollBar } from "../primitives/scroll-area"
+import * as React from "react";
+import type { LucideIcon } from "@stdui/icons";
+import { cn } from "../lib/utils";
+import { ItemCard, type ItemAction } from "../primitives/item-card";
+import { ScrollArea, ScrollBar } from "../primitives/scroll-area";
 
 export interface ListItem {
   /**
    * Unique identifier for the item
    */
-  id: string
+  id: string;
   /**
    * Primary title text
    */
-  title: string
+  title: string;
   /**
    * Optional subtitle or metadata text (single line, truncated)
    */
-  subtitle?: string
+  subtitle?: string;
   /**
    * Optional rich content section below subtitle.
    * Can contain any React content for flexible formatting.
    */
-  content?: React.ReactNode
+  content?: React.ReactNode;
   /**
    * Optional badge text to display
    */
-  badge?: string
+  badge?: string;
   /**
    * Icon to display - can be a Lucide icon or custom React node
    */
-  icon?: LucideIcon | React.ReactNode
+  icon?: LucideIcon | React.ReactNode;
   /**
    * Whether this item is currently selected/active
    */
-  active?: boolean
+  active?: boolean;
   /**
    * Optional actions for this item (shown on hover)
    */
-  actions?: ItemAction[]
+  actions?: ItemAction[];
   /**
    * Optional preview element to display above the card content
    */
-  preview?: React.ReactNode
+  preview?: React.ReactNode;
   /**
    * Height of the preview section in pixels
    */
-  previewHeight?: number
+  previewHeight?: number;
   /**
    * Whether the item is disabled. When a string is provided,
    * it's used as the reason/explanation shown to the user.
    */
-  disabled?: boolean | string
+  disabled?: boolean | string;
 }
 
 export interface ItemListProps<T extends ListItem = ListItem> {
   /**
    * Array of items to display
    */
-  items: T[]
+  items: T[];
   /**
    * Callback when an item is selected.
    * If not provided, items will not be clickable (no pointer cursor).
    */
-  onSelect?: (id: string) => void
+  onSelect?: (id: string) => void;
   /**
    * Layout orientation
    * @default "vertical"
    */
-  orientation?: "vertical" | "horizontal" | "grid"
+  orientation?: "vertical" | "horizontal" | "grid";
   /**
    * Maximum size constraint (height for vertical, width for horizontal)
    * Can be a number (pixels) or CSS string value
    */
-  maxSize?: number | string
+  maxSize?: number | string;
   /**
    * Gap between items in pixels
    * @default 8
    */
-  gap?: number
+  gap?: number;
   /**
    * Fixed item width for horizontal layout (pixels)
    * @default 220
    */
-  itemWidth?: number
+  itemWidth?: number;
   /**
    * Number of columns for grid orientation.
    * When not specified, uses responsive defaults (1 on mobile, 2 on md, 3 on lg).
    */
-  gridColumns?: number
+  gridColumns?: number;
   /**
    * Additional CSS classes for the container
    */
-  className?: string
+  className?: string;
   /**
    * Message to display when items array is empty
    */
-  emptyMessage?: string
+  emptyMessage?: string;
   /**
    * Icon to display in empty state
    */
-  emptyIcon?: React.ReactNode
+  emptyIcon?: React.ReactNode;
   /**
    * Custom render function for items.
    * When provided, replaces the default ItemCard rendering.
    */
-  renderItem?: (item: T, onClick: () => void) => React.ReactNode
+  renderItem?: (item: T, onClick: () => void) => React.ReactNode;
 }
 
 /**
@@ -141,44 +141,37 @@ export function ItemList<T extends ListItem>({
   // Show empty state when no items
   if (items.length === 0) {
     return (
-      <div
-        className={cn(
-          "flex flex-col items-center justify-center p-8 text-center",
-          className,
-        )}
-      >
-        {emptyIcon && (
-          <div className="mb-3 text-neutral-fg-subtle">{emptyIcon}</div>
-        )}
+      <div className={cn("flex flex-col items-center justify-center p-8 text-center", className)}>
+        {emptyIcon && <div className="mb-3 text-neutral-fg-subtle">{emptyIcon}</div>}
         <p className="text-sm text-neutral-fg-subtle">{emptyMessage}</p>
       </div>
-    )
+    );
   }
 
   // Convert maxSize to CSS value
-  const maxSizeValue = typeof maxSize === "number" ? `${maxSize}px` : maxSize
+  const maxSizeValue = typeof maxSize === "number" ? `${maxSize}px` : maxSize;
 
   // Render icon - handles both LucideIcon components and React nodes
   const renderIcon = (icon: ListItem["icon"]) => {
-    if (!icon) return null
+    if (!icon) return null;
 
     // If it's a component (LucideIcon), render it
     if (typeof icon === "function") {
-      const Icon = icon as LucideIcon
-      return <Icon className="h-4 w-4" />
+      const Icon = icon as LucideIcon;
+      return <Icon className="h-4 w-4" />;
     }
 
     // Otherwise it's already a React node
-    return icon
-  }
+    return icon;
+  };
 
   // Render a single item - uses custom renderItem if provided, otherwise default ItemCard
   const renderListItem = (item: T) => {
     // Only create onClick handler if onSelect is provided
-    const onClick = onSelect ? () => onSelect(item.id) : undefined
+    const onClick = onSelect ? () => onSelect(item.id) : undefined;
 
     if (renderItem) {
-      return renderItem(item, onClick || (() => {}))
+      return renderItem(item, onClick || (() => {}));
     }
 
     return (
@@ -195,20 +188,18 @@ export function ItemList<T extends ListItem>({
         disabled={item.disabled}
         onClick={onClick}
       />
-    )
-  }
+    );
+  };
 
   const itemElements = items.map((item) => (
     <div
       key={item.id}
       className={cn(orientation === "horizontal" && "shrink-0")}
-      style={
-        orientation === "horizontal" ? { width: `${itemWidth}px` } : undefined
-      }
+      style={orientation === "horizontal" ? { width: `${itemWidth}px` } : undefined}
     >
       {renderListItem(item)}
     </div>
-  ))
+  ));
 
   // Vertical orientation
   if (orientation === "vertical") {
@@ -221,7 +212,7 @@ export function ItemList<T extends ListItem>({
           {itemElements}
         </div>
       </ScrollArea>
-    )
+    );
   }
 
   // Grid orientation
@@ -231,7 +222,7 @@ export function ItemList<T extends ListItem>({
           gap: `${gap}px`,
           gridTemplateColumns: `repeat(${gridColumns}, 1fr)`,
         }
-      : { gap: `${gap}px` }
+      : { gap: `${gap}px` };
 
     return (
       <div
@@ -246,7 +237,7 @@ export function ItemList<T extends ListItem>({
           <div key={item.id}>{renderListItem(item)}</div>
         ))}
       </div>
-    )
+    );
   }
 
   // Horizontal orientation
@@ -260,5 +251,5 @@ export function ItemList<T extends ListItem>({
       </div>
       <ScrollBar orientation="horizontal" />
     </ScrollArea>
-  )
+  );
 }

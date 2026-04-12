@@ -27,7 +27,9 @@ export const Default: Story = {
         <p>Card content with some example text.</p>
       </CardContent>
       <CardFooter>
-        <Button variant="soft" color="primary">Action</Button>
+        <Button variant="soft" color="primary">
+          Action
+        </Button>
       </CardFooter>
     </Card>
   ),
@@ -97,8 +99,12 @@ export const WithFooter: Story = {
         <p>Choose a framework to get started.</p>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button variant="outline" color="secondary">Cancel</Button>
-        <Button variant="soft" color="primary">Deploy</Button>
+        <Button variant="outline" color="secondary">
+          Cancel
+        </Button>
+        <Button variant="soft" color="primary">
+          Deploy
+        </Button>
       </CardFooter>
     </Card>
   ),

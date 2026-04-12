@@ -21,9 +21,7 @@ export const Default: Story = {
     <Alert>
       <InfoIcon className="h-4 w-4" />
       <AlertTitle>Information</AlertTitle>
-      <AlertDescription>
-        This is a default alert with useful information.
-      </AlertDescription>
+      <AlertDescription>This is a default alert with useful information.</AlertDescription>
     </Alert>
   ),
 };
@@ -33,9 +31,7 @@ export const Info: Story = {
     <Alert color="info">
       <InfoIcon className="h-4 w-4" />
       <AlertTitle>Info</AlertTitle>
-      <AlertDescription>
-        This action has been logged for review.
-      </AlertDescription>
+      <AlertDescription>This action has been logged for review.</AlertDescription>
     </Alert>
   ),
 };
@@ -45,9 +41,7 @@ export const Success: Story = {
     <Alert color="success">
       <CheckCircleIcon className="h-4 w-4" />
       <AlertTitle>Success</AlertTitle>
-      <AlertDescription>
-        Your changes have been saved successfully.
-      </AlertDescription>
+      <AlertDescription>Your changes have been saved successfully.</AlertDescription>
     </Alert>
   ),
 };
@@ -57,9 +51,7 @@ export const Warning: Story = {
     <Alert color="warning">
       <AlertCircleIcon className="h-4 w-4" />
       <AlertTitle>Warning</AlertTitle>
-      <AlertDescription>
-        This action may have unintended consequences.
-      </AlertDescription>
+      <AlertDescription>This action may have unintended consequences.</AlertDescription>
     </Alert>
   ),
 };
@@ -69,9 +61,7 @@ export const Danger: Story = {
     <Alert color="danger">
       <AlertCircleIcon className="h-4 w-4" />
       <AlertTitle>Error</AlertTitle>
-      <AlertDescription>
-        Something went wrong. Please try again later.
-      </AlertDescription>
+      <AlertDescription>Something went wrong. Please try again later.</AlertDescription>
     </Alert>
   ),
 };
@@ -82,37 +72,27 @@ export const AllColors: Story = {
       <Alert>
         <InfoIcon className="h-4 w-4" />
         <AlertTitle>Default</AlertTitle>
-        <AlertDescription>
-          A neutral informational message.
-        </AlertDescription>
+        <AlertDescription>A neutral informational message.</AlertDescription>
       </Alert>
       <Alert color="info">
         <InfoIcon className="h-4 w-4" />
         <AlertTitle>Info</AlertTitle>
-        <AlertDescription>
-          Additional context for the current view.
-        </AlertDescription>
+        <AlertDescription>Additional context for the current view.</AlertDescription>
       </Alert>
       <Alert color="success">
         <CheckCircleIcon className="h-4 w-4" />
         <AlertTitle>Success</AlertTitle>
-        <AlertDescription>
-          Operation completed successfully.
-        </AlertDescription>
+        <AlertDescription>Operation completed successfully.</AlertDescription>
       </Alert>
       <Alert color="warning">
         <AlertCircleIcon className="h-4 w-4" />
         <AlertTitle>Warning</AlertTitle>
-        <AlertDescription>
-          Proceed with caution.
-        </AlertDescription>
+        <AlertDescription>Proceed with caution.</AlertDescription>
       </Alert>
       <Alert color="danger">
         <AlertCircleIcon className="h-4 w-4" />
         <AlertTitle>Danger</AlertTitle>
-        <AlertDescription>
-          An error occurred that needs attention.
-        </AlertDescription>
+        <AlertDescription>An error occurred that needs attention.</AlertDescription>
       </Alert>
     </div>
   ),
@@ -131,9 +111,7 @@ export const WithoutIcon: Story = {
   render: () => (
     <Alert>
       <AlertTitle>No icon</AlertTitle>
-      <AlertDescription>
-        This alert has no icon, just text content.
-      </AlertDescription>
+      <AlertDescription>This alert has no icon, just text content.</AlertDescription>
     </Alert>
   ),
 };

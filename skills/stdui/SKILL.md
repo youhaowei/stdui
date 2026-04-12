@@ -41,13 +41,13 @@ stdui is **refined and professional** — not playful, not brutalist. The aesthe
 
 System fonts by default. Five scales:
 
-| Scale   | Size | Weight | Leading | Use |
-|---------|------|--------|---------|-----|
-| Display | 24px | 700    | 1.2     | Page titles |
-| Heading | 16px | 600    | 1.3     | Section headers |
-| Body    | 14px | 400    | 1.5     | Default content |
+| Scale   | Size | Weight | Leading | Use                   |
+| ------- | ---- | ------ | ------- | --------------------- |
+| Display | 24px | 700    | 1.2     | Page titles           |
+| Heading | 16px | 600    | 1.3     | Section headers       |
+| Body    | 14px | 400    | 1.5     | Default content       |
 | Small   | 12px | 400    | 1.4     | Secondary text, hints |
-| Caption | 10px | 500    | 1.3     | Labels, micro text |
+| Caption | 10px | 500    | 1.3     | Labels, micro text    |
 
 Code: 12px, SF Mono / Fira Code / ui-monospace.
 
@@ -89,14 +89,19 @@ Use `class-variance-authority` for all variant-based components:
 const buttonVariants = cva("base-classes", {
   variants: {
     variant: { solid: "...", soft: "...", outline: "...", ghost: "..." },
-    color: { primary: "...", secondary: "...", success: "...", danger: "...", warning: "...", info: "..." },
-    size: { xs: "...", sm: "...", default: "...", lg: "...", icon: "..." }
+    color: {
+      primary: "...",
+      secondary: "...",
+      success: "...",
+      danger: "...",
+      warning: "...",
+      info: "...",
+    },
+    size: { xs: "...", sm: "...", default: "...", lg: "...", icon: "..." },
   },
-  compoundVariants: [
-    { variant: "solid", color: "primary", className: "..." }
-  ],
-  defaultVariants: { variant: "soft", color: "primary", size: "default" }
-})
+  compoundVariants: [{ variant: "solid", color: "primary", className: "..." }],
+  defaultVariants: { variant: "soft", color: "primary", size: "default" },
+});
 ```
 
 ### Pattern: Composition
@@ -104,10 +109,18 @@ const buttonVariants = cva("base-classes", {
 Sub-components as separate exports, not nested:
 
 ```typescript
-export function Card({ className, ...props }) { /* wrapper */ }
-export function CardHeader({ className, ...props }) { /* header slot */ }
-export function CardTitle({ className, ...props }) { /* title slot */ }
-export function CardContent({ className, ...props }) { /* content slot */ }
+export function Card({ className, ...props }) {
+  /* wrapper */
+}
+export function CardHeader({ className, ...props }) {
+  /* header slot */
+}
+export function CardTitle({ className, ...props }) {
+  /* title slot */
+}
+export function CardContent({ className, ...props }) {
+  /* content slot */
+}
 ```
 
 ### Pattern: Polymorphism
@@ -115,7 +128,9 @@ export function CardContent({ className, ...props }) { /* content slot */ }
 Use `asChild` prop (Radix Slot) for element polymorphism:
 
 ```tsx
-<Button asChild><a href="/link">Link styled as button</a></Button>
+<Button asChild>
+  <a href="/link">Link styled as button</a>
+</Button>
 ```
 
 ### Prop Conventions
@@ -146,6 +161,7 @@ Before creating any new stdui component:
 **Palette colors:** primary, secondary, success, danger, warning, info (each has `-fg` variant)
 
 **Neutral scale (light L → dark L):**
+
 - `fg`: 0.145 → 0.985 | `fg-subtle`: 0.556 → 0.708
 - `bg`: 1.0 → 0.145 | `bg-subtle` through `bg-strongest`: graduated steps
 - `border`: 0.922 → white/10% | `ring`: 0.708 → 0.556

@@ -7,9 +7,7 @@
 // -- Parse / Format --------------------------------------------------------
 
 export function parseOklch(str: string): { l: number; c: number; h: number; alpha?: number } {
-  const m = str.match(
-    /oklch\(\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)(?:\s*\/\s*([\d.]+%?))?\s*\)/,
-  );
+  const m = str.match(/oklch\(\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)(?:\s*\/\s*([\d.]+%?))?\s*\)/);
   if (!m) throw new Error(`Invalid oklch string: ${str}`);
   let alpha: number | undefined;
   if (m[4]) {
@@ -95,12 +93,25 @@ function linearToSrgb(c: number) {
 
 function hexToRgb(hex: string): [number, number, number] {
   const h = hex.replace("#", "");
-  const full = h.length === 3 ? h.split("").map((c) => c + c).join("") : h;
-  return [parseInt(full.slice(0, 2), 16), parseInt(full.slice(2, 4), 16), parseInt(full.slice(4, 6), 16)];
+  const full =
+    h.length === 3
+      ? h
+          .split("")
+          .map((c) => c + c)
+          .join("")
+      : h;
+  return [
+    parseInt(full.slice(0, 2), 16),
+    parseInt(full.slice(2, 4), 16),
+    parseInt(full.slice(4, 6), 16),
+  ];
 }
 
 function rgbToHex(r: number, g: number, b: number) {
-  const toHex = (v: number) => Math.round(v * 255).toString(16).padStart(2, "0");
+  const toHex = (v: number) =>
+    Math.round(v * 255)
+      .toString(16)
+      .padStart(2, "0");
   return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 

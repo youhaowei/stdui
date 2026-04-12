@@ -1,22 +1,22 @@
-import { cn } from "../lib/utils"
-import { ButtonGroup as PrimitiveButtonGroup } from "../primitives/button-group"
+import { cn } from "../lib/utils";
+import { ButtonGroup as PrimitiveButtonGroup } from "../primitives/button-group";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../primitives/dropdown-menu"
-import { Button, type ItemAction } from "./button"
+} from "../primitives/dropdown-menu";
+import { Button, type ItemAction } from "./button";
 
-export type { ItemAction }
+export type { ItemAction };
 
 export interface ButtonGroupProps {
-  actions: ItemAction[]
-  className?: string
+  actions: ItemAction[];
+  className?: string;
   /**
    * Icon-only mode applied to all top-level buttons
    */
-  iconOnly?: boolean
+  iconOnly?: boolean;
 }
 
 /**
@@ -24,41 +24,33 @@ export interface ButtonGroupProps {
  * Single actions are returned as-is, while grouped actions are returned as arrays.
  */
 function groupActions(actions: ItemAction[]): (ItemAction | ItemAction[])[] {
-  const result: (ItemAction | ItemAction[])[] = []
-  let currentGroup: ItemAction[] = []
-  let currentGroupId: string | undefined
+  const result: (ItemAction | ItemAction[])[] = [];
+  let currentGroup: ItemAction[] = [];
+  let currentGroupId: string | undefined;
 
   for (const action of actions) {
     if (action.group && action.group === currentGroupId) {
-      currentGroup.push(action)
+      currentGroup.push(action);
     } else {
       if (currentGroup.length > 0) {
-        result.push(
-          currentGroup.length === 1 ? currentGroup[0]! : currentGroup,
-        )
+        result.push(currentGroup.length === 1 ? currentGroup[0]! : currentGroup);
       }
-      currentGroup = [action]
-      currentGroupId = action.group
+      currentGroup = [action];
+      currentGroupId = action.group;
     }
   }
 
   if (currentGroup.length > 0) {
-    result.push(currentGroup.length === 1 ? currentGroup[0]! : currentGroup)
+    result.push(currentGroup.length === 1 ? currentGroup[0]! : currentGroup);
   }
 
-  return result
+  return result;
 }
 
 /**
  * Render a dropdown menu action with nested items.
  */
-function DropdownAction({
-  action,
-  iconOnly,
-}: {
-  action: ItemAction
-  iconOnly: boolean
-}) {
+function DropdownAction({ action, iconOnly }: { action: ItemAction; iconOnly: boolean }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -83,7 +75,7 @@ function DropdownAction({
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }
 
 /**
@@ -102,27 +94,19 @@ function DropdownAction({
  * />
  * ```
  */
-export function ButtonGroup({
-  actions,
-  className,
-  iconOnly = false,
-}: ButtonGroupProps) {
-  if (actions.length === 0) return null
+export function ButtonGroup({ actions, className, iconOnly = false }: ButtonGroupProps) {
+  if (actions.length === 0) return null;
 
-  const groupedActions = groupActions(actions)
+  const groupedActions = groupActions(actions);
 
   return (
-    <div
-      className={cn("flex shrink-0 flex-wrap items-center gap-2", className)}
-    >
+    <div className={cn("flex shrink-0 flex-wrap items-center gap-2", className)}>
       {groupedActions.map((item, index) => {
         // Single action (not grouped)
         if (!Array.isArray(item)) {
           // Dropdown action (has nested actions)
           if (item.actions && item.actions.length > 0) {
-            return (
-              <DropdownAction key={index} action={item} iconOnly={iconOnly} />
-            )
+            return <DropdownAction key={index} action={item} iconOnly={iconOnly} />;
           }
 
           // Regular single action
@@ -142,7 +126,7 @@ export function ButtonGroup({
             >
               {item.children}
             </Button>
-          )
+          );
         }
 
         // Group of actions (ButtonGroup)
@@ -166,8 +150,8 @@ export function ButtonGroup({
               </Button>
             ))}
           </PrimitiveButtonGroup>
-        )
+        );
       })}
     </div>
-  )
+  );
 }

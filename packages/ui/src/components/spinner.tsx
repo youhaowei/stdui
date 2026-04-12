@@ -1,4 +1,4 @@
-import { cva, type VariantProps } from "class-variance-authority"
+import { cva, type VariantProps } from "class-variance-authority";
 
 const colorVariants = {
   current: "text-current",
@@ -7,7 +7,7 @@ const colorVariants = {
   warning: "text-palette-warning",
   danger: "text-palette-danger",
   success: "text-palette-success",
-} as const
+} as const;
 
 const spinnerVariants = cva("animate-spin", {
   variants: {
@@ -18,11 +18,10 @@ const spinnerVariants = cva("animate-spin", {
     },
     color: colorVariants,
   },
-})
+});
 
 export interface SpinnerProps
-  extends Omit<React.ComponentProps<"svg">, "color">,
-    VariantProps<typeof spinnerVariants> {}
+  extends Omit<React.ComponentProps<"svg">, "color">, VariantProps<typeof spinnerVariants> {}
 
 /**
  * Spinner - Loading indicator component
@@ -37,12 +36,7 @@ export interface SpinnerProps
  * <Spinner color="danger" size="sm" />
  * ```
  */
-export function Spinner({
-  className,
-  size = "md",
-  color = "current",
-  ...props
-}: SpinnerProps) {
+export function Spinner({ className, size = "md", color = "current", ...props }: SpinnerProps) {
   return (
     <svg
       role="status"
@@ -59,9 +53,7 @@ export function Spinner({
       {...props}
     >
       <circle className="opacity-20" cx="12" cy="12" r="10" />
-      <path
-        d="M12 2a10 10 0 0 1 10 10"
-      />
+      <path d="M12 2a10 10 0 0 1 10 10" />
     </svg>
-  )
+  );
 }
