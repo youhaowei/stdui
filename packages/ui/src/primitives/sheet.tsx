@@ -1,17 +1,17 @@
-import * as React from "react"
-import { Drawer as DrawerPrimitive } from "@base-ui/react/drawer"
-import { cva, type VariantProps } from "class-variance-authority"
-import { CloseIcon } from "@stdui/icons"
+import * as React from "react";
+import { DrawerPreview as DrawerPrimitive } from "@base-ui/react/drawer";
+import { cva, type VariantProps } from "class-variance-authority";
+import { CloseIcon } from "@stdui/icons";
 
-import { cn } from "../lib/utils"
+import { cn } from "../lib/utils";
 
-const Sheet = DrawerPrimitive.Root
+const Sheet = DrawerPrimitive.Root;
 
-const SheetTrigger = DrawerPrimitive.Trigger
+const SheetTrigger = DrawerPrimitive.Trigger;
 
-const SheetClose = DrawerPrimitive.Close
+const SheetClose = DrawerPrimitive.Close;
 
-const SheetPortal = DrawerPrimitive.Portal
+const SheetPortal = DrawerPrimitive.Portal;
 
 function SheetOverlay({
   className,
@@ -21,11 +21,11 @@ function SheetOverlay({
     <DrawerPrimitive.Backdrop
       className={cn(
         "fixed inset-0 z-50 bg-black/80 data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0",
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 const sheetVariants = cva(
@@ -44,23 +44,19 @@ const sheetVariants = cva(
     defaultVariants: {
       side: "right",
     },
-  }
-)
+  },
+);
 
 function SheetContent({
   side = "right",
   className,
   children,
   ...props
-}: React.ComponentProps<typeof DrawerPrimitive.Popup> &
-  VariantProps<typeof sheetVariants>) {
+}: React.ComponentProps<typeof DrawerPrimitive.Popup> & VariantProps<typeof sheetVariants>) {
   return (
     <SheetPortal>
       <SheetOverlay />
-      <DrawerPrimitive.Popup
-        className={cn(sheetVariants({ side }), className)}
-        {...props}
-      >
+      <DrawerPrimitive.Popup className={cn(sheetVariants({ side }), className)} {...props}>
         {children}
         <DrawerPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-neutral-bg transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-neutral-ring focus:ring-offset-2 disabled:pointer-events-none data-[open]:bg-palette-secondary">
           <CloseIcon className="h-4 w-4" />
@@ -68,49 +64,31 @@ function SheetContent({
         </DrawerPrimitive.Close>
       </DrawerPrimitive.Popup>
     </SheetPortal>
-  )
+  );
 }
 
-function SheetHeader({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div className={cn("flex flex-col space-y-2 text-center sm:text-left", className)} {...props} />
+  );
+}
+
+function SheetFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn(
-        "flex flex-col space-y-2 text-center sm:text-left",
-        className
-      )}
+      className={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className)}
       {...props}
     />
-  )
+  );
 }
 
-function SheetFooter({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
-  return (
-    <div
-      className={cn(
-        "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
-        className
-      )}
-      {...props}
-    />
-  )
-}
-
-function SheetTitle({
-  className,
-  ...props
-}: React.ComponentProps<typeof DrawerPrimitive.Title>) {
+function SheetTitle({ className, ...props }: React.ComponentProps<typeof DrawerPrimitive.Title>) {
   return (
     <DrawerPrimitive.Title
       className={cn("text-lg font-semibold text-neutral-fg", className)}
       {...props}
     />
-  )
+  );
 }
 
 function SheetDescription({
@@ -122,7 +100,7 @@ function SheetDescription({
       className={cn("text-sm text-neutral-fg-subtle", className)}
       {...props}
     />
-  )
+  );
 }
 
 export {
@@ -136,4 +114,4 @@ export {
   SheetFooter,
   SheetTitle,
   SheetDescription,
-}
+};
