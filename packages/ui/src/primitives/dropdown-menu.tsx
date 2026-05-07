@@ -63,8 +63,8 @@ function DropdownMenuContent({
   sideOffset = 4,
   ...props
 }: React.ComponentProps<typeof MenuPrimitive.Popup> & {
-  align?: "start" | "center" | "end";
-  side?: "top" | "right" | "bottom" | "left";
+  align?: React.ComponentProps<typeof MenuPrimitive.Positioner>["align"];
+  side?: React.ComponentProps<typeof MenuPrimitive.Positioner>["side"];
   sideOffset?: number;
 }) {
   return (
