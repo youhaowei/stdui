@@ -105,14 +105,17 @@ function applyNeutralOverrides(
     const hue = neutralHue ?? 0;
     const chroma = neutralChroma ?? 0;
     for (const token of NEUTRAL_TOKEN_NAMES) {
-      const def = NEUTRAL_TOKENS[token][modeKey];
+      const def = NEUTRAL_TOKENS[token]?.[modeKey];
+      if (!def) continue;
       style.setProperty(`--neutral-${token}`, formatOklch(def.l, chroma, hue, def.alpha));
     }
-    const ringDef = NEUTRAL_TOKENS["ring"][modeKey];
-    style.setProperty(
-      "--neutral-ring-glow",
-      formatOklch(ringDef.l, chroma, hue, isDark ? 0.2 : 0.3),
-    );
+    const ringDef = NEUTRAL_TOKENS["ring"]?.[modeKey];
+    if (ringDef) {
+      style.setProperty(
+        "--neutral-ring-glow",
+        formatOklch(ringDef.l, chroma, hue, isDark ? 0.2 : 0.3),
+      );
+    }
   } else {
     for (const token of NEUTRAL_TOKEN_NAMES) {
       style.removeProperty(`--neutral-${token}`);

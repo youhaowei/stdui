@@ -8,7 +8,9 @@
 
 export function parseOklch(str: string): { l: number; c: number; h: number; alpha?: number } {
   const m = str.match(/oklch\(\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)(?:\s*\/\s*([\d.]+%?))?\s*\)/);
-  if (!m) throw new Error(`Invalid oklch string: ${str}`);
+  if (!m || !m[1] || !m[2] || !m[3]) {
+    throw new Error(`Invalid oklch string: ${str}`);
+  }
   let alpha: number | undefined;
   if (m[4]) {
     alpha = m[4].endsWith("%") ? parseFloat(m[4]) / 100 : parseFloat(m[4]);
