@@ -1,5 +1,5 @@
 {
-  "name": "@stdui/storybook",
+  "name": "@wystack/ui-storybook",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -8,8 +8,8 @@
     "build-storybook": "storybook build"
   },
   "devDependencies": {
-    "@stdui/icons": "workspace:*",
-    "@stdui/react": "workspace:*",
+    "@wystack/ui-icons": "workspace:*",
+    "@wystack/ui": "workspace:*",
     "@storybook/addon-a11y": "^10.2.0",
     "@storybook/addon-docs": "^10.2.0",
     "@storybook/react": "^10.2.0",

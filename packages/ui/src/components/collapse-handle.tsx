@@ -3,7 +3,7 @@ import {
   ChevronsLeftIcon,
   ChevronsRightIcon,
   ChevronsUpIcon,
-} from "@stdui/icons";
+} from "@wystack/ui-icons";
 import { cn } from "../lib/utils";
 
 export interface CollapseHandleProps {

@@ -1,4 +1,4 @@
-import { AlertCircleIcon, RefreshIcon } from "@stdui/icons";
+import { AlertCircleIcon, RefreshIcon } from "@wystack/ui-icons";
 import { cn } from "../lib/utils";
 import { Button } from "../primitives/button";
 

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Slot } from "../lib/slot";
-import { ChevronRightIcon, MoreIcon } from "@stdui/icons";
+import { ChevronRightIcon, MoreIcon } from "@wystack/ui-icons";
 
 import { cn } from "../lib/utils";
 

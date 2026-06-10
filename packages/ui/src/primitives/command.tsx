@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Command as CommandPrimitive } from "cmdk";
-import { SearchIcon } from "@stdui/icons";
+import { SearchIcon } from "@wystack/ui-icons";
 
 import { cn } from "../lib/utils";
 import { Dialog, DialogContent } from "./dialog";

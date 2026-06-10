@@ -1,5 +1,5 @@
 {
-  "name": "@stdui/icons",
+  "name": "@wystack/ui-icons",
   "version": "0.1.0",
   "type": "module",
   "main": "src/index.tsx",

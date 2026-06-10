@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Checkbox as CheckboxPrimitive } from "@base-ui/react/checkbox";
-import { CheckIcon } from "@stdui/icons";
+import { CheckIcon } from "@wystack/ui-icons";
 
 import { cn } from "../lib/utils";
 

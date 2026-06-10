@@ -7,7 +7,7 @@ import {
   NumberTypeIcon,
   TextTypeIcon,
   DotIcon,
-} from "@stdui/icons";
+} from "@wystack/ui-icons";
 import { cn } from "../lib/utils";
 import { Badge } from "./badge";
 import { Checkbox } from "./checkbox";

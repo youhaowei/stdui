@@ -1,5 +1,5 @@
 {
-  "name": "stdui",
+  "name": "wystack-ui",
   "private": true,
   "workspaces": [
     "packages/*",

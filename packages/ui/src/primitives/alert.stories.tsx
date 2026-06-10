@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { AlertCircleIcon, InfoIcon, CheckCircleIcon } from "@stdui/icons";
+import { AlertCircleIcon, InfoIcon, CheckCircleIcon } from "@wystack/ui-icons";
 import { Alert, AlertTitle, AlertDescription } from "./alert";
 
 const meta = {

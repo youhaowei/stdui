@@ -1,4 +1,4 @@
-import type { LucideIcon } from "@stdui/icons";
+import type { LucideIcon } from "@wystack/ui-icons";
 import { cn } from "../lib/utils";
 import { Button } from "../primitives/button";
 

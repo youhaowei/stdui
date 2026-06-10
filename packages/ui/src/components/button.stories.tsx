@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button } from "./button";
-import { SearchIcon, PlusIcon, CheckIcon } from "@stdui/icons";
+import { SearchIcon, PlusIcon, CheckIcon } from "@wystack/ui-icons";
 
 const meta = {
   title: "Components/Button",

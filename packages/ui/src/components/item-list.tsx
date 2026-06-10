@@ -1,5 +1,5 @@
 import * as React from "react";
-import type { LucideIcon } from "@stdui/icons";
+import type { LucideIcon } from "@wystack/ui-icons";
 import { cn } from "../lib/utils";
 import { ItemCard, type ItemAction } from "../primitives/item-card";
 import { ScrollArea, ScrollBar } from "../primitives/scroll-area";

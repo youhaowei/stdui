@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Menu as MenuPrimitive } from "@base-ui/react/menu";
-import { CheckIcon, ChevronRightIcon, CircleIcon } from "@stdui/icons";
+import { CheckIcon, ChevronRightIcon, CircleIcon } from "@wystack/ui-icons";
 
 import { cn } from "../lib/utils";
 

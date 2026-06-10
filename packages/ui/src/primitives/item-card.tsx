@@ -1,5 +1,5 @@
 import * as React from "react";
-import { MoreIcon } from "@stdui/icons";
+import { MoreIcon } from "@wystack/ui-icons";
 import { cn } from "../lib/utils";
 import { Button } from "./button";
 import {
