@@ -46,6 +46,11 @@ import {
   Merge,
   Monitor,
   Moon,
+  PanelLeftClose,
+  PanelLeftOpen,
+  PanelRightClose,
+  PanelRightOpen,
+  Palette,
   Pencil,
   Plus,
   RefreshCw,
@@ -95,6 +100,10 @@ export {
   GripHorizontal as DragHandleIcon,
   GripVertical as DragHandleVerticalIcon,
   Menu as MenuIcon,
+  PanelLeftClose as PanelLeftCloseIcon,
+  PanelLeftOpen as PanelLeftOpenIcon,
+  PanelRightClose as PanelRightCloseIcon,
+  PanelRightOpen as PanelRightOpenIcon,
 };
 
 // Pages & Views
@@ -126,6 +135,7 @@ export {
   Moon as DarkModeIcon,
   Sun as LightModeIcon,
   Monitor as SystemModeIcon,
+  Palette as PaletteIcon,
   RotateCcw as ResetIcon,
 };
 

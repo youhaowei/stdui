@@ -1,13 +1,19 @@
-import { useState, createContext, useContext, useCallback } from "react";
 import type { ReactNode } from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 import { cn } from "../lib/utils";
-import { Surface } from "../primitives/surface";
 import { TooltipProvider } from "../primitives/tooltip";
 import { StduiProvider } from "../theme/provider";
 import { ThemePanel } from "../views/theme-panel";
+import { Dock } from "./dock";
+import { Stage } from "./stage";
 
 // Re-use existing stdui Sheet for mobile drawer
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../primitives/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "../primitives/sheet";
 
 // ---------- AppShell Context ----------
 
@@ -102,21 +108,20 @@ export function AppShell({
                 {/* Top bar — desktop only */}
                 {topBar && <div className="hidden md:block">{topBar}</div>}
 
-                {/* Main content row — Surface + optional ThemePanel */}
-                <div className="flex-1 flex gap-2 min-h-0 overflow-hidden">
-                  <Surface
-                    elevation="raised"
-                    role="main"
-                    className={cn(
-                      "flex flex-col min-w-0 flex-1 overflow-y-auto [contain:paint]",
-                      surfaceClassName,
-                    )}
-                  >
+                {/* Main content row — center Stage + right appearance Dock */}
+                <div className="flex min-h-0 flex-1 gap-2 overflow-hidden">
+                  <Stage className={cn("[contain:paint]", surfaceClassName)}>
                     {children}
-                  </Surface>
+                  </Stage>
 
-                  {/* Theme panel — slides in from right */}
-                  <ThemePanel isOpen={themePanelOpen} onClose={() => setThemePanelOpen(false)} />
+                  {/* Appearance panel — a right Dock; ThemePanel brings its own
+                      surface chrome, so the dock is a bare collapsing container. */}
+                  <Dock side="right" open={themePanelOpen} surface={false}>
+                    <ThemePanel
+                      isOpen={themePanelOpen}
+                      onClose={() => setThemePanelOpen(false)}
+                    />
+                  </Dock>
                 </div>
               </div>
 

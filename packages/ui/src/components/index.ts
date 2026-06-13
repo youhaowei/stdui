@@ -32,6 +32,13 @@ export type { ContainerProps } from "./container";
 export { Panel, PanelSection } from "./panel";
 export type { PanelProps, PanelSectionProps } from "./panel";
 
+// Layout shell — center stage + collapsing edge docks
+export { Stage } from "./stage";
+export type { StageProps } from "./stage";
+
+export { Dock } from "./dock";
+export type { DockProps, DockSide, DockMode } from "./dock";
+
 // Section components
 export { Section } from "./section";
 export type { SectionProps } from "./section";
