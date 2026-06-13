@@ -35,6 +35,12 @@ export interface ButtonProps {
    * Replaces icon if present, or shows spinner alongside text.
    */
   loading?: boolean;
+  /**
+   * Toggle state — renders the pressed visual (ghost active styles) and emits
+   * `aria-pressed`. Leave undefined for plain action buttons so they don't
+   * present as toggles to assistive tech.
+   */
+  active?: boolean;
 }
 
 /**
@@ -95,6 +101,7 @@ export function Button({
   iconOnly = false,
   disabled,
   loading = false,
+  active,
 }: ButtonProps) {
   const shouldShowLabel = !iconOnly || !Icon;
 
@@ -129,6 +136,8 @@ export function Button({
       className={cn("flex items-center justify-center", className)}
       title={tooltip || (iconOnly ? label : undefined)}
       aria-label={iconOnly ? label : undefined}
+      aria-pressed={active}
+      active={active}
       onClick={onClick}
       asChild={asChild}
       disabled={disabled || loading}

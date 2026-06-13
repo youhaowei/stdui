@@ -20,19 +20,38 @@ export interface SurfaceProps extends React.ComponentProps<"div"> {
    * @default false
    */
   interactive?: boolean;
+  /**
+   * Renders the surface translucent + chroma-boosted instead of opaque, so an
+   * underlying tinted canvas (or an OS vibrancy window in a desktop host) shows
+   * through. Presentational only — degrades gracefully to a faintly tinted
+   * panel on opaque backgrounds. Use for floating shell regions on a
+   * `bg-surface-base` canvas; leave off for content that must stay fully opaque.
+   *
+   * @default false
+   */
+  vibrancy?: boolean;
 }
 
-function Surface({ elevation = "raised", interactive = false, className, ...props }: SurfaceProps) {
+function Surface({
+  elevation = "raised",
+  interactive = false,
+  vibrancy = false,
+  className,
+  ...props
+}: SurfaceProps) {
   return (
     <div
       data-slot="surface"
       className={cn(
-        "rounded-[var(--radius)] bg-neutral-bg transition-colors",
+        "rounded-[var(--radius)] transition-colors",
+        // Opaque by default; vibrancy swaps to a translucent, saturated fill.
+        vibrancy ? "bg-neutral-bg/80 saturate-[1.2]" : "bg-neutral-bg",
         {
           "border border-neutral-border-subtle": elevation === "flat",
           "shadow-[var(--shadow-md)]": elevation === "raised",
           "shadow-[var(--shadow-lg)]": elevation === "floating",
-          "shadow-[var(--inner-shadow)] bg-neutral-bg-dim/30": elevation === "inset",
+          "shadow-[var(--inner-shadow)] bg-neutral-bg-dim/30":
+            elevation === "inset",
         },
         interactive &&
           "cursor-pointer hover:shadow-[var(--shadow-lg)] hover:bg-neutral-bg-subtle/50",

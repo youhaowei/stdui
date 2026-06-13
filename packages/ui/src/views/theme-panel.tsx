@@ -65,9 +65,15 @@ const SURFACE_TINT_STYLE_ORDER: SurfaceTintStyle[] = ["solid", "gradient2", "gra
 export interface ThemePanelProps {
   isOpen: boolean;
   onClose: () => void;
+  /**
+   * Render without the standalone Surface chrome and fixed width — for hosting
+   * inside a Dock (or another shell slot) that owns the panel's surface and
+   * size. Default is the self-contained floating panel.
+   */
+  bare?: boolean;
 }
 
-export function ThemePanel({ isOpen, onClose }: ThemePanelProps) {
+export function ThemePanel({ isOpen, onClose, bare = false }: ThemePanelProps) {
   const { mode, overrides, setMode, setOverrides, resetOverrides, setPreviewMode } = useTheme();
 
   // For system mode, which variant tab is active
@@ -107,11 +113,8 @@ export function ThemePanel({ isOpen, onClose }: ThemePanelProps) {
 
   if (!isOpen) return null;
 
-  return (
-    <Surface
-      elevation="raised"
-      className="flex-shrink-0 flex flex-col select-none w-72 animate-[panel-in_200ms_ease-out]"
-    >
+  const content = (
+    <>
       {/* Header */}
       <div className="flex items-center h-10 px-3 gap-2 shrink-0">
         <h2 className="text-sm font-semibold text-neutral-fg flex-1 select-none">Appearance</h2>
@@ -201,6 +204,19 @@ export function ThemePanel({ isOpen, onClose }: ThemePanelProps) {
             ))}
         </div>
       </div>
+    </>
+  );
+
+  if (bare) {
+    return <div className="flex h-full min-h-0 flex-col select-none">{content}</div>;
+  }
+
+  return (
+    <Surface
+      elevation="raised"
+      className="flex-shrink-0 flex flex-col select-none w-72 animate-[panel-in_200ms_ease-out]"
+    >
+      {content}
     </Surface>
   );
 }
