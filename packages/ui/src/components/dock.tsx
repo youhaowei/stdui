@@ -6,25 +6,11 @@ import { Surface } from "../primitives/surface";
 
 export type DockSide = "left" | "right" | "bottom";
 
-/**
- * How the dock occupies space relative to its siblings:
- * - `separate` — in the layout flow; expanding reflows the siblings beside it.
- * - `overlay` — absolutely positioned against the edge, hovering over siblings
- *   without reflowing them. Same width/extent and edge inset as `separate`, so
- *   toggling mode never changes the panel's size or alignment.
- */
-export type DockMode = "separate" | "overlay";
-
-export interface DockProps extends Omit<
-  React.ComponentProps<"div">,
-  "children"
-> {
+export interface DockProps extends Omit<React.ComponentProps<"div">, "children"> {
   /** Which edge the dock is anchored to. */
   side: DockSide;
   /** Open (expanded) vs. collapsed to zero extent. */
   open: boolean;
-  /** Presentation relative to siblings. @default "separate" */
-  mode?: DockMode;
   /** Expanded width in px for left/right docks. Ignored for `bottom`. */
   width?: number;
   /** Expanded height in px for the `bottom` dock. Ignored for left/right. */
@@ -68,13 +54,6 @@ const handlePosition: Record<DockSide, string> = {
   bottom: "left-0 right-0 top-0 h-1 cursor-row-resize",
 };
 
-/** Overlay anchoring — pin to the dock's edge, fill the cross axis. */
-const overlayAnchor: Record<DockSide, string> = {
-  left: "absolute inset-y-0 left-0 z-30",
-  right: "absolute inset-y-0 right-0 z-30",
-  bottom: "absolute inset-x-0 bottom-0 z-30",
-};
-
 /** Wires a pointer-drag resize: tracks movement and reports the clamped extent. */
 function beginResize(opts: {
   isHorizontal: boolean;
@@ -101,19 +80,17 @@ function beginResize(opts: {
 
 /**
  * Dock — a collapsing edge panel for an app shell. Holds whatever a docked
- * region needs: navigation, an assistant, an appearance panel. Collapses to
- * zero extent with a transition, goes `inert` + `aria-hidden` when closed, and
- * can present either in-flow (`separate`) or floating over siblings (`overlay`)
- * with identical size and edge alignment in both modes.
+ * region needs: navigation, an assistant, an appearance panel. In the layout
+ * flow: expanding reflows its siblings; collapsing to zero extent (with a
+ * transition) reclaims the space and drops it from the tab order (`inert` +
+ * `aria-hidden`).
  *
- * Presentational and generic — the caller owns open/collapsed state, the
- * mode, and (when `resizable`) the persisted extent. The host row must be
- * `relative` for `overlay` mode to anchor correctly.
+ * Presentational and generic — the caller owns open/collapsed state and (when
+ * `resizable`) the persisted extent.
  */
 export function Dock({
   side,
   open,
-  mode = "separate",
   width,
   height,
   surface = true,
@@ -127,14 +104,10 @@ export function Dock({
   ...props
 }: DockProps) {
   const isHorizontal = side === "left" || side === "right";
-  const isOverlay = mode === "overlay";
-
   const extent = isHorizontal ? (width ?? "auto") : (height ?? "auto");
 
-  // In `separate` mode, collapsing to 0 extent is what reflows siblings. In
-  // `overlay` mode the panel is out of flow, so it stays at full extent and
-  // visibility is owned by mount (caller renders it only when open).
-  const resolvedExtent = isOverlay || open ? extent : 0;
+  // Collapsing to 0 extent is what reflows the siblings.
+  const resolvedExtent = open ? extent : 0;
   const collapseStyle = isHorizontal
     ? { width: resolvedExtent }
     : { height: resolvedExtent };
@@ -161,38 +134,16 @@ export function Dock({
     [resizable, onResize, isHorizontal, extent, side, minExtent, maxExtent],
   );
 
-  // Body chrome:
-  // - overlay: always an opaque, shadow-lifted, backdrop-blurred card, inset on
-  //   every side and rounded — it floats over the Stage, so it must read as a
-  //   distinct surface and stay legible regardless of `surface`.
-  // - separate + surface: a vibrancy Surface, inset on the three outer edges
-  //   (the inner edge meets the layout gap).
-  // - separate + !surface: bare — the content brings its own chrome.
-  let body: ReactNode;
-  if (isOverlay) {
-    body = (
-      <Surface
-        elevation="floating"
-        className={cn(
-          "flex min-h-0 flex-1 flex-col bg-neutral-bg/95 backdrop-blur supports-backdrop-filter:bg-neutral-bg/85",
-          "m-[var(--surface-inset)]",
-        )}
-      >
-        {children}
-      </Surface>
-    );
-  } else if (surface) {
-    body = (
-      <Surface
-        vibrancy
-        className={cn("flex min-h-0 flex-1 flex-col", edgeMargin[side])}
-      >
-        {children}
-      </Surface>
-    );
-  } else {
-    body = children;
-  }
+  // With `surface`, a vibrancy Surface inset on the three outer edges (the inner
+  // edge meets the layout gap); without it, bare — the content brings its own
+  // chrome.
+  const body = surface ? (
+    <Surface vibrancy className={cn("flex min-h-0 flex-1 flex-col", edgeMargin[side])}>
+      {children}
+    </Surface>
+  ) : (
+    children
+  );
 
   return (
     <div
@@ -200,9 +151,7 @@ export function Dock({
       role="complementary"
       className={cn(
         "relative flex shrink-0 flex-col overflow-hidden",
-        !isOverlay &&
-          "transition-[width,height] duration-200 ease-in-out motion-reduce:transition-none",
-        isOverlay && overlayAnchor[side],
+        "transition-[width,height] duration-200 ease-in-out motion-reduce:transition-none",
         className,
       )}
       style={collapseStyle}

@@ -37,7 +37,7 @@ export { Stage } from "./stage";
 export type { StageProps } from "./stage";
 
 export { Dock } from "./dock";
-export type { DockProps, DockSide, DockMode } from "./dock";
+export type { DockProps, DockSide } from "./dock";
 
 // Section components
 export { Section } from "./section";
