@@ -41,12 +41,6 @@ export interface DockProps extends Omit<React.ComponentProps<"div">, "children">
   ref?: React.Ref<HTMLDivElement>;
 }
 
-const edgeMargin: Record<DockSide, string> = {
-  left: "m-[0_0_var(--surface-inset)_var(--surface-inset)]",
-  right: "m-[0_var(--surface-inset)_var(--surface-inset)_0]",
-  bottom: "m-[var(--surface-inset)_var(--surface-inset)_var(--surface-inset)]",
-};
-
 /** Where the resize handle sits — the edge that faces the Stage. */
 const handlePosition: Record<DockSide, string> = {
   left: "right-0 top-0 bottom-0 w-1 cursor-col-resize",
@@ -134,11 +128,13 @@ export function Dock({
     [resizable, onResize, isHorizontal, extent, side, minExtent, maxExtent],
   );
 
-  // With `surface`, a vibrancy Surface inset on the three outer edges (the inner
-  // edge meets the layout gap); without it, bare — the content brings its own
-  // chrome.
+  // With `surface`, a vibrancy Surface filling the dock; without it, bare — the
+  // content brings its own chrome. The consumer's layout (row padding + gap)
+  // owns the inset/spacing, so the surface itself carries no outer margin —
+  // this keeps the dock flush with sibling surfaces (e.g. a Stage) on every
+  // edge, rather than double-insetting.
   const body = surface ? (
-    <Surface vibrancy className={cn("flex min-h-0 flex-1 flex-col", edgeMargin[side])}>
+    <Surface vibrancy className="flex min-h-0 flex-1 flex-col">
       {children}
     </Surface>
   ) : (
