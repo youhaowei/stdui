@@ -64,13 +64,15 @@ export { Checkbox } from "./primitives/checkbox";
 export { Switch } from "./primitives/switch";
 export { Separator } from "./primitives/separator";
 
-// Tooltip primitive exported as TooltipPrimitive (enhanced Tooltip is the default)
+// Tooltip primitive parts exported as TooltipPrimitive + parts.
 export {
   Tooltip as TooltipPrimitive,
   TooltipTrigger,
   TooltipContent,
   TooltipProvider,
 } from "./primitives/tooltip";
+// Enhanced one-prop Tooltip (<Tooltip content={...}>) — the default app-level API.
+export { Tooltip, type TooltipProps } from "./components/tooltip";
 
 export { ScrollArea, ScrollBar } from "./primitives/scroll-area";
 export { Progress } from "./primitives/progress";

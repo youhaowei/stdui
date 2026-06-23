@@ -10,8 +10,7 @@
   "cssEntry": "packages/ui/src/styles/tokens.css",
   "readmeHeader": ".design-sync/conventions.md",
   "titleMap": {
-    "Button": "ButtonPrimitive",
-    "Tooltip": "TooltipPrimitive"
+    "Button": "ButtonPrimitive"
   },
   "overrides": {
     "Toggle": { "cardMode": "column" },
