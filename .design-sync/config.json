@@ -1,0 +1,34 @@
+{
+  "pkg": "@wystack/ui",
+  "globalName": "WyStackUI",
+  "projectId": "7f1f88ae-b0d8-4275-9325-a264a9852c18",
+  "shape": "storybook",
+  "storybookConfigDir": "apps/storybook/.storybook",
+  "storybookStatic": ".design-sync/sb-reference",
+  "entry": "packages/ui/src/index.ts",
+  "buildCmd": "cd packages/ui && bunx tsc --declaration --emitDeclarationOnly --outDir dist",
+  "cssEntry": "packages/ui/src/styles/tokens.css",
+  "readmeHeader": ".design-sync/conventions.md",
+  "titleMap": {
+    "Button": "ButtonPrimitive",
+    "Tooltip": "TooltipPrimitive"
+  },
+  "overrides": {
+    "Toggle": { "cardMode": "column" },
+    "Alert": { "cardMode": "column" },
+    "Card": { "cardMode": "column" },
+    "Progress": { "cardMode": "column" },
+    "Tabs": { "cardMode": "column" }
+  },
+  "libOverrides": {
+    "dts.mjs": "TS-source-only pkg has no `types`; honor findTypesRoot's resolved dist/ d.ts root for the dts entry instead of a non-existent <pkgDir>/index.d.ts"
+  },
+  "extraEntries": ["./src/theme/index.ts"],
+  "provider": {
+    "component": "StduiProvider",
+    "props": { "defaultMode": "light" },
+    "inner": {
+      "component": "TooltipProvider"
+    }
+  }
+}
