@@ -1,6 +1,6 @@
 ---
 name: stdui
-description: Consult when writing or modifying any UI component in a project that uses @stdui/react. Covers design tokens, OKLCH colors, CVA variants, spacing/sizing rules, theme system, and component conventions. Should inform all component work in stdui-consuming codebases (WorkHub, DashFrame, Workforce).
+description: Consult when writing or modifying @stdui/react itself or UI components in stdui-consuming codebases (WorkHub, DashFrame, Workforce). Covers design tokens, OKLCH colors, CVA variants, spacing/sizing rules, theme/dark-mode work, component conventions, and git submodule workflow.
 ---
 
 # stdui Design System
