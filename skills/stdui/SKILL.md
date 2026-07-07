@@ -1,12 +1,6 @@
 ---
 name: stdui
-description: >
-  This skill should be used when working with @stdui/react, the stdui design system,
-  or any UI component work in a stdui-consuming codebase. Trigger phrases include
-  create a component, add a primitive, style a component, fix styling, theme issue,
-  dark mode, light mode, design tokens, color system, OKLCH colors, Tailwind tokens,
-  add a variant, CVA variants, spacing, shadow, focus ring, Radix UI, or submodule workflow.
-  Provides design system principles, token conventions, component patterns, and git submodule workflow.
+description: Consult when writing or modifying any UI component in a project that uses @stdui/react. Covers design tokens, OKLCH colors, CVA variants, spacing/sizing rules, theme system, and component conventions. Should inform all component work in stdui-consuming codebases (WorkHub, DashFrame, Workforce).
 ---
 
 # stdui Design System
