@@ -10,8 +10,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ResetIcon } from "@wystack/ui-icons";
 import { Popover, PopoverTrigger, PopoverContent } from "../primitives/popover";
-import { parseOklch, formatOklch, oklchToHex, hexToOklch } from "../theme/oklch";
-import { safeOklchToHex, getRecentColors, addRecentColor } from "../theme/store";
+import {
+  parseOklch,
+  formatOklch,
+  oklchToHex,
+  hexToOklch,
+  safeOklchToHex,
+  getRecentColors,
+  addRecentColor,
+} from "@wystack/ui-core";
 
 const AREA_W = 192;
 const AREA_H = 144;

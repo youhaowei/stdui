@@ -1,14 +1,12 @@
 {
-  "name": "@wystack/ui",
+  "name": "@wystack/ui-react",
   "version": "0.2.0",
   "type": "module",
   "main": "src/index.ts",
   "exports": {
     ".": "./src/index.ts",
     "./theme": "./src/theme/index.ts",
-    "./styles": "./src/styles/tokens.css",
-    "./views": "./src/views/index.ts",
-    "./virtual-table": "./src/components/virtual-table.tsx"
+    "./views": "./src/views/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
@@ -17,6 +15,7 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.2.0",
+    "@wystack/ui-core": "workspace:*",
     "@wystack/ui-icons": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -25,8 +24,7 @@
     "motion": "^12.35.2",
     "radix-ui": "^1.4.3",
     "sonner": "^2.0.7",
-    "tailwind-merge": "^3.4.0",
-    "zustand": "^5.0.0"
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.0",

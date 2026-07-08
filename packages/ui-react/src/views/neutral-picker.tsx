@@ -7,7 +7,7 @@
  */
 
 import { useCallback, useEffect, useRef } from "react";
-import { formatOklch, oklchToHex } from "../theme/oklch";
+import { formatOklch, oklchToHex } from "@wystack/ui-core";
 
 interface NeutralPickerProps {
   hue: number;

@@ -1,6 +1,11 @@
 import { createContext, useContext, useEffect, useRef } from "react";
-import { createThemeStore, resolveIsDark } from "./store";
-import type { ThemeMode, ResolvedMode, ThemeOverrides } from "./tokens";
+import {
+  createThemeStore,
+  resolveIsDark,
+  type ThemeMode,
+  type ResolvedMode,
+  type ThemeOverrides,
+} from "@wystack/ui-core";
 
 // -- Types -----------------------------------------------------------------
 

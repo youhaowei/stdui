@@ -5,4 +5,4 @@ export {
   DEFAULT_SURFACE_DARK,
   PREVIEW_LEVELS_LIGHT,
   PREVIEW_LEVELS_DARK,
-} from "../theme/defaults";
+} from "@wystack/ui-core";

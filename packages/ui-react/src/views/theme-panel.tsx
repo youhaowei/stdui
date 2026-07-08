@@ -16,15 +16,15 @@ import {
 import { Button } from "../primitives/button";
 import { Surface } from "../primitives/surface";
 import { useTheme } from "../theme/provider";
-import { hasModeOverrides } from "../theme/store";
-import type {
-  ThemeMode,
-  PaletteColor,
-  ModeOverrides,
-  ResolvedMode,
-  SurfaceTintStyle,
-  ThemeOverrides,
-} from "../theme/tokens";
+import {
+  hasModeOverrides,
+  type ThemeMode,
+  type PaletteColor,
+  type ModeOverrides,
+  type ResolvedMode,
+  type SurfaceTintStyle,
+  type ThemeOverrides,
+} from "@wystack/ui-core";
 import { ColorPicker } from "./color-picker";
 import { NeutralPicker } from "./neutral-picker";
 import {

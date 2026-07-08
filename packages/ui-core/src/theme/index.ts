@@ -1,4 +1,5 @@
-"use client";
+// Framework-agnostic theme foundation. No React — safe to consume from any
+// toolchain (@wystack/ui-react, and future @wystack/ui-* siblings).
 
 // OKLCH utilities
 export { parseOklch, formatOklch, oklchToHex, hexToOklch } from "./oklch";
@@ -35,6 +36,3 @@ export {
   addRecentColor,
 } from "./store";
 export type { ThemeStoreConfig } from "./store";
-
-// Provider and hook
-export { StduiProvider, useTheme } from "./provider";

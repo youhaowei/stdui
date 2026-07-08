@@ -8,8 +8,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import { ResetIcon } from "@wystack/ui-icons";
 import { Popover, PopoverTrigger, PopoverContent } from "../primitives/popover";
-import { parseOklch, formatOklch, oklchToHex } from "../theme/oklch";
-import { addRecentColor } from "../theme/store";
+import { parseOklch, formatOklch, oklchToHex, addRecentColor } from "@wystack/ui-core";
 
 const WHEEL_SIZE = 160;
 const WHEEL_RADIUS = WHEEL_SIZE / 2;

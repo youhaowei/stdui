@@ -9,7 +9,8 @@
   },
   "devDependencies": {
     "@wystack/ui-icons": "workspace:*",
-    "@wystack/ui": "workspace:*",
+    "@wystack/ui-core": "workspace:*",
+    "@wystack/ui-react": "workspace:*",
     "@storybook/addon-a11y": "^10.2.0",
     "@storybook/addon-docs": "^10.2.0",
     "@storybook/react": "^10.2.0",
