@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Select as SelectPrimitive } from "@base-ui/react/select";
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "@wystack/ui-icons";
+import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "../lib/utils";
 
@@ -10,19 +11,43 @@ const SelectGroup = SelectPrimitive.Group;
 
 const SelectValue = SelectPrimitive.Value;
 
+const selectTriggerVariants = cva(
+  "flex w-full items-center justify-between rounded-md text-sm ring-offset-neutral-bg transition-colors data-[placeholder]:text-neutral-fg-subtle focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+  {
+    variants: {
+      variant: {
+        default:
+          "border border-neutral-border bg-neutral-bg focus:ring-2 focus:ring-neutral-ring focus:ring-offset-2",
+        // Borderless, reads as plain text; reveals border + subtle bg on
+        // hover/focus. For inline-editable property fields (Linear/Notion style).
+        ghost:
+          "border border-transparent bg-transparent shadow-none hover:border-neutral-border hover:bg-neutral-bg-subtle focus:border-neutral-border focus:bg-neutral-bg",
+      },
+      size: {
+        default: "h-10 px-3 py-2",
+        sm: "h-8 px-2 py-1",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  },
+);
+
 function SelectTrigger({
   className,
   children,
+  variant,
+  size,
   ref,
   ...props
-}: React.ComponentProps<typeof SelectPrimitive.Trigger>) {
+}: React.ComponentProps<typeof SelectPrimitive.Trigger> &
+  VariantProps<typeof selectTriggerVariants>) {
   return (
     <SelectPrimitive.Trigger
       ref={ref}
-      className={cn(
-        "flex h-10 w-full items-center justify-between rounded-md border border-neutral-border bg-neutral-bg px-3 py-2 text-sm ring-offset-neutral-bg data-[placeholder]:text-neutral-fg-subtle focus:outline-none focus:ring-2 focus:ring-neutral-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
-        className,
-      )}
+      className={cn(selectTriggerVariants({ variant, size }), className)}
       {...props}
     >
       {children}
@@ -146,6 +171,7 @@ export {
   SelectGroup,
   SelectValue,
   SelectTrigger,
+  selectTriggerVariants,
   SelectContent,
   SelectLabel,
   SelectItem,
