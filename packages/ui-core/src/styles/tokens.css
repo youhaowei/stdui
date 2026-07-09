@@ -1,9 +1,7 @@
 @import "tailwindcss";
 
-@source "../primitives";
-@source "../components";
-@source "../fields";
-@source "../views";
+/* No @source here: ui-core ships tokens only. Each framework package scans its
+   own components -- see @wystack/ui-react's styles.css. */
 
 @custom-variant dark (&:is(.dark *));
 

@@ -7,7 +7,8 @@
     ".": "./src/index.ts",
     "./theme": "./src/theme/index.ts",
     "./views": "./src/views/index.ts",
-    "./icons": "./src/icons.tsx"
+    "./icons": "./src/icons.tsx",
+    "./styles": "./src/styles.css"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
@@ -24,7 +25,8 @@
     "motion": "^12.35.2",
     "radix-ui": "^1.4.3",
     "sonner": "^2.0.7",
-    "tailwind-merge": "^3.4.0"
+    "tailwind-merge": "^3.4.0",
+    "zustand": "^5.0.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.0",
