@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useRef } from "react";
+import { useStore } from "zustand";
 import {
   createThemeStore,
   resolveIsDark,
@@ -56,7 +57,7 @@ function StduiProviderInner({ children, defaultMode, storageKey }: StduiProvider
   }
 
   const store = storeRef.current!;
-  const state = store();
+  const state = useStore(store);
 
   // Set default mode on mount if provided
   useEffect(() => {

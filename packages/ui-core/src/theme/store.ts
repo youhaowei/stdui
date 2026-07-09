@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { createStore } from "zustand/vanilla";
 import { formatOklch, parseOklch, oklchToHex } from "./oklch";
 import {
   type ThemeMode,
@@ -224,7 +224,7 @@ export function createThemeStore(config: ThemeStoreConfig = {}) {
   const target =
     config.target ?? (typeof document !== "undefined" ? document.documentElement : null);
 
-  return create<ThemeState>((set, get) => {
+  return createStore<ThemeState>()((set, get) => {
     const initialMode = getStoredTheme(prefix);
     const initialOverrides = getStoredOverrides(prefix);
 
