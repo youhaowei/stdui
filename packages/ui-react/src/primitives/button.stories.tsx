@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button } from "./button";
-import { Button as EnhancedButton } from "../components/button";
-import { SearchIcon, PlusIcon, CheckIcon } from "../icons";
 
 const meta = {
   title: "Primitives/Button",
@@ -180,32 +178,4 @@ export const Disabled: Story = {
   args: {
     disabled: true,
   },
-};
-
-// --- Enhanced Button stories (icon, loading, tooltip support) ---
-// These story the components/button wrapper which adds icon, loading, and tooltip
-// to the primitive. They use explicit render functions because EnhancedButton has
-// a different prop surface (label/icon/iconOnly/loading) from the primitive (children).
-
-export const WithIcon: StoryObj = {
-  render: () => <EnhancedButton icon={PlusIcon} label="Add Item" />,
-};
-
-export const IconOnly: StoryObj = {
-  render: () => <EnhancedButton icon={SearchIcon} label="Search" iconOnly tooltip="Search" />,
-};
-
-export const Loading: StoryObj = {
-  render: () => <EnhancedButton loading label="Saving..." />,
-};
-
-export const IconVariations: StoryObj = {
-  render: () => (
-    <div className="flex flex-wrap items-center gap-3">
-      <EnhancedButton icon={PlusIcon} label="Create" />
-      <EnhancedButton icon={SearchIcon} label="Search" variant="outline" />
-      <EnhancedButton icon={CheckIcon} label="Done" variant="solid" color="success" />
-      <EnhancedButton icon={PlusIcon} label="Add" iconOnly variant="ghost" tooltip="Add" />
-    </div>
-  ),
 };

@@ -12,12 +12,12 @@ const SelectGroup = SelectPrimitive.Group;
 const SelectValue = SelectPrimitive.Value;
 
 const selectTriggerVariants = cva(
-  "flex w-full items-center justify-between rounded-md text-sm ring-offset-neutral-bg transition-colors data-[placeholder]:text-neutral-fg-subtle focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+  "flex w-full items-center justify-between rounded-md text-sm ring-offset-neutral-bg transition-colors data-[placeholder]:text-neutral-fg-subtle focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
   {
     variants: {
       variant: {
         default:
-          "border border-neutral-border bg-neutral-bg focus:ring-2 focus:ring-neutral-ring focus:ring-offset-2",
+          "border border-neutral-border bg-neutral-bg focus-visible:ring-2 focus-visible:ring-neutral-ring focus-visible:ring-offset-2",
         // Borderless, reads as plain text; reveals border + subtle bg on
         // hover/focus. For inline-editable property fields (Linear/Notion style).
         ghost:
