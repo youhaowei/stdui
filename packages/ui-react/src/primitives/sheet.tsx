@@ -58,7 +58,7 @@ function SheetContent({
       <SheetOverlay />
       <DrawerPrimitive.Popup className={cn(sheetVariants({ side }), className)} {...props}>
         {children}
-        <DrawerPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-neutral-bg transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-neutral-ring focus:ring-offset-2 disabled:pointer-events-none data-[open]:bg-palette-secondary">
+        <DrawerPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-neutral-bg transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-ring focus-visible:ring-offset-2 disabled:pointer-events-none data-[open]:bg-palette-secondary">
           <CloseIcon className="h-4 w-4" />
           <span className="sr-only">Close</span>
         </DrawerPrimitive.Close>

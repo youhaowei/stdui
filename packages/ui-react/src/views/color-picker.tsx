@@ -207,7 +207,7 @@ export function ColorPicker({
           type="text"
           value={hexText}
           onChange={handleHexInput}
-          className="w-[72px] h-7 px-2 text-[11px] font-mono rounded-md border border-neutral-border bg-neutral-bg text-neutral-fg focus:outline-none focus:ring-1 focus:ring-neutral-ring"
+          className="w-[72px] h-7 px-2 text-[11px] font-mono rounded-md border border-neutral-border bg-neutral-bg text-neutral-fg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-ring"
           spellCheck={false}
         />
       )}
@@ -294,7 +294,7 @@ function PopoverControls({
             type="text"
             value={hexText}
             onChange={onHexInput}
-            className="flex-1 h-6 px-2 text-[11px] font-mono rounded-md border border-neutral-border bg-neutral-bg text-neutral-fg focus:outline-none focus:ring-1 focus:ring-neutral-ring"
+            className="flex-1 h-6 px-2 text-[11px] font-mono rounded-md border border-neutral-border bg-neutral-bg text-neutral-fg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-ring"
             spellCheck={false}
           />
         )}
