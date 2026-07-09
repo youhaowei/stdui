@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
-import { CloseIcon } from "@wystack/ui-icons";
+import { CloseIcon } from "../icons";
 
 import { cn } from "../lib/utils";
 

@@ -8,7 +8,6 @@
     "build-storybook": "storybook build"
   },
   "devDependencies": {
-    "@wystack/ui-icons": "workspace:*",
     "@wystack/ui-core": "workspace:*",
     "@wystack/ui-react": "workspace:*",
     "@storybook/addon-a11y": "^10.2.0",

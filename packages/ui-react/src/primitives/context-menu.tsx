@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ContextMenu as ContextMenuPrimitive } from "@base-ui/react/context-menu";
-import { CheckIcon, ChevronRightIcon, CircleIcon } from "@wystack/ui-icons";
+import { CheckIcon, ChevronRightIcon, CircleIcon } from "../icons";
 
 import { cn } from "../lib/utils";
 

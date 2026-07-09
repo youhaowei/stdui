@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Toggle } from "./toggle";
-import { ChartIcon, TableIcon, ListIcon, GridIcon } from "@wystack/ui-icons";
+import { ChartIcon, TableIcon, ListIcon, GridIcon } from "../icons";
 
 const meta = {
   title: "Components/Toggle",

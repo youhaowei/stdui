@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { EmptyState } from "./empty-state";
-import { DatabaseIcon, SearchIcon, PlusIcon, FileIcon } from "@wystack/ui-icons";
+import { DatabaseIcon, SearchIcon, PlusIcon, FileIcon } from "../icons";
 
 const meta = {
   title: "Components/EmptyState",

@@ -8,7 +8,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ResetIcon } from "@wystack/ui-icons";
+import { ResetIcon } from "../icons";
 import { Popover, PopoverTrigger, PopoverContent } from "../primitives/popover";
 import {
   parseOklch,

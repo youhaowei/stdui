@@ -7,7 +7,6 @@
   "include": ["src", ".storybook"],
   "references": [
     { "path": "../../packages/ui-core" },
-    { "path": "../../packages/ui-react" },
-    { "path": "../../packages/icons" }
+    { "path": "../../packages/ui-react" }
   ]
 }

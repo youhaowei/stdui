@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "./tabs";
-import { UserIcon, LockIcon, SettingsIcon, BellIcon } from "@wystack/ui-icons";
+import { UserIcon, LockIcon, SettingsIcon, BellIcon } from "../icons";
 
 const meta = {
   title: "Primitives/Tabs",

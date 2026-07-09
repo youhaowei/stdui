@@ -21,28 +21,12 @@
         "@storybook/react-vite": "^10.2.0",
         "@tailwindcss/vite": "^4.1.0",
         "@wystack/ui-core": "workspace:*",
-        "@wystack/ui-icons": "workspace:*",
         "@wystack/ui-react": "workspace:*",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
         "storybook": "^10.2.0",
         "tailwindcss": "^4.1.0",
         "vite": "^6.3.0",
-      },
-    },
-    "packages/icons": {
-      "name": "@wystack/ui-icons",
-      "version": "0.1.0",
-      "dependencies": {
-        "lucide-react": "^0.563.0",
-      },
-      "devDependencies": {
-        "@types/react": "^19.0.0",
-        "react": "^19.0.0",
-        "typescript": "~5.7.2",
-      },
-      "peerDependencies": {
-        "react": ">=19.0.0",
       },
     },
     "packages/ui-core": {
@@ -67,7 +51,6 @@
       "dependencies": {
         "@base-ui/react": "^1.3.0",
         "@wystack/ui-core": "workspace:*",
-        "@wystack/ui-icons": "workspace:*",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "cmdk": "^1.1.1",
@@ -561,8 +544,6 @@
     "@vitest/utils": ["@vitest/utils@3.2.4", "", { "dependencies": { "@vitest/pretty-format": "3.2.4", "loupe": "^3.1.4", "tinyrainbow": "^2.0.0" } }, "sha512-fB2V0JFrQSMsCo9HiSq3Ezpdv4iYaXRG1Sx8edX3MwxfyNn83mKiGzOcH+Fkxt4MHxr3y42fQi1oeAInqgX2QA=="],
 
     "@wystack/ui-core": ["@wystack/ui-core@workspace:packages/ui-core"],
-
-    "@wystack/ui-icons": ["@wystack/ui-icons@workspace:packages/icons"],
 
     "@wystack/ui-react": ["@wystack/ui-react@workspace:packages/ui-react"],
 

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Select as SelectPrimitive } from "@base-ui/react/select";
-import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "@wystack/ui-icons";
+import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "../icons";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "../lib/utils";

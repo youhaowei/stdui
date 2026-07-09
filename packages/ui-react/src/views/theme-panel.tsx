@@ -12,7 +12,7 @@ import {
   DarkModeIcon,
   SystemModeIcon,
   ChevronRightIcon,
-} from "@wystack/ui-icons";
+} from "../icons";
 import { Button } from "../primitives/button";
 import { Surface } from "../primitives/surface";
 import { useTheme } from "../theme/provider";
