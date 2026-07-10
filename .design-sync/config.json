@@ -7,7 +7,7 @@
   "storybookStatic": ".design-sync/sb-reference",
   "entry": "packages/ui-react/src/index.ts",
   "buildCmd": "cd packages/ui-react && bunx tsc --declaration --emitDeclarationOnly --outDir dist",
-  "cssEntry": "packages/ui-core/src/styles/tokens.css",
+  "cssEntry": "packages/ui-react/src/styles.css",
   "readmeHeader": ".design-sync/conventions.md",
   "titleMap": {
     "Button": "ButtonPrimitive"

@@ -20,8 +20,10 @@ const selectTriggerVariants = cva(
           "border border-neutral-border bg-neutral-bg focus-visible:ring-2 focus-visible:ring-neutral-ring focus-visible:ring-offset-2",
         // Borderless, reads as plain text; reveals border + subtle bg on
         // hover/focus. For inline-editable property fields (Linear/Notion style).
+        // Keyboard focus additionally gets a ring: without it, focus and hover
+        // are visually identical.
         ghost:
-          "border border-transparent bg-transparent shadow-none hover:border-neutral-border hover:bg-neutral-bg-subtle focus:border-neutral-border focus:bg-neutral-bg",
+          "border border-transparent bg-transparent shadow-none hover:border-neutral-border hover:bg-neutral-bg-subtle focus:border-neutral-border focus:bg-neutral-bg focus-visible:ring-2 focus-visible:ring-neutral-ring",
       },
       size: {
         default: "h-10 px-3 py-2",
