@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import type { Preview } from "@storybook/react";
-import { StduiProvider } from "@wystack/ui/theme";
-import { TooltipProvider } from "@wystack/ui";
-import "@wystack/ui/styles";
+import { StduiProvider } from "@wystack/ui-react/theme";
+import { TooltipProvider } from "@wystack/ui-react";
+import "@wystack/ui-react/styles";
 
 const preview: Preview = {
   globalTypes: {

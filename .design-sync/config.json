@@ -1,13 +1,13 @@
 {
-  "pkg": "@wystack/ui",
+  "pkg": "@wystack/ui-react",
   "globalName": "WyStackUI",
   "projectId": "7f1f88ae-b0d8-4275-9325-a264a9852c18",
   "shape": "storybook",
   "storybookConfigDir": "apps/storybook/.storybook",
   "storybookStatic": ".design-sync/sb-reference",
-  "entry": "packages/ui/src/index.ts",
-  "buildCmd": "cd packages/ui && bunx tsc --declaration --emitDeclarationOnly --outDir dist",
-  "cssEntry": "packages/ui/src/styles/tokens.css",
+  "entry": "packages/ui-react/src/index.ts",
+  "buildCmd": "cd packages/ui-react && bunx tsc --declaration --emitDeclarationOnly --outDir dist",
+  "cssEntry": "packages/ui-react/src/styles.css",
   "readmeHeader": ".design-sync/conventions.md",
   "titleMap": {
     "Button": "ButtonPrimitive"
