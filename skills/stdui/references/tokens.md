@@ -1,6 +1,8 @@
+Values are defined in `packages/ui-core/src/tokens/schema.ts`; `src/styles/tokens.css` is generated.
+
 # stdui Token Reference
 
-Complete CSS custom property reference for the stdui design system. All values defined in `src/styles/tokens.css`.
+Complete CSS custom property reference for the stdui design system. Run `bun run --filter @wystack/ui-core build:tokens` after editing the schema; `check:tokens` rejects stale CSS.
 
 ## Palette Colors
 
@@ -8,28 +10,37 @@ Semantic accent colors. Each has a foreground variant (`-fg`) for text on that c
 
 ### Light Mode (`:root`)
 
-| Token                  | Value                           |
-| ---------------------- | ------------------------------- |
-| `--palette-primary`    | `oklch(0.205 0 0)` (near black) |
-| `--palette-primary-fg` | `oklch(0.985 0 0)` (near white) |
-| `--palette-secondary`  | Tailwind `slate-600`            |
-| `--palette-success`    | Tailwind `lime-600`             |
-| `--palette-danger`     | Tailwind `red-600`              |
-| `--palette-warning`    | Tailwind `amber-600`            |
-| `--palette-info`       | Tailwind `sky-600`              |
-| All `*-fg` variants    | `white` (except primary)        |
+| Token                    | Value                        |
+| ------------------------ | ---------------------------- |
+| `--palette-primary`      | `oklch(0.205 0 0)`           |
+| `--palette-primary-fg`   | `oklch(0.985 0 0)`           |
+| `--palette-secondary`    | `oklch(0.446 0.043 257.281)` |
+| `--palette-secondary-fg` | `oklch(1 0 0)`               |
+| `--palette-success`      | `oklch(0.648 0.2 131.684)`   |
+| `--palette-success-fg`   | `oklch(1 0 0)`               |
+| `--palette-danger`       | `oklch(0.577 0.245 27.325)`  |
+| `--palette-danger-fg`    | `oklch(1 0 0)`               |
+| `--palette-warning`      | `oklch(0.666 0.179 58.318)`  |
+| `--palette-warning-fg`   | `oklch(1 0 0)`               |
+| `--palette-info`         | `oklch(0.588 0.158 241.966)` |
+| `--palette-info-fg`      | `oklch(1 0 0)`               |
 
 ### Dark Mode (`.dark`)
 
-| Token                  | Value                           |
-| ---------------------- | ------------------------------- |
-| `--palette-primary`    | `oklch(0.922 0 0)` (near white) |
-| `--palette-primary-fg` | `oklch(0.205 0 0)` (near black) |
-| `--palette-secondary`  | Tailwind `slate-400`            |
-| `--palette-success`    | Tailwind `lime-400`             |
-| `--palette-danger`     | Tailwind `red-400`              |
-| `--palette-warning`    | Tailwind `amber-400`            |
-| `--palette-info`       | Tailwind `sky-400`              |
+| Token                    | Value                        |
+| ------------------------ | ---------------------------- |
+| `--palette-primary`      | `oklch(0.922 0 0)`           |
+| `--palette-primary-fg`   | `oklch(0.205 0 0)`           |
+| `--palette-secondary`    | `oklch(0.704 0.04 256.788)`  |
+| `--palette-secondary-fg` | `oklch(0.129 0.042 264.695)` |
+| `--palette-success`      | `oklch(0.841 0.238 128.85)`  |
+| `--palette-success-fg`   | `oklch(0.274 0.072 132.109)` |
+| `--palette-danger`       | `oklch(0.704 0.191 22.216)`  |
+| `--palette-danger-fg`    | `oklch(1 0 0)`               |
+| `--palette-warning`      | `oklch(0.828 0.189 84.429)`  |
+| `--palette-warning-fg`   | `oklch(0.279 0.077 45.635)`  |
+| `--palette-info`         | `oklch(0.746 0.16 232.661)`  |
+| `--palette-info-fg`      | `oklch(0.293 0.066 243.157)` |
 
 ### Tailwind Usage
 
@@ -88,25 +99,18 @@ border-neutral-border    ring-neutral-ring
 
 ## Typography
 
-| Token                    | Value                                           |
-| ------------------------ | ----------------------------------------------- |
-| `--text-display-size`    | 24px                                            |
-| `--text-display-weight`  | 700                                             |
-| `--text-display-leading` | 1.2                                             |
-| `--text-heading-size`    | 16px                                            |
-| `--text-heading-weight`  | 600                                             |
-| `--text-heading-leading` | 1.3                                             |
-| `--text-body-size`       | 14px                                            |
-| `--text-body-weight`     | 400                                             |
-| `--text-body-leading`    | 1.5                                             |
-| `--text-sm-size`         | 12px                                            |
-| `--text-sm-weight`       | 400                                             |
-| `--text-sm-leading`      | 1.4                                             |
-| `--text-caption-size`    | 10px                                            |
-| `--text-caption-weight`  | 500                                             |
-| `--text-caption-leading` | 1.3                                             |
-| `--text-code-size`       | 12px                                            |
-| `--text-code-family`     | "SF Mono", "Fira Code", ui-monospace, monospace |
+Tailwind's default `text-xs` through `text-2xl` remain unchanged. Semantic utilities set size, line height, and weight together:
+
+| Utility        | Size | Line height | Weight    |
+| -------------- | ---- | ----------- | --------- |
+| `text-display` | 24px | 1.2         | 700       |
+| `text-heading` | 16px | 1.3         | 600       |
+| `text-body`    | 14px | 1.5         | 400       |
+| `text-label`   | 12px | 1.4         | 400       |
+| `text-caption` | 10px | 1.3         | 500       |
+| `text-code`    | 12px | inherited   | inherited |
+
+Use `text-code font-code` for code. `--font-code` is `"SF Mono", "Fira Code", ui-monospace, monospace`. The old `--text-*-size/weight/leading` properties are removed.
 
 ## Spacing (4px Grid)
 
@@ -131,17 +135,23 @@ border-neutral-border    ring-neutral-ring
 
 ### Light Mode
 
-| Token            | Value                                                      |
-| ---------------- | ---------------------------------------------------------- |
-| `--shadow-xs`    | `0 1px 2px oklch(0 0 0 / 4%)`                              |
-| `--shadow-sm`    | `0 1px 3px oklch(0 0 0 / 6%), 0 1px 2px oklch(0 0 0 / 4%)` |
-| `--shadow-md`    | Multi-layer: 1px border + 4px + 8px blur                   |
-| `--shadow-lg`    | Multi-layer: 1px border + 12px + 24px blur                 |
-| `--inner-shadow` | Inset: 1px border + 2px + 4px blur                         |
+| Token            | Value                                                                                                                 |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `--shadow-xs`    | `0 1px 2px oklch(0 0 0 / 4%)`                                                                                         |
+| `--shadow-sm`    | `0 1px 3px oklch(0 0 0 / 6%), 0 1px 2px oklch(0 0 0 / 4%)`                                                            |
+| `--shadow-md`    | `0 0 0 1px oklch(0 0 0 / 3%), 0 1px 2px oklch(0 0 0 / 4%), 0 4px 8px oklch(0 0 0 / 3%), 0 8px 16px oklch(0 0 0 / 2%)` |
+| `--shadow-lg`    | `0 0 0 1px oklch(0 0 0 / 3%), 0 4px 12px oklch(0 0 0 / 6%), 0 12px 24px oklch(0 0 0 / 4%)`                            |
+| `--inner-shadow` | `0 0 0 1px oklch(0 0 0 / 4%), 0 1px 2px oklch(0 0 0 / 6%), 0 2px 4px oklch(0 0 0 / 3%)`                               |
 
 ### Dark Mode
 
-Same structure but higher opacity (20-35% vs 3-6%). Borders use white/8% instead of black.
+| Token            | Value                                                                                                                    |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `--shadow-xs`    | `0 1px 2px oklch(0 0 0 / 30%)`                                                                                           |
+| `--shadow-sm`    | `0 1px 3px oklch(0 0 0 / 35%), 0 1px 2px oklch(0 0 0 / 25%)`                                                             |
+| `--shadow-md`    | `0 0 0 1px oklch(1 0 0 / 8%), 0 1px 2px oklch(0 0 0 / 30%), 0 3px 6px oklch(0 0 0 / 25%), 0 6px 12px oklch(0 0 0 / 20%)` |
+| `--shadow-lg`    | `0 0 0 1px oklch(1 0 0 / 8%), 0 4px 12px oklch(0 0 0 / 35%), 0 12px 24px oklch(0 0 0 / 25%)`                             |
+| `--inner-shadow` | `0 0 0 1px oklch(1 0 0 / 12%), 0 1px 3px oklch(0 0 0 / 30%), 0 2px 6px oklch(0 0 0 / 22%)`                               |
 
 ## Shape
 
@@ -152,6 +162,8 @@ Same structure but higher opacity (20-35% vs 3-6%). Borders use white/8% instead
 | `--surface-inset`  | 8px             | Padding between shell and surface   |
 | `--inner-radius`   | 8px             | Inner element corners               |
 | `--inner-gap`      | 4px             | Gap between nested rounded elements |
+
+`rounded-surface`, `rounded-inner`, and `rounded-control` use 10px, 8px, and 6px respectively. `--control-radius` is 6px. `shadow-surface` and the legacy `--surface-shadow` both reference `var(--shadow-md)`.
 
 ## Z-Index
 
@@ -183,20 +195,23 @@ Same structure but higher opacity (20-35% vs 3-6%). Borders use white/8% instead
 
 5 distinct OKLCH hues for data visualization. Different palettes for light and dark mode.
 
-| Token       | Light                 | Dark                   |
-| ----------- | --------------------- | ---------------------- |
-| `--chart-1` | oklch(0.646 0.222 41) | oklch(0.488 0.243 264) |
-| `--chart-2` | oklch(0.6 0.118 185)  | oklch(0.696 0.17 162)  |
-| `--chart-3` | oklch(0.398 0.07 227) | oklch(0.769 0.188 70)  |
-| `--chart-4` | oklch(0.828 0.189 84) | oklch(0.627 0.265 304) |
-| `--chart-5` | oklch(0.769 0.188 70) | oklch(0.645 0.246 16)  |
+| Token       | Light                       | Dark                         |
+| ----------- | --------------------------- | ---------------------------- |
+| `--chart-1` | `oklch(0.646 0.222 41.116)` | `oklch(0.488 0.243 264.376)` |
+| `--chart-2` | `oklch(0.6 0.118 184.704)`  | `oklch(0.696 0.17 162.48)`   |
+| `--chart-3` | `oklch(0.398 0.07 227.392)` | `oklch(0.769 0.188 70.08)`   |
+| `--chart-4` | `oklch(0.828 0.189 84.429)` | `oklch(0.627 0.265 303.9)`   |
+| `--chart-5` | `oklch(0.769 0.188 70.08)`  | `oklch(0.645 0.246 16.439)`  |
 
 ## Tailwind v4 Bridge
+
+The default color palette is closed with `--color-*: initial`. Use semantic colors; numbered defaults such as `text-amber-500` do not compile. White and black remain available for `bg-white`, `bg-black`, and `border-white`.
 
 The `@theme inline` block in `tokens.css` maps CSS custom properties to Tailwind utilities:
 
 ```css
 @theme inline {
+  --color-*: initial;
   --color-palette-primary: var(--palette-primary);
   --color-neutral-bg: var(--neutral-bg);
   --color-shell-bg: var(--shell-bg);
