@@ -5,6 +5,8 @@ export interface TokenSchema {
   palette: Record<string, Modes<{ value: string; fg: string }>>;
   neutral: Record<string, Modes<NeutralValue>>;
   ringGlowAlpha: Modes<number>;
+  /** Foreground used on top of an arbitrary override color: `dark` text on light colors, `light` on dark. */
+  contrastFg: { onLight: string; onDark: string };
   surface: { base: Modes<string> };
   shell: { bg: Modes<string>; topbarHeight: string };
   typography: Record<string, TextStyle>;
@@ -135,6 +137,10 @@ export const tokens = {
   ringGlowAlpha: {
     light: 0.3,
     dark: 0.2,
+  },
+  contrastFg: {
+    onLight: "oklch(0.205 0 0)",
+    onDark: "oklch(0.985 0 0)",
   },
   surface: {
     base: {

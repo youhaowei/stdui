@@ -69,9 +69,9 @@ export function resolveIsDark(mode: ThemeMode, previewMode?: ResolvedMode | null
 function contrastFg(oklchStr: string) {
   try {
     const { l } = parseOklch(oklchStr);
-    return l > 0.6 ? tokens.palette.primary.light.value : tokens.palette.primary.light.fg;
+    return l > 0.6 ? tokens.contrastFg.onLight : tokens.contrastFg.onDark;
   } catch {
-    return tokens.palette.primary.light.fg;
+    return tokens.contrastFg.onDark;
   }
 }
 
