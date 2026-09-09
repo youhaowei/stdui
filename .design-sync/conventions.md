@@ -8,9 +8,7 @@ Components read theme + tokens from a provider. Without it, tokens resolve to no
 
 ```jsx
 <WyStackUI.StduiProvider defaultMode="light">
-  <WyStackUI.TooltipProvider>
-    {/* your design */}
-  </WyStackUI.TooltipProvider>
+  <WyStackUI.TooltipProvider>{/* your design */}</WyStackUI.TooltipProvider>
 </WyStackUI.StduiProvider>
 ```
 
@@ -20,14 +18,14 @@ Components read theme + tokens from a provider. Without it, tokens resolve to no
 
 This is a **Tailwind-preset** system. Style with these class families (real names — use them, do not invent off-token hex or generic Tailwind palette colors):
 
-| Family | Classes | Use |
-|---|---|---|
-| **Surface** | `bg-surface-base` | the canvas behind shadow-lifted panels |
-| **Neutral bg** | `bg-neutral-bg` `-subtle` `-muted` `-dim` `-emphasis` | backgrounds, from quietest to strongest |
-| **Neutral fg** | `text-neutral-fg` `text-neutral-fg-subtle` | primary / secondary text |
-| **Neutral border** | `border-neutral-border` `-subtle`, `border-neutral-ring`, `ring-neutral-ring` | dividers, focus rings |
-| **Palette** (status/intent) | `bg-palette-{primary,secondary,success,danger,warning,info}` + matching `text-palette-*` / `border-palette-*` | filled intent surfaces |
-| **Palette fg** | `text-palette-{primary,success,danger,warning,info,secondary}-fg` | text ON a palette surface |
+| Family                      | Classes                                                                                                       | Use                                     |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| **Surface**                 | `bg-surface-base`                                                                                             | the canvas behind shadow-lifted panels  |
+| **Neutral bg**              | `bg-neutral-bg` `-subtle` `-muted` `-dim` `-emphasis`                                                         | backgrounds, from quietest to strongest |
+| **Neutral fg**              | `text-neutral-fg` `text-neutral-fg-subtle`                                                                    | primary / secondary text                |
+| **Neutral border**          | `border-neutral-border` `-subtle`, `border-neutral-ring`, `ring-neutral-ring`                                 | dividers, focus rings                   |
+| **Palette** (status/intent) | `bg-palette-{primary,secondary,success,danger,warning,info}` + matching `text-palette-*` / `border-palette-*` | filled intent surfaces                  |
+| **Palette fg**              | `text-palette-{primary,success,danger,warning,info,secondary}-fg`                                             | text ON a palette surface               |
 
 Geometry: `--radius-{sm,md,lg,xl}`, `--surface-radius`, `--surface-inset`. Prefer the component's own props over re-styling; reach for these classes only for your own layout glue.
 
@@ -54,7 +52,9 @@ Build with these (group/Name): **ButtonPrimitive, Badge, Card, Alert, Dialog, In
         </WyStackUI.CardHeader>
         <WyStackUI.CardContent>
           <WyStackUI.Stack gap="md">
-            <WyStackUI.Badge variant="solid" color="success">+12%</WyStackUI.Badge>
+            <WyStackUI.Badge variant="solid" color="success">
+              +12%
+            </WyStackUI.Badge>
             <WyStackUI.ButtonPrimitive>View report</WyStackUI.ButtonPrimitive>
           </WyStackUI.Stack>
         </WyStackUI.CardContent>

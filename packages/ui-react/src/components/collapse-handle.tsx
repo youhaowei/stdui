@@ -1,9 +1,4 @@
-import {
-  ChevronsDownIcon,
-  ChevronsLeftIcon,
-  ChevronsRightIcon,
-  ChevronsUpIcon,
-} from "../icons";
+import { ChevronsDownIcon, ChevronsLeftIcon, ChevronsRightIcon, ChevronsUpIcon } from "../icons";
 import { cn } from "../lib/utils";
 
 export interface CollapseHandleProps {

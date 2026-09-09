@@ -8,13 +8,13 @@
     "build-storybook": "storybook build"
   },
   "devDependencies": {
-    "@wystack/ui-core": "workspace:*",
-    "@wystack/ui-react": "workspace:*",
     "@storybook/addon-a11y": "^10.2.0",
     "@storybook/addon-docs": "^10.2.0",
     "@storybook/react": "^10.2.0",
     "@storybook/react-vite": "^10.2.0",
     "@tailwindcss/vite": "^4.1.0",
+    "@wystack/ui-core": "workspace:*",
+    "@wystack/ui-react": "workspace:*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "storybook": "^10.2.0",

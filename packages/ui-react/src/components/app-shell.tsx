@@ -8,12 +8,7 @@ import { Dock } from "./dock";
 import { Stage } from "./stage";
 
 // Re-use existing stdui Sheet for mobile drawer
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "../primitives/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../primitives/sheet";
 
 // ---------- AppShell Context ----------
 
@@ -110,17 +105,12 @@ export function AppShell({
 
                 {/* Main content row — center Stage + right appearance Dock */}
                 <div className="flex min-h-0 flex-1 gap-2 overflow-hidden">
-                  <Stage className={cn("[contain:paint]", surfaceClassName)}>
-                    {children}
-                  </Stage>
+                  <Stage className={cn("[contain:paint]", surfaceClassName)}>{children}</Stage>
 
                   {/* Appearance panel — a right Dock; ThemePanel brings its own
                       surface chrome, so the dock is a bare collapsing container. */}
                   <Dock side="right" open={themePanelOpen} surface={false}>
-                    <ThemePanel
-                      isOpen={themePanelOpen}
-                      onClose={() => setThemePanelOpen(false)}
-                    />
+                    <ThemePanel isOpen={themePanelOpen} onClose={() => setThemePanelOpen(false)} />
                   </Dock>
                 </div>
               </div>
