@@ -58,6 +58,8 @@ describe("token schema contract", () => {
     cssVar("text-display");
     // @ts-expect-error Same for the Tailwind-side radius alias; the emitted name is surface-radius.
     cssVar("radius-surface");
+    // @ts-expect-error shadows.surface is an alias key, not a per-mode shadow; the emitted name is surface-shadow.
+    cssVar("shadow-surface");
   });
 
   it("declares every cssVar-accepted name family in :root or .dark", () => {

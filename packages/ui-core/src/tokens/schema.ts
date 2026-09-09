@@ -300,7 +300,7 @@ export type TokenName =
   | `${Exclude<RadiusName, "base">}-radius`
   | "surface-inset"
   | "inner-gap"
-  | `shadow-${Exclude<ShadowName, "inner">}`
+  | `shadow-${Exclude<ShadowName, "inner" | "surface">}`
   | "inner-shadow"
   | "surface-shadow"
   | `z-${ZIndexName}`
