@@ -1,5 +1,7 @@
 Values are defined in `packages/ui-core/src/tokens/schema.ts`; `src/styles/tokens.css` is generated.
 
+`cssVar(name)` from `@wystack/ui-core/tokens` returns `var(--name)` and accepts only custom properties the CSS declares in `:root`/`.dark` (`TokenName`). Tailwind bridge keys such as `text-display`, `radius-surface`, `shadow-surface`, and `font-code` (`ThemeKeyName`) are inlined into utilities and never emitted as custom properties — use the utility class, not `cssVar`.
+
 # stdui Token Reference
 
 Complete CSS custom property reference for the stdui design system. Run `bun run --filter @wystack/ui-core build:tokens` after editing the schema; `check:tokens` rejects stale CSS.

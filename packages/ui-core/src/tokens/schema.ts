@@ -285,20 +285,19 @@ export type ShadowName = keyof typeof tokens.shadows;
 export type ZIndexName = keyof typeof tokens.zIndex;
 export type ChartName = keyof typeof tokens.chart;
 export type UtilityName = keyof typeof tokens.utility;
+/**
+ * Custom properties the generated CSS declares in `:root` / `.dark`.
+ * These are the only names `cssVar()` accepts: every member resolves at runtime.
+ */
 export type TokenName =
   | `palette-${PaletteColor}${"" | "-fg"}`
   | `neutral-${NeutralTokenName | "ring-glow"}`
   | "surface-base"
   | "shell-bg"
   | "topbar-height"
-  | `text-${TextStyleName}`
-  | `text-${Exclude<TextStyleName, "code">}--${"line-height" | "font-weight"}`
-  | "font-code"
   | `space-${SpacingName}`
-  | "spacing"
   | "radius"
   | `${Exclude<RadiusName, "base">}-radius`
-  | `radius-${Exclude<RadiusName, "base">}`
   | "surface-inset"
   | "inner-gap"
   | `shadow-${Exclude<ShadowName, "inner">}`
@@ -308,7 +307,21 @@ export type TokenName =
   | `chart-${ChartName}`
   | UtilityName;
 
-/** Reference a known custom property without the leading --. */
+/**
+ * Keys the generated CSS declares only inside `@theme inline`. Tailwind inlines
+ * them into utilities (`text-display`, `rounded-surface`, `shadow-surface`,
+ * `font-code`) and does not emit them as cascade custom properties, so they are
+ * not valid `cssVar()` arguments. Use the utility class instead.
+ */
+export type ThemeKeyName =
+  | `text-${TextStyleName}`
+  | `text-${Exclude<TextStyleName, "code">}--${"line-height" | "font-weight"}`
+  | "font-code"
+  | "spacing"
+  | `radius-${Exclude<RadiusName, "base">}`
+  | "shadow-surface";
+
+/** Reference a custom property the generated CSS declares, without the leading --. */
 export function cssVar<N extends TokenName>(name: N): `var(--${string})` {
   return `var(--${name.replaceAll(".", "\\.")})`;
 }
