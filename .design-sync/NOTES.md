@@ -15,7 +15,7 @@ Repo gotchas discovered during the first sync. Read before any re-sync.
 
 ## [GENERAL] dts entry mismatch (OPEN — converter-internals)
 
-- `findTypesRoot` resolves the types root to `dist/` correctly, but `projectFor` (dts.mjs ~L90) recomputes the *entry* from `pj.types`/`pj.typings` → falls back to `packages/ui/index.d.ts` (absent) → `getSourceFile(entry)` undefined → 0 exports.
+- `findTypesRoot` resolves the types root to `dist/` correctly, but `projectFor` (dts.mjs ~L90) recomputes the _entry_ from `pj.types`/`pj.typings` → falls back to `packages/ui/index.d.ts` (absent) → `getSourceFile(entry)` undefined → 0 exports.
 - VERIFIED the data is fine: adding `dist/**/*.d.ts` to a ts-morph project and reading `dist/index.d.ts` yields **231 exports** incl. all PascalCase components (Button→ButtonPrimitive, Badge, Dialog, Card, Tabs, Input, Select…).
 - The fix must make the converter's dts entry = `dist/index.d.ts` WITHOUT a committed package.json `types` pointing at gitignored dist. Candidate: a `.design-sync/overrides/dts.mjs` fork that uses the resolved typesRoot for the entry, declared in `cfg.libOverrides`.
 

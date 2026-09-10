@@ -1,3 +1,4 @@
+import { tokens } from "../tokens/schema";
 import { createStore } from "zustand/vanilla";
 import { formatOklch, parseOklch, oklchToHex } from "./oklch";
 import {
@@ -68,9 +69,9 @@ export function resolveIsDark(mode: ThemeMode, previewMode?: ResolvedMode | null
 function contrastFg(oklchStr: string) {
   try {
     const { l } = parseOklch(oklchStr);
-    return l > 0.6 ? "oklch(0.205 0 0)" : "oklch(0.985 0 0)";
+    return l > 0.6 ? tokens.contrastFg.onLight : tokens.contrastFg.onDark;
   } catch {
-    return "oklch(0.985 0 0)";
+    return tokens.contrastFg.onDark;
   }
 }
 
@@ -97,7 +98,6 @@ function applyPaletteOverrides(style: CSSStyleDeclaration, palette: ModeOverride
 function applyNeutralOverrides(
   style: CSSStyleDeclaration,
   modeKey: ResolvedMode,
-  isDark: boolean,
   neutralHue: number | undefined,
   neutralChroma: number | undefined,
 ) {
@@ -113,7 +113,7 @@ function applyNeutralOverrides(
     if (ringDef) {
       style.setProperty(
         "--neutral-ring-glow",
-        formatOklch(ringDef.l, chroma, hue, isDark ? 0.2 : 0.3),
+        formatOklch(ringDef.l, chroma, hue, tokens.ringGlowAlpha[modeKey]),
       );
     }
   } else {
@@ -193,13 +193,7 @@ function applyOverrides(
   const modeOverrides = overrides[modeKey] ?? {};
 
   applyPaletteOverrides(style, modeOverrides.palette);
-  applyNeutralOverrides(
-    style,
-    modeKey,
-    isDark,
-    modeOverrides.neutralHue,
-    modeOverrides.neutralChroma,
-  );
+  applyNeutralOverrides(style, modeKey, modeOverrides.neutralHue, modeOverrides.neutralChroma);
   applySurfaceOverrides(style, isDark, modeOverrides.surfaceBase, modeOverrides.surfaceTintStyle);
 }
 

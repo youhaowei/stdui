@@ -25,26 +25,15 @@ export interface StageProps extends React.ComponentProps<"div"> {
  * overlays inside it, and an inner scroll column. Apps own the role ("this is
  * the dashboard area"); the primitive only owns the shape.
  */
-export function Stage({
-  elevation = "raised",
-  children,
-  className,
-  ref,
-  ...props
-}: StageProps) {
+export function Stage({ elevation = "raised", children, className, ref, ...props }: StageProps) {
   return (
     <Surface
       ref={ref}
       elevation={elevation}
-      className={cn(
-        "relative isolate flex min-w-0 flex-1 flex-col overflow-hidden",
-        className,
-      )}
+      className={cn("relative isolate flex min-w-0 flex-1 flex-col overflow-hidden", className)}
       {...props}
     >
-      <main className="flex min-h-0 flex-1 flex-col overflow-auto">
-        {children}
-      </main>
+      <main className="flex min-h-0 flex-1 flex-col overflow-auto">{children}</main>
     </Surface>
   );
 }

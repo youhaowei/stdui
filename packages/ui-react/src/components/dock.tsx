@@ -102,9 +102,7 @@ export function Dock({
 
   // Collapsing to 0 extent is what reflows the siblings.
   const resolvedExtent = open ? extent : 0;
-  const collapseStyle = isHorizontal
-    ? { width: resolvedExtent }
-    : { height: resolvedExtent };
+  const collapseStyle = isHorizontal ? { width: resolvedExtent } : { height: resolvedExtent };
 
   const onHandleDown = useCallback(
     (e: React.PointerEvent) => {

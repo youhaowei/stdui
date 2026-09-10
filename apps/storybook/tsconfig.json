@@ -5,8 +5,5 @@
     "rootDir": "src"
   },
   "include": ["src", ".storybook"],
-  "references": [
-    { "path": "../../packages/ui-core" },
-    { "path": "../../packages/ui-react" }
-  ]
+  "references": [{ "path": "../../packages/ui-core" }, { "path": "../../packages/ui-react" }]
 }

@@ -50,8 +50,7 @@ function Surface({
           "border border-neutral-border-subtle": elevation === "flat",
           "shadow-[var(--shadow-md)]": elevation === "raised",
           "shadow-[var(--shadow-lg)]": elevation === "floating",
-          "shadow-[var(--inner-shadow)] bg-neutral-bg-dim/30":
-            elevation === "inset",
+          "shadow-[var(--inner-shadow)] bg-neutral-bg-dim/30": elevation === "inset",
         },
         interactive &&
           "cursor-pointer hover:shadow-[var(--shadow-lg)] hover:bg-neutral-bg-subtle/50",
