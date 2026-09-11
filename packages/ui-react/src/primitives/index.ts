@@ -57,7 +57,7 @@ export { Separator } from "./separator";
 
 export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "./tooltip";
 
-export { ScrollArea, ScrollBar } from "./scroll-area";
+export { ScrollArea, ScrollBar, type ScrollAreaProps } from "./scroll-area";
 
 export { Progress } from "./progress";
 
