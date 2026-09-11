@@ -6,14 +6,19 @@ import { Spinner } from "./spinner";
 
 /**
  * Native `<button>` attributes this component accepts and forwards, minus the
- * names it redefines with a richer API (`color`, `children`).
+ * names it redefines with a richer API (`color`, `children`) and
+ * `dangerouslySetInnerHTML`, which React rejects alongside the children this
+ * component always renders.
  *
  * Declaring them keeps `aria-*`, `data-*`, `id`, `title`, `type`, `form`, and
  * the rest of the native surface available to consumers: TypeScript does not
  * check dashed attribute names in JSX, so without this they type-checked at the
  * call site and were then silently dropped.
  */
-type NativeButtonAttributes = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "color" | "children">;
+type NativeButtonAttributes = Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  "color" | "children" | "dangerouslySetInnerHTML"
+>;
 
 export interface ButtonProps extends NativeButtonAttributes {
   label: string;
