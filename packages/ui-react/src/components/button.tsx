@@ -1,11 +1,26 @@
-import type { ReactNode } from "react";
+import type { ButtonHTMLAttributes, ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "../lib/utils";
 import { Button as PrimitiveButton } from "../primitives/button";
 import { Spinner } from "./spinner";
 
-export interface ButtonProps {
+/**
+ * Native `<button>` attributes this component accepts and forwards, minus the
+ * names it redefines with a richer API (`color`, `children`).
+ *
+ * Declaring them keeps `aria-*`, `data-*`, `id`, `title`, `type`, `form`, and
+ * the rest of the native surface available to consumers: TypeScript does not
+ * check dashed attribute names in JSX, so without this they type-checked at the
+ * call site and were then silently dropped.
+ */
+type NativeButtonAttributes = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "color" | "children">;
+
+export interface ButtonProps extends NativeButtonAttributes {
   label: string;
+  /**
+   * Click handler. Kept argument-free so an `ItemAction` handler stays usable on
+   * non-button surfaces such as a dropdown item.
+   */
   onClick?: () => void;
   /**
    * Button style variant - controls the visual appearance (solid, outline, ghost, link)
@@ -20,6 +35,10 @@ export interface ButtonProps {
   asChild?: boolean;
   children?: ReactNode;
   className?: string;
+  /**
+   * Tooltip / native `title` text. Takes precedence over a `title` attribute
+   * passed through, and falls back to `label` in icon-only mode.
+   */
   tooltip?: string;
   /**
    * Icon-only mode - when true, shows only icon (if available) with sr-only label.
@@ -77,6 +96,8 @@ type ButtonSize = "sm" | "default" | "lg" | "icon";
  * - Tooltip support
  * - asChild prop for rendering as Link or other components (Radix Slot pattern)
  * - Loading state support
+ * - Remaining native button attributes (`aria-*`, `data-*`, `id`, `type`, ...)
+ *   are forwarded to the rendered element
  *
  * @example
  * ```tsx
@@ -89,7 +110,6 @@ type ButtonSize = "sm" | "default" | "lg" | "icon";
  */
 export function Button({
   label,
-  onClick,
   variant = "solid",
   color = "primary",
   icon: Icon,
@@ -97,11 +117,13 @@ export function Button({
   asChild,
   children,
   className,
+  title,
   tooltip,
   iconOnly = false,
   disabled,
   loading = false,
   active,
+  ...rest
 }: ButtonProps) {
   const shouldShowLabel = !iconOnly || !Icon;
 
@@ -134,13 +156,13 @@ export function Button({
       color={color}
       size={buttonSize}
       className={cn("flex items-center justify-center", className)}
-      title={tooltip || (iconOnly ? label : undefined)}
+      title={tooltip || title || (iconOnly ? label : undefined)}
       aria-label={iconOnly ? label : undefined}
       aria-pressed={active}
       active={active}
-      onClick={onClick}
       asChild={asChild}
       disabled={disabled || loading}
+      {...rest}
     >
       {buttonContent}
     </PrimitiveButton>

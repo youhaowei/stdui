@@ -1,0 +1,71 @@
+import { describe, expect, it } from "vitest";
+import { render } from "@testing-library/react";
+import { Check } from "lucide-react";
+import { Button } from "./button";
+
+describe("Button", () => {
+  it("forwards aria-* and data-* attributes to the rendered button", () => {
+    const { getByRole } = render(
+      <Button
+        label="Bar chart"
+        aria-disabled
+        aria-describedby="chart-hint"
+        data-testid="chart-tile"
+        id="chart-tile-bar"
+        title="Needs two columns"
+      />,
+    );
+
+    const button = getByRole("button", { name: "Bar chart" });
+    expect(button.getAttribute("aria-disabled")).toBe("true");
+    expect(button.getAttribute("aria-describedby")).toBe("chart-hint");
+    expect(button.getAttribute("data-testid")).toBe("chart-tile");
+    expect(button.getAttribute("id")).toBe("chart-tile-bar");
+    expect(button.getAttribute("title")).toBe("Needs two columns");
+  });
+
+  it("keeps its own props working alongside forwarded attributes", () => {
+    const { getByRole } = render(
+      <Button
+        label="Toggle grid"
+        icon={Check}
+        iconOnly
+        active
+        disabled
+        className="custom-class"
+        data-testid="toggle-grid"
+      />,
+    );
+
+    const button = getByRole("button", { name: "Toggle grid" });
+    // iconOnly still supplies the accessible name and title fallback
+    expect(button.getAttribute("aria-label")).toBe("Toggle grid");
+    expect(button.getAttribute("title")).toBe("Toggle grid");
+    expect(button.getAttribute("aria-pressed")).toBe("true");
+    expect(button.getAttribute("data-active")).toBe("true");
+    expect(button.getAttribute("data-testid")).toBe("toggle-grid");
+    expect((button as HTMLButtonElement).disabled).toBe(true);
+    expect(button.className).toContain("custom-class");
+  });
+
+  it("forwards attributes through asChild", () => {
+    const { getByRole } = render(
+      <Button label="Docs" asChild data-testid="docs-link" aria-describedby="docs-hint">
+        <a href="/docs">Docs</a>
+      </Button>,
+    );
+
+    const link = getByRole("link", { name: "Docs" });
+    expect(link.getAttribute("data-testid")).toBe("docs-link");
+    expect(link.getAttribute("aria-describedby")).toBe("docs-hint");
+    expect(link.getAttribute("href")).toBe("/docs");
+  });
+
+  it("lets a forwarded aria-label override the icon-only default", () => {
+    const { getByRole } = render(
+      <Button label="Save" icon={Check} iconOnly aria-label="Save insight" />,
+    );
+
+    expect(getByRole("button", { name: "Save insight" })).toBeTruthy();
+  });
+});
