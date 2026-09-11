@@ -36,6 +36,11 @@ interface ScrollAreaProps extends Omit<
   topInset?: number;
   /** Fade colour; match the surface behind the content. */
   fadeClassName?: string;
+  /**
+   * "overlay" (default) shows the thin bar on hover and while scrolling.
+   * "none" leaves only the edge fades, for strips too small for a bar.
+   */
+  scrollbar?: "overlay" | "none";
 }
 
 /**
@@ -51,6 +56,7 @@ function ScrollArea({
   onScroll,
   topInset = 0,
   fadeClassName = "from-neutral-bg",
+  scrollbar = "overlay",
   ...props
 }: ScrollAreaProps) {
   const vertical = orientation !== "horizontal";
@@ -72,12 +78,14 @@ function ScrollArea({
       </ScrollAreaPrimitive.Viewport>
       {vertical && (
         <>
-          <ScrollBar
-            // In "both", stop short of the horizontal bar so the two tracks
-            // don't overlap in the corner.
-            className={cn("my-1 mr-0.5", horizontal && "mb-2.5")}
-            style={topInset ? { marginTop: topInset + 4 } : undefined}
-          />
+          {scrollbar === "overlay" && (
+            <ScrollBar
+              // In "both", stop short of the horizontal bar so the two tracks
+              // don't overlap in the corner.
+              className={cn("my-1 mr-0.5", horizontal && "mb-2.5")}
+              style={topInset ? { marginTop: topInset + 4 } : undefined}
+            />
+          )}
           <div
             aria-hidden
             className={cn(FADE_TOP, fadeClassName)}
@@ -88,7 +96,12 @@ function ScrollArea({
       )}
       {horizontal && (
         <>
-          <ScrollBar orientation="horizontal" className={cn("mx-1 mb-0.5", vertical && "mr-2.5")} />
+          {scrollbar === "overlay" && (
+            <ScrollBar
+              orientation="horizontal"
+              className={cn("mx-1 mb-0.5", vertical && "mr-2.5")}
+            />
+          )}
           <div aria-hidden className={cn(FADE_LEFT, fadeClassName)} />
           <div aria-hidden className={cn(FADE_RIGHT, fadeClassName)} />
         </>

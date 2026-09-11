@@ -82,6 +82,30 @@ export const MaxHeight: Story = {
   ),
 };
 
+/** A strip of tabs: fades mark what runs off the ends, with no scrollbar. */
+export const WithoutScrollbar: Story = {
+  args: { children: null },
+  render: () => (
+    <ScrollArea
+      orientation="horizontal"
+      scrollbar="none"
+      className="w-80 rounded-lg border border-neutral-border p-1"
+    >
+      <div className="flex gap-1">
+        {columns.map((column) => (
+          <button
+            key={column}
+            type="button"
+            className="h-7 shrink-0 rounded-md px-3 text-sm text-neutral-fg-subtle hover:bg-neutral-bg-muted hover:text-neutral-fg"
+          >
+            {column}
+          </button>
+        ))}
+      </div>
+    </ScrollArea>
+  ),
+};
+
 /** A sticky header: the scrollbar starts below it and the top fade runs under it. */
 export const StickyHeader: Story = {
   args: { children: null },
