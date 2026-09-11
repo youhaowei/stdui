@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { render } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { ButtonGroup } from "./button-group";
 
 describe("ButtonGroup", () => {
@@ -34,5 +34,24 @@ describe("ButtonGroup", () => {
     const redo = getByRole("button", { name: "Redo" });
     expect(redo.getAttribute("id")).toBe("redo");
     expect((redo as HTMLButtonElement).disabled).toBe(true);
+  });
+
+  it("forwards a nested action's attributes to its menu item", async () => {
+    const { getByRole } = render(
+      <ButtonGroup
+        actions={[
+          {
+            label: "More",
+            actions: [{ label: "Duplicate", id: "duplicate", "aria-describedby": "dup-hint" }],
+          },
+        ]}
+      />,
+    );
+
+    fireEvent.click(getByRole("button", { name: "More" }));
+
+    const item = await screen.findByRole("menuitem", { name: "Duplicate" });
+    expect(item.getAttribute("id")).toBe("duplicate");
+    expect(item.getAttribute("aria-describedby")).toBe("dup-hint");
   });
 });

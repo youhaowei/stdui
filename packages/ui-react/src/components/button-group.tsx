@@ -1,3 +1,4 @@
+import type { ComponentProps } from "react";
 import { cn } from "../lib/utils";
 import { ButtonGroup as PrimitiveButtonGroup } from "../primitives/button-group";
 import {
@@ -59,6 +60,42 @@ function toButtonProps(action: ItemAction, iconOnly: boolean): ButtonProps {
 }
 
 /**
+ * Keep only what a menu item can use: strip the button presentation props and
+ * the `<button>`-specific native ones, and forward the element-level remainder
+ * (`id`, `title`, `aria-*`, `data-*`, `style`, focus handlers, …) so a nested
+ * action's attributes are not dropped either.
+ */
+function toMenuItemProps(action: ItemAction) {
+  const {
+    label: _label,
+    icon: _icon,
+    tooltip: _tooltip,
+    variant: _variant,
+    color: _color,
+    size: _size,
+    iconOnly: _iconOnly,
+    loading: _loading,
+    active: _active,
+    asChild: _asChild,
+    children: _children,
+    group: _group,
+    actions: _actions,
+    href: _href,
+    type: _type,
+    form: _form,
+    formAction: _formAction,
+    formEncType: _formEncType,
+    formMethod: _formMethod,
+    formNoValidate: _formNoValidate,
+    formTarget: _formTarget,
+    name: _name,
+    value: _value,
+    ...menuItemProps
+  } = action;
+  return menuItemProps as ComponentProps<typeof DropdownMenuItem>;
+}
+
+/**
  * Render a dropdown menu action with nested items.
  */
 function DropdownAction({ action, iconOnly }: { action: ItemAction; iconOnly: boolean }) {
@@ -72,7 +109,7 @@ function DropdownAction({ action, iconOnly }: { action: ItemAction; iconOnly: bo
       />
       <DropdownMenuContent align="end">
         {action.actions?.map((nestedAction, nestedIndex) => (
-          <DropdownMenuItem key={nestedIndex} onClick={nestedAction.onClick}>
+          <DropdownMenuItem key={nestedIndex} {...toMenuItemProps(nestedAction)}>
             {nestedAction.icon && <nestedAction.icon aria-hidden />}
             {nestedAction.label}
           </DropdownMenuItem>
