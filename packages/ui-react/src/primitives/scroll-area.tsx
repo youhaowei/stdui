@@ -16,7 +16,10 @@ interface ScrollAreaProps extends Omit<
   React.ComponentProps<typeof ScrollAreaPrimitive.Root>,
   "onScroll"
 > {
-  /** Directions that scroll. Each gets a scrollbar and edge fades. */
+  /**
+   * Directions that get a scrollbar and edge fades. The viewport still
+   * scrolls natively on both axes.
+   */
   orientation?: "vertical" | "horizontal" | "both";
   /** Classes for the scrolling viewport. */
   viewportClassName?: string;
@@ -26,7 +29,8 @@ interface ScrollAreaProps extends Omit<
   onScroll?: React.UIEventHandler<HTMLDivElement>;
   /**
    * Height of sticky content at the top of the viewport, such as a table
-   * header. The top fade and the vertical scrollbar start below it.
+   * header. The top fade and the vertical scrollbar start below it. Vertical
+   * orientations only.
    */
   topInset?: number;
   /** Fade colour; match the surface behind the content. */
@@ -51,19 +55,27 @@ function ScrollArea({
   const vertical = orientation !== "horizontal";
   const horizontal = orientation !== "vertical";
   return (
-    <ScrollAreaPrimitive.Root className={cn("relative overflow-hidden", className)} {...props}>
+    <ScrollAreaPrimitive.Root
+      // flex-col with min-h-0 on the viewport lets a root sized only by
+      // max-height scroll; a percentage height would resolve to auto there.
+      // isolate keeps the fades and bars from stacking against the page.
+      className={cn("relative isolate flex flex-col overflow-hidden", className)}
+      {...props}
+    >
       <ScrollAreaPrimitive.Viewport
         ref={viewportRef}
         onScroll={onScroll}
-        className={cn("h-full w-full rounded-[inherit]", viewportClassName)}
+        className={cn("h-full min-h-0 w-full rounded-[inherit]", viewportClassName)}
       >
         {children}
       </ScrollAreaPrimitive.Viewport>
       {vertical && (
         <>
           <ScrollBar
-            className="my-1 mr-0.5"
-            style={topInset ? { marginTop: topInset } : undefined}
+            // In "both", stop short of the horizontal bar so the two tracks
+            // don't overlap in the corner.
+            className={cn("my-1 mr-0.5", horizontal && "mb-2.5")}
+            style={topInset ? { marginTop: topInset + 4 } : undefined}
           />
           <div
             aria-hidden
@@ -75,7 +87,7 @@ function ScrollArea({
       )}
       {horizontal && (
         <>
-          <ScrollBar orientation="horizontal" className="mx-1 mb-0.5" />
+          <ScrollBar orientation="horizontal" className={cn("mx-1 mb-0.5", vertical && "mr-2.5")} />
           <div aria-hidden className={cn(FADE_LEFT, fadeClassName)} />
           <div aria-hidden className={cn(FADE_RIGHT, fadeClassName)} />
         </>

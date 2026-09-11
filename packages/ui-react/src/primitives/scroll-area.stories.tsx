@@ -66,6 +66,22 @@ export const Both: Story = {
   ),
 };
 
+/** Sized by max-height alone: scrolls once content passes 240px. */
+export const MaxHeight: Story = {
+  args: { children: null },
+  render: () => (
+    <ScrollArea className="max-h-60 w-64 rounded-lg border border-neutral-border">
+      <ul className="p-3 text-sm">
+        {rows.map((row) => (
+          <li key={row} className="py-1.5">
+            {row}
+          </li>
+        ))}
+      </ul>
+    </ScrollArea>
+  ),
+};
+
 /** A sticky header: the top fade and scrollbar start below it. */
 export const StickyHeader: Story = {
   args: { children: null },

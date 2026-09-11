@@ -247,7 +247,9 @@ export function ItemList<T extends ListItem>({
       className={cn("w-full", className)}
       style={maxSizeValue ? { maxWidth: maxSizeValue } : undefined}
     >
-      <div className="flex flex-row" style={{ gap: `${gap}px` }}>
+      {/* Bottom padding keeps the overlay scrollbar off the items, where it
+          would take their clicks. */}
+      <div className="flex flex-row pb-3" style={{ gap: `${gap}px` }}>
         {itemElements}
       </div>
     </ScrollArea>
