@@ -164,7 +164,9 @@ export function Button({
   // `active` owns the toggle state: a forwarded value only applies when the
   // component is not driving one, so the two can never contradict.
   const ariaPressed = active ?? forwarded["aria-pressed"];
-  const dataActive = active || forwarded["data-active"];
+  // Presence-shaped, like the primitive's own attribute: `active={false}` drops
+  // it rather than rendering "false".
+  const dataActive = active === undefined ? forwarded["data-active"] : active || undefined;
 
   return (
     <PrimitiveButton

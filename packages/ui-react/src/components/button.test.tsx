@@ -69,6 +69,17 @@ describe("Button", () => {
     expect(button.getAttribute("data-active")).toBe("maybe");
   });
 
+  it("drops a forwarded data-active when active is explicitly false", () => {
+    const { getByRole } = render(
+      // Deliberately contradictory input: an explicit `active={false}` wins.
+      <Button label="Toggle snap" active={false} aria-pressed data-active="true" />,
+    );
+
+    const button = getByRole("button", { name: "Toggle snap" });
+    expect(button.getAttribute("aria-pressed")).toBe("false");
+    expect(button.hasAttribute("data-active")).toBe(false);
+  });
+
   it("forwards attributes through asChild", () => {
     const { getByRole } = render(
       <Button label="Docs" asChild data-testid="docs-link" aria-describedby="docs-hint">
