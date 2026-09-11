@@ -55,9 +55,10 @@ export interface ButtonProps extends NativeButtonAttributes {
    */
   loading?: boolean;
   /**
-   * Toggle state — renders the pressed visual (ghost active styles) and emits
-   * `aria-pressed`. Leave undefined for plain action buttons so they don't
-   * present as toggles to assistive tech.
+   * Toggle state — renders the pressed visual (ghost active styles) and owns
+   * both `aria-pressed` and `data-active`. Leave undefined for plain action
+   * buttons so they don't present as toggles to assistive tech; a forwarded
+   * `aria-pressed` / `data-active` then applies instead.
    */
   active?: boolean;
 }
@@ -127,6 +128,11 @@ export function Button({
 }: ButtonProps) {
   const shouldShowLabel = !iconOnly || !Icon;
 
+  // `data-active` is not part of ButtonHTMLAttributes (JSX never type-checks
+  // dashed names), but a caller can still pass one at runtime. Read it through a
+  // widened view so the toggle state below stays consistent with `active`.
+  const forwarded = rest as typeof rest & { "data-active"?: boolean | string };
+
   // Map button size to spinner size (default to "md")
   const spinnerSize = size || "md";
 
@@ -150,6 +156,11 @@ export function Button({
 
   const buttonSize = getButtonSize();
 
+  // `active` owns the toggle state: a forwarded value only applies when the
+  // component is not driving one, so the two can never contradict.
+  const ariaPressed = active ?? forwarded["aria-pressed"];
+  const dataActive = active || forwarded["data-active"];
+
   return (
     <PrimitiveButton
       variant={variant}
@@ -158,11 +169,12 @@ export function Button({
       className={cn("flex items-center justify-center", className)}
       title={tooltip || title || (iconOnly ? label : undefined)}
       aria-label={iconOnly ? label : undefined}
-      aria-pressed={active}
       active={active}
       asChild={asChild}
       disabled={disabled || loading}
-      {...rest}
+      {...forwarded}
+      aria-pressed={ariaPressed}
+      data-active={dataActive}
     >
       {buttonContent}
     </PrimitiveButton>

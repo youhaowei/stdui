@@ -48,6 +48,27 @@ describe("Button", () => {
     expect(button.className).toContain("custom-class");
   });
 
+  it("keeps active in charge of the toggle state it drives", () => {
+    const { getByRole } = render(
+      // Deliberately contradictory input: active must win.
+      <Button label="Toggle grid" active aria-pressed={false} data-active="false" />,
+    );
+
+    const button = getByRole("button", { name: "Toggle grid" });
+    expect(button.getAttribute("aria-pressed")).toBe("true");
+    expect(button.getAttribute("data-active")).toBe("true");
+  });
+
+  it("forwards toggle attributes when active is not driving them", () => {
+    const { getByRole } = render(
+      <Button label="Filters" aria-pressed={false} data-active="maybe" />,
+    );
+
+    const button = getByRole("button", { name: "Filters" });
+    expect(button.getAttribute("aria-pressed")).toBe("false");
+    expect(button.getAttribute("data-active")).toBe("maybe");
+  });
+
   it("forwards attributes through asChild", () => {
     const { getByRole } = render(
       <Button label="Docs" asChild data-testid="docs-link" aria-describedby="docs-hint">
