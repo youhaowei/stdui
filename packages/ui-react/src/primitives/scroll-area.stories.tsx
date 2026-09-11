@@ -82,7 +82,7 @@ export const MaxHeight: Story = {
   ),
 };
 
-/** A sticky header: the top fade and scrollbar start below it. */
+/** A sticky header: the scrollbar starts below it and the top fade runs under it. */
 export const StickyHeader: Story = {
   args: { children: null },
   render: () => (
@@ -91,7 +91,7 @@ export const StickyHeader: Story = {
       topInset={32}
       className="h-64 w-72 rounded-lg border border-neutral-border"
     >
-      <div className="sticky top-0 z-10 flex h-8 items-center border-b border-neutral-border bg-neutral-bg-muted px-3 text-xs font-medium">
+      <div className="sticky top-0 z-20 flex h-8 items-center border-b border-neutral-border bg-neutral-bg-muted px-3 text-xs font-medium">
         Name
       </div>
       <ul className="px-3 text-sm">

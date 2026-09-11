@@ -29,8 +29,9 @@ interface ScrollAreaProps extends Omit<
   onScroll?: React.UIEventHandler<HTMLDivElement>;
   /**
    * Height of sticky content at the top of the viewport, such as a table
-   * header. The top fade and the vertical scrollbar start below it. Vertical
-   * orientations only.
+   * header. The vertical scrollbar starts below it, and the top fade extends
+   * under it so content dissolves as it scrolls behind. Content that should
+   * sit above the fade needs a z-index above 10. Vertical orientations only.
    */
   topInset?: number;
   /** Fade colour; match the surface behind the content. */
@@ -80,7 +81,7 @@ function ScrollArea({
           <div
             aria-hidden
             className={cn(FADE_TOP, fadeClassName)}
-            style={topInset ? { top: topInset } : undefined}
+            style={topInset ? { height: topInset + 24 } : undefined}
           />
           <div aria-hidden className={cn(FADE_BOTTOM, fadeClassName)} />
         </>
@@ -98,8 +99,8 @@ function ScrollArea({
 
 /**
  * Thin scrollbar for a Base UI scroll area root. It stays out of layout and
- * shows only while the area scrolls or the pointer is on the bar, so edge
- * fades do the everyday job of marking more content.
+ * shows while the pointer is over the area (after a short delay, so passing
+ * over doesn't flash it) or while the area scrolls.
  */
 function ScrollBar({
   className,
@@ -111,7 +112,7 @@ function ScrollBar({
       orientation={orientation}
       className={cn(
         "z-20 flex touch-none rounded-full p-0.5 opacity-0 transition-opacity delay-300 duration-300 select-none motion-reduce:transition-none",
-        "hover:opacity-100 hover:delay-0 data-[scrolling]:opacity-100 data-[scrolling]:delay-0 data-[scrolling]:duration-100",
+        "data-[hovering]:opacity-100 data-[hovering]:delay-150 data-[hovering]:duration-200 data-[scrolling]:opacity-100 data-[scrolling]:delay-0 data-[scrolling]:duration-100",
         orientation === "vertical" ? "w-2" : "h-2 flex-col",
         className,
       )}
