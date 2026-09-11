@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { render } from "@testing-library/react";
 import { Check } from "lucide-react";
-import { Button } from "./button";
+import { Button, type ButtonProps } from "./button";
 
 describe("Button", () => {
   it("forwards aria-* and data-* attributes to the rendered button", () => {
@@ -99,5 +99,14 @@ describe("Button", () => {
     );
 
     expect(getByRole("button", { name: "Save insight" })).toBeTruthy();
+  });
+
+  it("accepts data-* on a typed props object, not just in JSX", () => {
+    const props: ButtonProps = { label: "Export", "data-testid": "export-button" };
+    const { getByRole } = render(<Button {...props} />);
+
+    expect(getByRole("button", { name: "Export" }).getAttribute("data-testid")).toBe(
+      "export-button",
+    );
   });
 });

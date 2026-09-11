@@ -6,7 +6,15 @@ describe("ButtonGroup", () => {
   it("forwards an action's native attributes to the rendered button", () => {
     const { getByRole } = render(
       <ButtonGroup
-        actions={[{ label: "Save", id: "save", "aria-describedby": "hint", title: "Save now" }]}
+        actions={[
+          {
+            label: "Save",
+            id: "save",
+            "aria-describedby": "hint",
+            title: "Save now",
+            "data-testid": "save-action",
+          },
+        ]}
       />,
     );
 
@@ -14,13 +22,15 @@ describe("ButtonGroup", () => {
     expect(button.getAttribute("id")).toBe("save");
     expect(button.getAttribute("aria-describedby")).toBe("hint");
     expect(button.getAttribute("title")).toBe("Save now");
+    // data-* is usable on an action object, not just at a JSX call site
+    expect(button.getAttribute("data-testid")).toBe("save-action");
   });
 
   it("forwards attributes for grouped actions too, without leaking grouping fields", () => {
     const { getByRole } = render(
       <ButtonGroup
         actions={[
-          { label: "Undo", group: "edit", id: "undo", active: true },
+          { label: "Undo", group: "edit", id: "undo", active: true, "data-testid": "undo-action" },
           { label: "Redo", group: "edit", id: "redo", disabled: true },
         ]}
       />,
@@ -29,6 +39,7 @@ describe("ButtonGroup", () => {
     const undo = getByRole("button", { name: "Undo" });
     expect(undo.getAttribute("id")).toBe("undo");
     expect(undo.getAttribute("aria-pressed")).toBe("true");
+    expect(undo.getAttribute("data-testid")).toBe("undo-action");
     expect(undo.hasAttribute("group")).toBe(false);
 
     const redo = getByRole("button", { name: "Redo" });
@@ -42,7 +53,14 @@ describe("ButtonGroup", () => {
         actions={[
           {
             label: "More",
-            actions: [{ label: "Duplicate", id: "duplicate", "aria-describedby": "dup-hint" }],
+            actions: [
+              {
+                label: "Duplicate",
+                id: "duplicate",
+                "aria-describedby": "dup-hint",
+                "data-testid": "duplicate-item",
+              },
+            ],
           },
         ]}
       />,
@@ -53,5 +71,6 @@ describe("ButtonGroup", () => {
     const item = await screen.findByRole("menuitem", { name: "Duplicate" });
     expect(item.getAttribute("id")).toBe("duplicate");
     expect(item.getAttribute("aria-describedby")).toBe("dup-hint");
+    expect(item.getAttribute("data-testid")).toBe("duplicate-item");
   });
 });

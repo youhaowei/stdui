@@ -21,6 +21,16 @@ type NativeButtonAttributes = Omit<
 >;
 
 export interface ButtonProps extends NativeButtonAttributes {
+  /**
+   * Arbitrary `data-*` attributes, forwarded to the rendered element.
+   *
+   * `ButtonHTMLAttributes` has no index signature for them, and JSX's exemption
+   * for dashed names does not extend to object literals, so without this an
+   * `ItemAction` or a `const props: ButtonProps = { … }` could not carry one.
+   * The pattern is narrow enough that excess property checking still catches a
+   * misspelled regular prop.
+   */
+  [dataAttribute: `data-${string}`]: string | number | boolean | undefined;
   label: string;
   /**
    * Click handler. Kept argument-free so an `ItemAction` handler stays usable on
@@ -133,11 +143,6 @@ export function Button({
 }: ButtonProps) {
   const shouldShowLabel = !iconOnly || !Icon;
 
-  // `data-active` is not part of ButtonHTMLAttributes (JSX never type-checks
-  // dashed names), but a caller can still pass one at runtime. Read it through a
-  // widened view so the toggle state below stays consistent with `active`.
-  const forwarded = rest as typeof rest & { "data-active"?: boolean | string };
-
   // Map button size to spinner size (default to "md")
   const spinnerSize = size || "md";
 
@@ -163,10 +168,10 @@ export function Button({
 
   // `active` owns the toggle state: a forwarded value only applies when the
   // component is not driving one, so the two can never contradict.
-  const ariaPressed = active ?? forwarded["aria-pressed"];
+  const ariaPressed = active ?? rest["aria-pressed"];
   // Presence-shaped, like the primitive's own attribute: `active={false}` drops
   // it rather than rendering "false".
-  const dataActive = active === undefined ? forwarded["data-active"] : active || undefined;
+  const dataActive = active === undefined ? rest["data-active"] : active || undefined;
 
   return (
     <PrimitiveButton
@@ -179,7 +184,7 @@ export function Button({
       active={active}
       asChild={asChild}
       disabled={disabled || loading}
-      {...forwarded}
+      {...rest}
       aria-pressed={ariaPressed}
       data-active={dataActive}
     >
