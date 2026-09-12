@@ -1,3 +1,4 @@
+import type { ComponentProps } from "react";
 import { cn } from "../lib/utils";
 import { ButtonGroup as PrimitiveButtonGroup } from "../primitives/button-group";
 import {
@@ -6,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../primitives/dropdown-menu";
-import { Button, type ItemAction } from "./button";
+import { Button, type ButtonProps, type ItemAction } from "./button";
 
 export type { ItemAction };
 
@@ -48,6 +49,53 @@ function groupActions(actions: ItemAction[]): (ItemAction | ItemAction[])[] {
 }
 
 /**
+ * Split an action into the props `<Button>` takes and the fields ButtonGroup
+ * consumes itself (`group`, `actions`, `href`), so everything else an
+ * `ItemAction` accepts — native attributes included — reaches the button
+ * instead of being dropped by a whitelist.
+ */
+function toButtonProps(action: ItemAction, iconOnly: boolean): ButtonProps {
+  const { group: _group, actions: _actions, href: _href, ...buttonProps } = action;
+  return { ...buttonProps, iconOnly: action.iconOnly ?? iconOnly };
+}
+
+/**
+ * Keep only what a menu item can use: strip the button presentation props and
+ * the `<button>`-specific native ones, and forward the element-level remainder
+ * (`id`, `title`, `aria-*`, `data-*`, `style`, focus handlers, …) so a nested
+ * action's attributes are not dropped either.
+ */
+function toMenuItemProps(action: ItemAction) {
+  const {
+    label: _label,
+    icon: _icon,
+    tooltip: _tooltip,
+    variant: _variant,
+    color: _color,
+    size: _size,
+    iconOnly: _iconOnly,
+    loading: _loading,
+    active: _active,
+    asChild: _asChild,
+    children: _children,
+    group: _group,
+    actions: _actions,
+    href: _href,
+    type: _type,
+    form: _form,
+    formAction: _formAction,
+    formEncType: _formEncType,
+    formMethod: _formMethod,
+    formNoValidate: _formNoValidate,
+    formTarget: _formTarget,
+    name: _name,
+    value: _value,
+    ...menuItemProps
+  } = action;
+  return menuItemProps as ComponentProps<typeof DropdownMenuItem>;
+}
+
+/**
  * Render a dropdown menu action with nested items.
  */
 function DropdownAction({ action, iconOnly }: { action: ItemAction; iconOnly: boolean }) {
@@ -55,20 +103,13 @@ function DropdownAction({ action, iconOnly }: { action: ItemAction; iconOnly: bo
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <Button
-            label={action.label}
-            icon={action.icon}
-            variant={action.variant}
-            size={action.size}
-            iconOnly={action.iconOnly ?? iconOnly}
-            className={action.className}
-            tooltip={action.tooltip}
-          />
+          // The trigger opens the menu, so the action's own onClick stays behind.
+          <Button {...toButtonProps(action, iconOnly)} onClick={undefined} />
         }
       />
       <DropdownMenuContent align="end">
         {action.actions?.map((nestedAction, nestedIndex) => (
-          <DropdownMenuItem key={nestedIndex} onClick={nestedAction.onClick}>
+          <DropdownMenuItem key={nestedIndex} {...toMenuItemProps(nestedAction)}>
             {nestedAction.icon && <nestedAction.icon aria-hidden />}
             {nestedAction.label}
           </DropdownMenuItem>
@@ -110,44 +151,14 @@ export function ButtonGroup({ actions, className, iconOnly = false }: ButtonGrou
           }
 
           // Regular single action
-          return (
-            <Button
-              key={index}
-              label={item.label}
-              onClick={item.onClick}
-              variant={item.variant}
-              icon={item.icon}
-              size={item.size}
-              iconOnly={item.iconOnly ?? iconOnly}
-              className={item.className}
-              tooltip={item.tooltip}
-              asChild={item.asChild}
-              disabled={item.disabled}
-            >
-              {item.children}
-            </Button>
-          );
+          return <Button key={index} {...toButtonProps(item, iconOnly)} />;
         }
 
         // Group of actions (ButtonGroup)
         return (
           <PrimitiveButtonGroup key={index}>
             {item.map((groupedAction, groupedIndex) => (
-              <Button
-                key={groupedIndex}
-                label={groupedAction.label}
-                onClick={groupedAction.onClick}
-                variant={groupedAction.variant}
-                icon={groupedAction.icon}
-                size={groupedAction.size}
-                iconOnly={groupedAction.iconOnly ?? iconOnly}
-                className={groupedAction.className}
-                tooltip={groupedAction.tooltip}
-                asChild={groupedAction.asChild}
-                disabled={groupedAction.disabled}
-              >
-                {groupedAction.children}
-              </Button>
+              <Button key={groupedIndex} {...toButtonProps(groupedAction, iconOnly)} />
             ))}
           </PrimitiveButtonGroup>
         );

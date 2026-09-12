@@ -1,11 +1,41 @@
-import type { ReactNode } from "react";
+import type { ButtonHTMLAttributes, ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "../lib/utils";
 import { Button as PrimitiveButton } from "../primitives/button";
 import { Spinner } from "./spinner";
 
-export interface ButtonProps {
+/**
+ * Native `<button>` attributes this component accepts and forwards, minus the
+ * names it redefines with a richer API (`color`, `children`) and
+ * `dangerouslySetInnerHTML`, which React rejects alongside the children this
+ * component always renders.
+ *
+ * Declaring them keeps `aria-*`, `data-*`, `id`, `title`, `type`, `form`, and
+ * the rest of the native surface available to consumers: TypeScript does not
+ * check dashed attribute names in JSX, so without this they type-checked at the
+ * call site and were then silently dropped.
+ */
+type NativeButtonAttributes = Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  "color" | "children" | "dangerouslySetInnerHTML"
+>;
+
+export interface ButtonProps extends NativeButtonAttributes {
+  /**
+   * Arbitrary `data-*` attributes, forwarded to the rendered element.
+   *
+   * `ButtonHTMLAttributes` has no index signature for them, and JSX's exemption
+   * for dashed names does not extend to object literals, so without this an
+   * `ItemAction` or a `const props: ButtonProps = { … }` could not carry one.
+   * The pattern is narrow enough that excess property checking still catches a
+   * misspelled regular prop.
+   */
+  [dataAttribute: `data-${string}`]: string | number | boolean | undefined;
   label: string;
+  /**
+   * Click handler. Kept argument-free so an `ItemAction` handler stays usable on
+   * non-button surfaces such as a dropdown item.
+   */
   onClick?: () => void;
   /**
    * Button style variant - controls the visual appearance (solid, outline, ghost, link)
@@ -20,6 +50,10 @@ export interface ButtonProps {
   asChild?: boolean;
   children?: ReactNode;
   className?: string;
+  /**
+   * Tooltip / native `title` text. Takes precedence over a `title` attribute
+   * passed through, and falls back to `label` in icon-only mode.
+   */
   tooltip?: string;
   /**
    * Icon-only mode - when true, shows only icon (if available) with sr-only label.
@@ -36,9 +70,10 @@ export interface ButtonProps {
    */
   loading?: boolean;
   /**
-   * Toggle state — renders the pressed visual (ghost active styles) and emits
-   * `aria-pressed`. Leave undefined for plain action buttons so they don't
-   * present as toggles to assistive tech.
+   * Toggle state — renders the pressed visual (ghost active styles) and owns
+   * both `aria-pressed` and `data-active`. Leave undefined for plain action
+   * buttons so they don't present as toggles to assistive tech; a forwarded
+   * `aria-pressed` / `data-active` then applies instead.
    */
   active?: boolean;
 }
@@ -77,6 +112,8 @@ type ButtonSize = "sm" | "default" | "lg" | "icon";
  * - Tooltip support
  * - asChild prop for rendering as Link or other components (Radix Slot pattern)
  * - Loading state support
+ * - Remaining native button attributes (`aria-*`, `data-*`, `id`, `type`, ...)
+ *   are forwarded to the rendered element
  *
  * @example
  * ```tsx
@@ -89,7 +126,6 @@ type ButtonSize = "sm" | "default" | "lg" | "icon";
  */
 export function Button({
   label,
-  onClick,
   variant = "solid",
   color = "primary",
   icon: Icon,
@@ -97,11 +133,13 @@ export function Button({
   asChild,
   children,
   className,
+  title,
   tooltip,
   iconOnly = false,
   disabled,
   loading = false,
   active,
+  ...rest
 }: ButtonProps) {
   const shouldShowLabel = !iconOnly || !Icon;
 
@@ -128,19 +166,27 @@ export function Button({
 
   const buttonSize = getButtonSize();
 
+  // `active` owns the toggle state: a forwarded value only applies when the
+  // component is not driving one, so the two can never contradict.
+  const ariaPressed = active ?? rest["aria-pressed"];
+  // Presence-shaped, like the primitive's own attribute: `active={false}` drops
+  // it rather than rendering "false".
+  const dataActive = active === undefined ? rest["data-active"] : active || undefined;
+
   return (
     <PrimitiveButton
       variant={variant}
       color={color}
       size={buttonSize}
       className={cn("flex items-center justify-center", className)}
-      title={tooltip || (iconOnly ? label : undefined)}
+      title={tooltip || title || (iconOnly ? label : undefined)}
       aria-label={iconOnly ? label : undefined}
-      aria-pressed={active}
       active={active}
-      onClick={onClick}
       asChild={asChild}
       disabled={disabled || loading}
+      {...rest}
+      aria-pressed={ariaPressed}
+      data-active={dataActive}
     >
       {buttonContent}
     </PrimitiveButton>
