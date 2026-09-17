@@ -28,6 +28,7 @@ import {
   Eye,
   FileSpreadsheet,
   FileText,
+  Funnel,
   BookOpen,
   Github,
   GripHorizontal,
@@ -58,6 +59,7 @@ import {
   Search,
   Settings,
   Shield,
+  SlidersHorizontal,
   Sparkles,
   SquareCheck,
   Sun,
@@ -126,6 +128,8 @@ export {
 export {
   Lock as LockIcon,
   EllipsisVertical as MoreIcon,
+  SlidersHorizontal as ControlsIcon,
+  Funnel as FilterIcon,
   Settings as SettingsIcon,
   Shield as ShieldIcon,
 };
