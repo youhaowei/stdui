@@ -2,7 +2,7 @@ import * as React from "react";
 import type { LucideIcon } from "../icons";
 import { cn } from "../lib/utils";
 import { ItemCard, type ItemAction } from "../primitives/item-card";
-import { ScrollArea, ScrollBar } from "../primitives/scroll-area";
+import { ScrollArea } from "../primitives/scroll-area";
 
 export interface ListItem {
   /**
@@ -243,13 +243,15 @@ export function ItemList<T extends ListItem>({
   // Horizontal orientation
   return (
     <ScrollArea
+      orientation="horizontal"
       className={cn("w-full", className)}
       style={maxSizeValue ? { maxWidth: maxSizeValue } : undefined}
     >
+      {/* Bottom padding keeps the overlay scrollbar off the items, where it
+          would take their clicks. */}
       <div className="flex flex-row pb-3" style={{ gap: `${gap}px` }}>
         {itemElements}
       </div>
-      <ScrollBar orientation="horizontal" />
     </ScrollArea>
   );
 }

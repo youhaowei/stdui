@@ -75,7 +75,7 @@ export {
 // Enhanced one-prop Tooltip (<Tooltip content={...}>) — the default app-level API.
 export { Tooltip, type TooltipProps } from "./components/tooltip";
 
-export { ScrollArea, ScrollBar } from "./primitives/scroll-area";
+export { ScrollArea, ScrollBar, type ScrollAreaProps } from "./primitives/scroll-area";
 export { Progress } from "./primitives/progress";
 
 // Batch 2 primitives
