@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { render } from "@testing-library/react";
 import { GridIcon, ListIcon } from "../icons";
 import { Toggle, type ToggleProps } from "./toggle";
+import { TooltipProvider } from "../primitives/tooltip";
 
 const classesOf = (el: Element) => el.className.split(/\s+/);
 
@@ -67,6 +68,41 @@ describe("Toggle", () => {
     const classes = classesOf(getByRole("tab", { name: "List view" }));
 
     expect(classes).toEqual(expect.arrayContaining(["aspect-square", "h-full", "px-0"]));
+  });
+
+  it("keeps a tooltip-wrapped segment filling the well", () => {
+    const { getByRole } = render(
+      <TooltipProvider>
+        <Toggle
+          size="sm"
+          value="grid"
+          onValueChange={() => {}}
+          options={[
+            { value: "grid", icon: <GridIcon />, tooltip: "Grid view" },
+            { value: "list", icon: <ListIcon />, tooltip: "List view" },
+          ]}
+        />
+      </TooltipProvider>,
+    );
+    const tab = getByRole("tab", { name: "Grid view" });
+
+    expect(classesOf(tab.parentElement!)).toEqual(
+      expect.arrayContaining(["inline-flex", "h-full"]),
+    );
+    expect(classesOf(tab)).toEqual(expect.arrayContaining(["h-full", "aspect-square"]));
+  });
+
+  it("does not square a segment that carries only a badge", () => {
+    const { getByRole } = renderToggle({
+      options: [
+        { value: "grid", badge: 3, ariaLabel: "Grid view" },
+        { value: "list", icon: <ListIcon />, ariaLabel: "List view" },
+      ],
+    });
+    const classes = classesOf(getByRole("tab", { name: "Grid view" }));
+
+    expect(classes).not.toContain("aspect-square");
+    expect(classes).toContain("px-3");
   });
 
   it("leaves the outline variant's pill styling in place", () => {

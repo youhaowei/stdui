@@ -4,10 +4,20 @@ import { cn } from "../lib/utils";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../primitives/tabs";
 import { Badge } from "../primitives/badge";
 
-function TriggerWithTooltip({ tooltip, children }: { tooltip: string; children: ReactNode }) {
+function TriggerWithTooltip({
+  tooltip,
+  className,
+  children,
+}: {
+  tooltip: string;
+  className?: string;
+  children: ReactNode;
+}) {
   return (
     <TooltipPrimitive.Root>
-      <TooltipPrimitive.Trigger render={<span className="inline-flex">{children}</span>} />
+      <TooltipPrimitive.Trigger
+        render={<span className={cn("inline-flex", className)}>{children}</span>}
+      />
       <TooltipPrimitive.Portal>
         <TooltipPrimitive.Positioner>
           <TooltipPrimitive.Popup className="z-50 overflow-hidden rounded-md border bg-neutral-bg-emphasis px-3 py-1.5 text-sm text-neutral-fg shadow-md">
@@ -124,7 +134,7 @@ export function Toggle<T extends string>({
               className={cn(
                 "h-full flex-none rounded-sm border-0 py-0 transition-colors duration-150 motion-reduce:transition-none",
                 "not-data-[active]:hover:bg-neutral-fg/[0.035] not-data-[active]:hover:text-neutral-fg",
-                option.label
+                option.label || option.badge !== undefined
                   ? size === "sm"
                     ? "px-2 text-xs gap-1"
                     : "px-3 text-sm gap-1.5"
@@ -147,7 +157,8 @@ export function Toggle<T extends string>({
 
           if (option.tooltip) {
             return (
-              <TriggerWithTooltip key={option.value} tooltip={option.tooltip}>
+              // h-full so the segment inside still fills the well.
+              <TriggerWithTooltip key={option.value} tooltip={option.tooltip} className="h-full">
                 {trigger}
               </TriggerWithTooltip>
             );

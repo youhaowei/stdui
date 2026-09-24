@@ -146,15 +146,20 @@ export const BesideInput: Story = {
       <div className="flex items-center gap-2 w-[360px]">
         <div className="relative flex-1">
           <SearchIcon className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-neutral-fg-subtle" />
-          <Input size="sm" placeholder="Search reports" className="pl-8" />
+          <Input
+            size="sm"
+            aria-label="Search reports"
+            placeholder="Search reports"
+            className="pl-8"
+          />
         </div>
         <Toggle
           size="sm"
           value={value}
           onValueChange={setValue}
           options={[
-            { value: "grid", icon: <GridIcon className="h-4 w-4" />, ariaLabel: "Grid view" },
-            { value: "list", icon: <ListIcon className="h-4 w-4" />, ariaLabel: "List view" },
+            { value: "grid", icon: <GridIcon className="h-4 w-4" />, tooltip: "Grid view" },
+            { value: "list", icon: <ListIcon className="h-4 w-4" />, tooltip: "List view" },
           ]}
         />
       </div>
