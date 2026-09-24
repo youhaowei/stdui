@@ -88,7 +88,7 @@ function NavigationMenuContent({
       data-slot="navigation-menu-content"
       className={cn(
         "data-[motion^=from-]:animate-in data-[motion^=to-]:animate-out data-[motion^=from-]:fade-in data-[motion^=to-]:fade-out data-[motion=from-end]:slide-in-from-right-52 data-[motion=from-start]:slide-in-from-left-52 data-[motion=to-end]:slide-out-to-right-52 data-[motion=to-start]:slide-out-to-left-52 top-0 left-0 w-full p-2 pr-2.5 md:absolute md:w-auto",
-        "group-data-[viewport=false]/navigation-menu:data-[open]:animate-in group-data-[viewport=false]/navigation-menu:data-[closed]:animate-out group-data-[viewport=false]/navigation-menu:data-[closed]:zoom-out-95 group-data-[viewport=false]/navigation-menu:data-[open]:zoom-in-95 group-data-[viewport=false]/navigation-menu:data-[open]:fade-in-0 group-data-[viewport=false]/navigation-menu:data-[closed]:fade-out-0 group-data-[viewport=false]/navigation-menu:top-full group-data-[viewport=false]/navigation-menu:mt-1.5 group-data-[viewport=false]/navigation-menu:overflow-hidden group-data-[viewport=false]/navigation-menu:rounded-md group-data-[viewport=false]/navigation-menu:border group-data-[viewport=false]/navigation-menu:bg-neutral-bg-subtle group-data-[viewport=false]/navigation-menu:text-neutral-fg group-data-[viewport=false]/navigation-menu:shadow group-data-[viewport=false]/navigation-menu:duration-200 **:data-[slot=navigation-menu-link]:focus:ring-0 **:data-[slot=navigation-menu-link]:focus:outline-none",
+        "group-data-[viewport=false]/navigation-menu:data-[open]:animate-in group-data-[viewport=false]/navigation-menu:data-[closed]:animate-out group-data-[viewport=false]/navigation-menu:data-[closed]:zoom-out-95 group-data-[viewport=false]/navigation-menu:data-[open]:zoom-in-95 group-data-[viewport=false]/navigation-menu:data-[open]:fade-in-0 group-data-[viewport=false]/navigation-menu:data-[closed]:fade-out-0 group-data-[viewport=false]/navigation-menu:top-full group-data-[viewport=false]/navigation-menu:mt-1.5 group-data-[viewport=false]/navigation-menu:overflow-hidden group-data-[viewport=false]/navigation-menu:rounded-[var(--surface-radius)] group-data-[viewport=false]/navigation-menu:bg-neutral-bg group-data-[viewport=false]/navigation-menu:text-neutral-fg group-data-[viewport=false]/navigation-menu:shadow-[var(--shadow-lg)] group-data-[viewport=false]/navigation-menu:duration-200 **:data-[slot=navigation-menu-link]:focus:ring-0 **:data-[slot=navigation-menu-link]:focus:outline-none",
         className,
       )}
       {...props}
@@ -105,7 +105,7 @@ function NavigationMenuViewport({
       <NavigationMenuPrimitive.Viewport
         data-slot="navigation-menu-viewport"
         className={cn(
-          "origin-top-center data-[open]:animate-in data-[closed]:animate-out data-[closed]:zoom-out-95 data-[open]:zoom-in-90 relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden rounded-md border bg-neutral-bg-subtle text-neutral-fg shadow md:w-[var(--radix-navigation-menu-viewport-width)]",
+          "origin-top-center data-[open]:animate-in data-[closed]:animate-out data-[closed]:zoom-out-95 data-[open]:zoom-in-90 relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden rounded-[var(--surface-radius)] bg-neutral-bg text-neutral-fg shadow-[var(--shadow-lg)] md:w-[var(--radix-navigation-menu-viewport-width)]",
           className,
         )}
         {...props}
@@ -122,7 +122,7 @@ function NavigationMenuLink({
     <NavigationMenuPrimitive.Link
       data-slot="navigation-menu-link"
       className={cn(
-        "flex flex-col gap-1 rounded-sm p-2 text-sm transition-all outline-none hover:bg-neutral-bg-dim hover:text-neutral-fg focus:bg-neutral-bg-dim focus:text-neutral-fg focus-visible:ring-[3px] focus-visible:ring-neutral-ring/50 focus-visible:outline-1 data-[active=true]:bg-neutral-bg-dim/50 data-[active=true]:text-neutral-fg data-[active=true]:hover:bg-neutral-bg-dim data-[active=true]:focus:bg-neutral-bg-dim [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-neutral-fg-subtle",
+        "flex flex-col gap-1 rounded-sm p-2 text-sm transition-[color,background-color,box-shadow] duration-150 motion-reduce:transition-none outline-none hover:bg-neutral-bg-emphasis hover:text-neutral-fg focus:bg-neutral-bg-emphasis focus:text-neutral-fg focus-visible:ring-[3px] focus-visible:ring-neutral-ring/50 focus-visible:outline-1 data-[active=true]:bg-neutral-bg-dim/50 data-[active=true]:text-neutral-fg data-[active=true]:hover:bg-neutral-bg-emphasis data-[active=true]:focus:bg-neutral-bg-emphasis [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-neutral-fg-subtle",
         className,
       )}
       {...props}
