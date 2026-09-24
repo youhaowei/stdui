@@ -64,7 +64,11 @@ describe("importTheme: base16", () => {
   it("maps Nord onto both modes, keeping its hues and darkening the light-mode accent", () => {
     const nord = imported(NORD);
 
-    expect(nord).toMatchObject({ id: "imported:nord", name: "Nord", imported: true });
+    expect(nord).toMatchObject({
+      id: expect.stringMatching(/^imported:nord-/),
+      name: "Nord",
+      imported: true,
+    });
     // Nord's accent is too light to read on a white page, so only contrast is adjusted.
     expect(nord.adjustments).toEqual(["contrast"]);
 
@@ -118,6 +122,17 @@ describe("importTheme: VS Code", () => {
 
     expectAccentPassesAA(github);
     expectWithinBounds(github);
+  });
+});
+
+describe("importTheme: JSONC", () => {
+  it("strips trailing commas only outside strings", () => {
+    const text = `{
+      // a comment with "quotes", ]
+      "name": "Odd, ] name, }",
+      "colors": { "editor.background": "#1e1e1e", /* inline */ "focusBorder": "#3794ff", },
+    }`;
+    expect(imported(text).name).toBe("Odd, ] name, }");
   });
 });
 
@@ -181,6 +196,28 @@ describe("exportPreset", () => {
     expect(back.adjustments).toEqual(["contrast", "softened"]);
     expectWithinBounds(back);
     expectAccentPassesAA(back);
+  });
+});
+
+describe("imported preset ids", () => {
+  it("keeps names that slug alike apart", () => {
+    const light = { neutralHue: 0 };
+    const a = imported(exportPreset({ id: "x", name: "A+B", overrides: { light, dark: {} } }));
+    const b = imported(exportPreset({ id: "x", name: "A B", overrides: { light, dark: {} } }));
+    expect(a.id).not.toBe(b.id);
+  });
+});
+
+describe("status colours", () => {
+  it("records softening when a status colour loses chroma", () => {
+    const loudDanger: ThemePreset = {
+      id: "x",
+      name: "Loud danger",
+      overrides: { light: { palette: { danger: "oklch(0.577 0.3 27)" } }, dark: {} },
+    };
+    const back = imported(exportPreset(loudDanger));
+    expect(back.adjustments).toEqual(["softened"]);
+    expect(parseOklch(back.overrides.light!.palette!.danger!).c).toBeLessThan(0.3);
   });
 });
 

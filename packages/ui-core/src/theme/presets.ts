@@ -111,6 +111,22 @@ function canonical(overrides: ThemeOverrides) {
   });
 }
 
+/**
+ * The selected preset: the one with the applied id while the overrides still
+ * match it, otherwise the first preset whose overrides equal these, otherwise
+ * undefined (a custom state).
+ */
+export function selectedPreset(
+  overrides: ThemeOverrides,
+  presetId: string | null | undefined,
+  presets: readonly ThemePreset[],
+) {
+  const key = canonical(overrides);
+  const byId = presetId ? presets.find((p) => p.id === presetId) : undefined;
+  if (byId && canonical(byId.overrides) === key) return byId;
+  return presets.find((p) => canonical(p.overrides) === key);
+}
+
 /** The first preset whose overrides equal these, or undefined for a custom state. */
 export function findPreset(overrides: ThemeOverrides, presets: readonly ThemePreset[]) {
   const key = canonical(overrides);

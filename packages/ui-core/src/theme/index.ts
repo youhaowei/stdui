@@ -41,7 +41,7 @@ export {
 } from "./defaults";
 
 // Presets, import, and export
-export { THEME_PRESETS, findPreset, presetSwatch } from "./presets";
+export { THEME_PRESETS, findPreset, selectedPreset, presetSwatch } from "./presets";
 export {
   importTheme,
   exportPreset,

@@ -137,7 +137,9 @@ export function clampModeOverrides(mode: ResolvedMode, input: unknown) {
     for (const name of STATUS_COLORS) {
       const color = tryParseOklch(input.palette[name]);
       const fitted = color && fitStatus(mode, name, color);
-      if (fitted) palette[name] = fitted;
+      if (!fitted) continue;
+      if (fitted.softened) adjustments.add("softened");
+      palette[name] = fitted.value;
     }
     if (Object.keys(palette).length > 0) out.palette = palette;
   }
@@ -160,7 +162,9 @@ function fromExport(text: string): ThemeImportResult {
   } catch {
     return fail(DAMAGED);
   }
+  // Both modes are always written, even when empty (Default); a missing one means damage.
   if (!isRecord(data) || typeof data.name !== "string") return fail(DAMAGED);
+  if (!isRecord(data.light) || !isRecord(data.dark)) return fail(DAMAGED);
   const { overrides, adjustments } = clampOverrides({ light: data.light, dark: data.dark });
   return { ok: true, preset: importedPreset(cleanName(data.name), overrides, adjustments) };
 }
@@ -315,8 +319,8 @@ function fixAccent(mode: ResolvedMode, color: Oklch, neutralHue: number, neutral
 function fitStatus(mode: ResolvedMode, name: StatusColor, color: Oklch) {
   const ours = parseOklch(tokens.palette[name][mode].value);
   if (hueDistance(color.h, ours.h) > STATUS_HUE_TOLERANCE) return undefined;
-  const c = Math.min(color.c, ours.c);
-  return formatOklch(ours.l, fitChroma(ours.l, c, color.h), color.h);
+  const c = fitChroma(ours.l, Math.min(color.c, ours.c), color.h);
+  return { value: formatOklch(ours.l, c, color.h), softened: round(c, 4) < round(color.c, 4) };
 }
 
 /** The highest chroma up to `c` that stays inside sRGB at this lightness and hue. */
@@ -381,6 +385,17 @@ function tryParseOklch(value: unknown): Oklch | undefined {
 
 /** JSON with `//` and block comments and trailing commas, as VS Code writes it. */
 function parseJsonc(text: string): unknown {
+  const body = stripTrailingCommas(stripComments(text)).trim();
+  if (!body.startsWith("{") && !body.startsWith("[")) return undefined;
+  try {
+    return JSON.parse(body);
+  } catch {
+    throw new ImportError("This looks like JSON but could not be read.");
+  }
+}
+
+/** Walks `text`, calling `visit` for each character outside a string literal. */
+function scanOutsideStrings(text: string, visit: (i: number) => number | void) {
   let out = "";
   let inString = false;
   for (let i = 0; i < text.length; i++) {
@@ -389,26 +404,39 @@ function parseJsonc(text: string): unknown {
       out += ch;
       if (ch === "\\") out += text[++i] ?? "";
       else if (ch === '"') inString = false;
-    } else if (ch === '"') {
-      inString = true;
-      out += ch;
-    } else if (ch === "/" && text[i + 1] === "/") {
-      while (i < text.length && text[i] !== "\n") i++;
-      out += "\n";
-    } else if (ch === "/" && text[i + 1] === "*") {
-      const end = text.indexOf("*/", i + 2);
-      i = end === -1 ? text.length : end + 1;
-    } else {
-      out += ch;
+      continue;
     }
+    const skipTo = visit(i);
+    if (skipTo !== undefined) {
+      i = skipTo;
+      continue;
+    }
+    if (ch === '"') inString = true;
+    out += ch;
   }
-  const body = out.trim();
-  if (!body.startsWith("{") && !body.startsWith("[")) return undefined;
-  try {
-    return JSON.parse(body.replace(/,(\s*[}\]])/g, "$1"));
-  } catch {
-    throw new ImportError("This looks like JSON but could not be read.");
-  }
+  return out;
+}
+
+function stripComments(text: string) {
+  return scanOutsideStrings(text, (i) => {
+    if (text[i] === "/" && text[i + 1] === "/") {
+      const end = text.indexOf("\n", i);
+      return (end === -1 ? text.length : end) - 1;
+    }
+    if (text[i] === "/" && text[i + 1] === "*") {
+      const end = text.indexOf("*/", i + 2);
+      return end === -1 ? text.length : end + 1;
+    }
+    return undefined;
+  });
+}
+
+function stripTrailingCommas(text: string) {
+  return scanOutsideStrings(text, (i) => {
+    if (text[i] !== ",") return undefined;
+    const next = text.slice(i + 1).match(/\S/)?.[0];
+    return next === "}" || next === "]" ? i : undefined;
+  });
 }
 
 /**
@@ -459,7 +487,8 @@ function importedPreset(
   overrides: ThemeOverrides,
   adjustments: ThemeAdjustment[],
 ): ThemePreset {
-  const preset: ThemePreset = { id: `imported:${slug(name)}`, name, overrides, imported: true };
+  const id = `imported:${slug(name)}-${hash(name)}`;
+  const preset: ThemePreset = { id, name, overrides, imported: true };
   if (adjustments.length > 0) preset.adjustments = adjustments;
   return preset;
 }
@@ -475,6 +504,16 @@ function slug(name: string) {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
   return s || "theme";
+}
+
+/** Short FNV-1a hash, so names that slug alike ("A+B", "A B") keep distinct ids. */
+function hash(text: string) {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < text.length; i++) {
+    h ^= text.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return (h >>> 0).toString(36).slice(0, 6);
 }
 
 function guess(bg: Oklch): ResolvedMode {

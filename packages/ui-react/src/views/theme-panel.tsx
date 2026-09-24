@@ -9,9 +9,9 @@ import {
   THEME_PRESETS,
   describeAdjustments,
   exportPreset,
-  findPreset,
   importTheme,
   presetSwatch,
+  selectedPreset,
   type ResolvedMode,
   type ThemeMode,
   type ThemePreset,
@@ -65,6 +65,7 @@ export function ThemePanel({ isOpen, onClose, bare = false }: ThemePanelProps) {
     mode,
     overrides,
     importedPresets,
+    presetId,
     setMode,
     setOverrides,
     resetOverrides,
@@ -76,13 +77,17 @@ export function ThemePanel({ isOpen, onClose, bare = false }: ThemePanelProps) {
 
   const presets = useMemo(() => [...THEME_PRESETS, ...importedPresets], [importedPresets]);
   // Persisted overrides that match no preset leave the grid with nothing selected.
-  const selected = useMemo(() => findPreset(overrides, presets), [overrides, presets]);
+  const selected = useMemo(
+    () => selectedPreset(overrides, presetId, presets),
+    [overrides, presetId, presets],
+  );
+  const [storageFailed, setStorageFailed] = useState(false);
   const [copyState, copy] = useCopyFeedback();
 
   const applyImport = useCallback(
     (preset: ThemePreset) => {
-      addImportedPreset(preset);
-      setOverrides(preset.overrides);
+      setStorageFailed(!addImportedPreset(preset).persisted);
+      setOverrides(preset.overrides, preset.id);
       setImportOpen(false);
     },
     [addImportedPreset, setOverrides],
@@ -180,10 +185,15 @@ export function ThemePanel({ isOpen, onClose, bare = false }: ThemePanelProps) {
                   key={preset.id}
                   preset={preset}
                   pressed={selected?.id === preset.id}
-                  onSelect={() => setOverrides(preset.overrides)}
+                  onSelect={() => setOverrides(preset.overrides, preset.id)}
                 />
               ))}
             </div>
+            {storageFailed && (
+              <p className="mt-3 text-xs text-neutral-fg-subtle" role="status">
+                Imported styles can't be saved here, so they last until you close the app.
+              </p>
+            )}
           </div>
         </div>
       </div>

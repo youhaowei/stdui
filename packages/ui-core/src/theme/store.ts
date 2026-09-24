@@ -27,17 +27,42 @@ interface ThemeState {
   overrides: ThemeOverrides;
   /** Presets the user imported; built-ins live in `THEME_PRESETS`. */
   importedPresets: ThemePreset[];
+  /** Id of the preset last applied, so identical presets stay distinguishable. */
+  presetId: string | null;
   setMode: (mode: ThemeMode) => void;
-  setOverrides: (overrides: ThemeOverrides) => void;
+  /** Applies overrides; pass the preset id when they come from a preset. */
+  setOverrides: (overrides: ThemeOverrides, presetId?: string) => void;
   resetOverrides: () => void;
-  /** Adds an imported preset, replacing one with the same id. */
-  addImportedPreset: (preset: ThemePreset) => void;
+  /**
+   * Adds an imported preset, replacing one with the same id. State updates
+   * even when storage fails; `persisted: false` means it lasts this session only.
+   */
+  addImportedPreset: (preset: ThemePreset) => { persisted: boolean };
 }
 
 // -- Helpers ---------------------------------------------------------------
 
 function getStorageKey(prefix: string, suffix: string) {
   return `${prefix}-${suffix}`;
+}
+
+/** Writes to localStorage (or removes when `value` is null); false when storage is unavailable. */
+function persist(key: string, value: string | null) {
+  try {
+    if (value == null) localStorage.removeItem(key);
+    else localStorage.setItem(key, value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function getStoredPresetId(prefix: string): string | null {
+  try {
+    return localStorage.getItem(getStorageKey(prefix, "theme-preset"));
+  } catch {
+    return null;
+  }
 }
 
 function getStoredTheme(prefix: string): ThemeMode {
@@ -211,30 +236,33 @@ export function createThemeStore(config: ThemeStoreConfig = {}) {
       mode: initialMode,
       overrides: initialOverrides,
       importedPresets: getStoredPresets(prefix),
+      presetId: getStoredPresetId(prefix),
 
       setMode: (mode) => {
-        localStorage.setItem(getStorageKey(prefix, "theme"), mode);
         if (target) {
           applyTheme(target, mode);
           applyOverrides(target, get().overrides, mode);
         }
         set({ mode });
+        persist(getStorageKey(prefix, "theme"), mode);
       },
 
-      setOverrides: (overrides) => {
-        localStorage.setItem(getStorageKey(prefix, "theme-overrides"), JSON.stringify(overrides));
+      setOverrides: (overrides, presetId) => {
         if (target) {
           applyOverrides(target, overrides, get().mode);
         }
-        set({ overrides });
+        set({ overrides, presetId: presetId ?? null });
+        persist(getStorageKey(prefix, "theme-overrides"), JSON.stringify(overrides));
+        persist(getStorageKey(prefix, "theme-preset"), presetId ?? null);
       },
 
       resetOverrides: () => {
-        localStorage.removeItem(getStorageKey(prefix, "theme-overrides"));
         if (target) {
           clearAllOverrideStyles(target);
         }
-        set({ overrides: {} });
+        set({ overrides: {}, presetId: null });
+        persist(getStorageKey(prefix, "theme-overrides"), null);
+        persist(getStorageKey(prefix, "theme-preset"), null);
       },
 
       addImportedPreset: (preset) => {
@@ -242,11 +270,12 @@ export function createThemeStore(config: ThemeStoreConfig = {}) {
           ...get().importedPresets.filter((p) => p.id !== preset.id),
           preset,
         ];
-        localStorage.setItem(
+        set({ importedPresets });
+        const persisted = persist(
           getStorageKey(prefix, "theme-presets"),
           JSON.stringify(importedPresets),
         );
-        set({ importedPresets });
+        return { persisted };
       },
     };
   });

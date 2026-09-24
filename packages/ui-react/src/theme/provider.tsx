@@ -17,10 +17,12 @@ interface ThemeContextValue {
   isDark: boolean;
   overrides: ThemeOverrides;
   importedPresets: ThemePreset[];
+  /** Id of the preset last applied, or null for none or a custom state. */
+  presetId: string | null;
   setMode: (mode: ThemeMode) => void;
-  setOverrides: (overrides: ThemeOverrides) => void;
+  setOverrides: (overrides: ThemeOverrides, presetId?: string) => void;
   resetOverrides: () => void;
-  addImportedPreset: (preset: ThemePreset) => void;
+  addImportedPreset: (preset: ThemePreset) => { persisted: boolean };
 }
 
 interface StduiProviderProps {
@@ -83,6 +85,7 @@ function StduiProviderInner({ children, defaultMode, storageKey }: StduiProvider
     isDark,
     overrides: state.overrides,
     importedPresets: state.importedPresets,
+    presetId: state.presetId,
     setMode: state.setMode,
     setOverrides: state.setOverrides,
     resetOverrides: state.resetOverrides,
