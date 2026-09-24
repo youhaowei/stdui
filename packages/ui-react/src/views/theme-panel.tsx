@@ -260,7 +260,9 @@ function PresetCard({
       aria-pressed={pressed}
       title={note ? `${preset.name}. ${note}` : preset.name}
       onClick={onSelect}
-      className="group flex min-w-0 cursor-pointer flex-col gap-1.5 rounded-[var(--inner-radius)] text-left outline-none"
+      // `items-stretch` overrides older Chromium's UA `button { align-items: flex-start }`
+      // (Electron 33), which otherwise collapses the empty thumbnail to zero width.
+      className="group flex min-w-0 cursor-pointer flex-col items-stretch gap-1.5 rounded-[var(--inner-radius)] text-left outline-none"
     >
       {body}
     </button>
@@ -273,7 +275,7 @@ function PresetThumbnail({ preset, pressed }: { preset: ThemePreset; pressed?: b
     <span
       aria-hidden
       className={cn(
-        "flex h-12 overflow-hidden rounded-[var(--inner-radius)] shadow-[var(--shadow-sm)] ring-offset-2 ring-offset-neutral-bg transition-[box-shadow] duration-150 motion-reduce:transition-none",
+        "flex h-12 w-full overflow-hidden rounded-[var(--inner-radius)] shadow-[var(--shadow-sm)] ring-offset-2 ring-offset-neutral-bg transition-[box-shadow] duration-150 motion-reduce:transition-none",
         "group-hover:shadow-[var(--shadow-md)] group-focus-visible:ring-2 group-focus-visible:ring-neutral-ring",
         pressed && "ring-2 ring-neutral-fg group-focus-visible:ring-neutral-fg",
       )}
