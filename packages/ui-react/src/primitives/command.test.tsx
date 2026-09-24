@@ -159,7 +159,7 @@ describe("CommandDialog", () => {
       </CommandDialog>,
     );
     const dialog = await findByRole("dialog");
-    expect(dialog.querySelector("[cmdk-list]")!.className).toContain("max-h-[60vh]");
+    expect(dialog.querySelector("[cmdk-list]")!.className).toContain("max-h-[60dvh]");
   });
 
   it("lets a caller's list max height win inside the dialog", async () => {
@@ -174,7 +174,7 @@ describe("CommandDialog", () => {
     const dialog = await findByRole("dialog");
     const list = dialog.querySelector("[cmdk-list]")!;
     expect(list.className).toContain("max-h-40");
-    expect(list.className).not.toContain("max-h-[60vh]");
+    expect(list.className).not.toContain("max-h-[60dvh]");
   });
 
   it("closes on Escape while a control in the leading slot has focus", async () => {

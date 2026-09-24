@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ArrowRightIcon, ChartIcon, CloseIcon, DashboardIcon, PlusIcon, TableIcon } from "../icons";
 import {
@@ -11,6 +12,7 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from "./command";
+import { Button } from "./button";
 
 const meta: Meta<typeof CommandDialog> = {
   title: "Primitives/Command",
@@ -113,6 +115,33 @@ export const Scoped: Story = {
       </CommandList>
     </CommandDialog>
   ),
+};
+
+function Interactive() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button variant="soft" color="primary" onClick={() => setOpen(true)}>
+        Open command palette
+      </Button>
+      <CommandDialog
+        open={open}
+        onOpenChange={setOpen}
+        leading={<ScopeChip />}
+        footer={<KeyHints />}
+      >
+        <CommandInput placeholder="Search in this chart…" />
+        <CommandList>
+          <Results />
+        </CommandList>
+      </CommandDialog>
+    </>
+  );
+}
+
+/** Opens from a button; Escape or a click on the overlay closes it. */
+export const Toggle: Story = {
+  render: () => <Interactive />,
 };
 
 /** No item matches the query. */

@@ -73,7 +73,7 @@ function CommandDialog({
             // Top-anchored so the panel does not jump as the result count changes.
             // The height cap keeps the footer on screen in short viewports; the
             // list is the part that shrinks.
-            "fixed left-1/2 top-[12vh] z-50 flex max-h-[calc(88vh-1rem)] w-[calc(100%-2rem)] max-w-[640px] -translate-x-1/2 flex-col overflow-hidden rounded-[var(--surface-radius)] bg-neutral-bg text-neutral-fg shadow-[var(--shadow-lg)] outline-none",
+            "fixed left-1/2 top-[12dvh] z-50 flex max-h-[calc(88dvh-1rem)] w-[calc(100%-2rem)] max-w-[640px] -translate-x-1/2 flex-col overflow-hidden rounded-[var(--surface-radius)] bg-neutral-bg text-neutral-fg shadow-[var(--shadow-lg)] outline-none",
             "transition-[opacity,translate] duration-200 ease-out motion-reduce:transition-none data-[starting-style]:-translate-y-1 data-[starting-style]:opacity-0 data-[ending-style]:-translate-y-1 data-[ending-style]:opacity-0",
             className,
           )}
@@ -81,7 +81,7 @@ function CommandDialog({
           <DialogTitle className="sr-only">{title}</DialogTitle>
           <DialogDescription className="sr-only">{description}</DialogDescription>
           <CommandDialogContext.Provider value={context}>
-            <Command className="min-h-0 flex-1 rounded-none bg-neutral-bg [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-neutral-fg-subtle [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
+            <Command className="min-h-0 flex-1 rounded-none bg-neutral-bg [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-neutral-fg-subtle [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[data-slot=command-search-icon]]:size-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
               {children}
             </Command>
           </CommandDialogContext.Provider>
@@ -130,7 +130,7 @@ function CommandInput({
       className="flex items-center border-b border-neutral-border-subtle px-3"
       cmdk-input-wrapper=""
     >
-      <SearchIcon className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+      <SearchIcon data-slot="command-search-icon" className="mr-2 h-4 w-4 shrink-0 opacity-50" />
       {leadingContent ? (
         <div
           data-slot="command-input-leading"
@@ -156,7 +156,7 @@ function CommandList({ className, ...props }: React.ComponentProps<typeof Comman
   return (
     <CommandPrimitive.List
       className={cn(
-        inDialog ? "max-h-[60vh]" : "max-h-[300px]",
+        inDialog ? "max-h-[60dvh]" : "max-h-[300px]",
         "overflow-y-auto overflow-x-hidden",
         className,
       )}
