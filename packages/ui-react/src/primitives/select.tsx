@@ -105,7 +105,7 @@ function SelectContent({
       <SelectPrimitive.Popup
         ref={ref}
         className={cn(
-          "relative max-h-[var(--available-height)] min-w-[8rem] overflow-y-auto overflow-x-hidden rounded-md border bg-neutral-bg-subtle text-neutral-fg shadow-md data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0 data-[closed]:zoom-out-95 data-[open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[var(--transform-origin)]",
+          "relative max-h-[var(--available-height)] min-w-[8rem] overflow-y-auto overflow-x-hidden rounded-[var(--surface-radius)] bg-neutral-bg text-neutral-fg shadow-[var(--shadow-lg)] data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0 data-[closed]:zoom-out-95 data-[open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[var(--transform-origin)]",
           className,
         )}
         {...props}
@@ -146,7 +146,7 @@ function SelectItem({
     <SelectPrimitive.Item
       ref={ref}
       className={cn(
-        "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-neutral-bg-subtle focus:text-neutral-fg data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors duration-150 motion-reduce:transition-none focus:bg-neutral-bg-emphasis focus:text-neutral-fg data-[highlighted]:bg-neutral-bg-emphasis data-[highlighted]:text-neutral-fg data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className,
       )}
       {...props}
@@ -164,7 +164,11 @@ function SelectItem({
 
 function SelectSeparator({ className, ref, ...props }: React.ComponentProps<"div">) {
   return (
-    <div ref={ref} className={cn("-mx-1 my-1 h-px bg-neutral-bg-dim", className)} {...props} />
+    <div
+      ref={ref}
+      className={cn("-mx-1 my-1 h-px bg-neutral-border-subtle", className)}
+      {...props}
+    />
   );
 }
 

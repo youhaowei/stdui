@@ -27,7 +27,7 @@ function ContextMenuSubTrigger({
   return (
     <ContextMenuPrimitive.SubmenuTrigger
       className={cn(
-        "flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-neutral-bg-subtle data-[open]:bg-neutral-bg-subtle [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+        "flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors duration-150 motion-reduce:transition-none focus:bg-neutral-bg-emphasis focus:text-neutral-fg data-[highlighted]:bg-neutral-bg-emphasis data-[highlighted]:text-neutral-fg data-[popup-open]:bg-neutral-bg-emphasis data-[popup-open]:text-neutral-fg [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
         inset && "pl-8",
         className,
       )}
@@ -47,7 +47,7 @@ function ContextMenuSubContent({
     <ContextMenuPrimitive.Positioner>
       <ContextMenuPrimitive.Popup
         className={cn(
-          "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-neutral-bg-subtle p-1 text-neutral-fg shadow-lg data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0 data-[closed]:zoom-out-95 data-[open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[var(--transform-origin)]",
+          "z-50 min-w-[8rem] overflow-hidden rounded-[var(--surface-radius)] bg-neutral-bg p-1 text-neutral-fg shadow-[var(--shadow-lg)] data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0 data-[closed]:zoom-out-95 data-[open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[var(--transform-origin)]",
           className,
         )}
         {...props}
@@ -65,7 +65,7 @@ function ContextMenuContent({
       <ContextMenuPrimitive.Positioner>
         <ContextMenuPrimitive.Popup
           className={cn(
-            "z-50 max-h-[var(--available-height)] min-w-[8rem] overflow-y-auto overflow-x-hidden rounded-md border bg-neutral-bg-subtle p-1 text-neutral-fg shadow-md data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0 data-[closed]:zoom-out-95 data-[open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[var(--transform-origin)]",
+            "z-50 max-h-[var(--available-height)] min-w-[8rem] overflow-y-auto overflow-x-hidden rounded-[var(--surface-radius)] bg-neutral-bg p-1 text-neutral-fg shadow-[var(--shadow-lg)] data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0 data-[closed]:zoom-out-95 data-[open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[var(--transform-origin)]",
             className,
           )}
           {...props}
@@ -85,7 +85,7 @@ function ContextMenuItem({
   return (
     <ContextMenuPrimitive.Item
       className={cn(
-        "relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-neutral-bg-subtle focus:text-neutral-fg data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+        "relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors duration-150 motion-reduce:transition-none focus:bg-neutral-bg-emphasis focus:text-neutral-fg data-[highlighted]:bg-neutral-bg-emphasis data-[highlighted]:text-neutral-fg data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
         inset && "pl-8",
         className,
       )}
@@ -103,7 +103,7 @@ function ContextMenuCheckboxItem({
   return (
     <ContextMenuPrimitive.CheckboxItem
       className={cn(
-        "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-neutral-bg-subtle focus:text-neutral-fg data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors duration-150 motion-reduce:transition-none focus:bg-neutral-bg-emphasis focus:text-neutral-fg data-[highlighted]:bg-neutral-bg-emphasis data-[highlighted]:text-neutral-fg data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className,
       )}
       checked={checked}
@@ -127,7 +127,7 @@ function ContextMenuRadioItem({
   return (
     <ContextMenuPrimitive.RadioItem
       className={cn(
-        "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-neutral-bg-subtle focus:text-neutral-fg data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors duration-150 motion-reduce:transition-none focus:bg-neutral-bg-emphasis focus:text-neutral-fg data-[highlighted]:bg-neutral-bg-emphasis data-[highlighted]:text-neutral-fg data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className,
       )}
       {...props}
@@ -163,7 +163,7 @@ function ContextMenuSeparator({
 }: React.ComponentProps<typeof ContextMenuPrimitive.Separator>) {
   return (
     <ContextMenuPrimitive.Separator
-      className={cn("-mx-1 my-1 h-px bg-neutral-bg-dim", className)}
+      className={cn("-mx-1 my-1 h-px bg-neutral-border-subtle", className)}
       {...props}
     />
   );
