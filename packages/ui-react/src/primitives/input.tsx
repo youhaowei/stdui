@@ -8,8 +8,12 @@ const inputVariants = cva(
   {
     variants: {
       variant: {
+        // The well: a recessed, borderless field with an inset shadow and a
+        // hairline ring. Shared with Toggle's default so value controls on one
+        // toolbar read as one family. Keyboard focus swaps the hairline for
+        // the full focus ring.
         default:
-          "border border-neutral-border bg-neutral-bg focus-visible:ring-2 focus-visible:ring-neutral-ring focus-visible:ring-offset-2",
+          "border-0 bg-neutral-bg-subtle shadow-inner ring-[0.5px] ring-neutral-border focus-visible:ring-2 focus-visible:ring-neutral-ring",
         // Borderless, reads as plain text; reveals border + subtle bg on
         // hover/focus. For inline-editable property fields (Linear/Notion style).
         // Keyboard focus additionally gets a ring: without it, focus and hover

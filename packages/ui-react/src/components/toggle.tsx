@@ -103,7 +103,13 @@ export function Toggle<T extends string>({
   return (
     <Tabs value={value} onValueChange={(v) => onValueChange(v as T)}>
       <TabsList
-        className={cn("h-auto", size === "sm" ? "p-0.5 rounded-lg" : "p-1 rounded-xl", className)}
+        className={cn(
+          // The same well as Input's default: tone, inset shadow, hairline
+          // ring, radius, and outer height all match Input at the same size.
+          "gap-0.5 rounded-md bg-neutral-bg-subtle p-0.5 shadow-inner ring-[0.5px] ring-neutral-border",
+          size === "sm" ? "h-8" : "h-10",
+          className,
+        )}
       >
         {options.map((option) => {
           const trigger = (
@@ -112,10 +118,17 @@ export function Toggle<T extends string>({
               value={option.value}
               disabled={option.disabled}
               aria-label={option.ariaLabel || option.tooltip || option.label}
+              // Flat segments inside the well: the active one is tinted, never
+              // raised (no shadow, no border).
+              activeClassName="data-[active]:bg-neutral-fg/[0.06] data-[active]:text-neutral-fg data-[active]:shadow-none"
               className={cn(
-                size === "sm"
-                  ? "px-2 py-1 text-xs gap-1 rounded-md"
-                  : "px-4 py-2 text-sm gap-2 rounded-lg",
+                "h-full flex-none rounded-sm border-0 py-0 transition-colors duration-150 motion-reduce:transition-none",
+                "not-data-[active]:hover:bg-neutral-fg/[0.035] not-data-[active]:hover:text-neutral-fg",
+                option.label
+                  ? size === "sm"
+                    ? "px-2 text-xs gap-1"
+                    : "px-3 text-sm gap-1.5"
+                  : "aspect-square px-0",
               )}
             >
               {option.icon && (
