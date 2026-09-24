@@ -94,6 +94,10 @@ describe("importTheme: base16", () => {
     expectWithinBounds(nord);
   });
 
+  it("skips YAML document markers", () => {
+    expect(imported(`---\n${NORD}...\n`).overrides).toEqual(imported(NORD).overrides);
+  });
+
   it("accepts the legacy layout with a scheme name and bare hex values", () => {
     const legacy = NORD.replace('name: "Nord"', 'scheme: "Nord Legacy"')
       .replace(/^system:.*\n|^variant:.*\n|^palette:\n/gm, "")
@@ -206,6 +210,15 @@ describe("imported preset ids", () => {
     const b = imported(exportPreset({ id: "x", name: "A B", overrides: { light, dark: {} } }));
     expect(a.id).not.toBe(b.id);
   });
+
+  it.each([
+    ["Foo Bar", "Foo-Bar"],
+    ["北极光", "南极光"],
+  ])("gives %s and %s different ids", (first, second) => {
+    const make = (name: string) =>
+      imported(exportPreset({ id: "x", name, overrides: { light: {}, dark: {} } }));
+    expect(make(first).id).not.toBe(make(second).id);
+  });
 });
 
 describe("status colours", () => {
@@ -218,6 +231,35 @@ describe("status colours", () => {
     const back = imported(exportPreset(loudDanger));
     expect(back.adjustments).toEqual(["softened"]);
     expect(parseOklch(back.overrides.light!.palette!.danger!).c).toBeLessThan(0.3);
+  });
+});
+
+describe("gamut fitting", () => {
+  it("records softening when the accent is pulled into sRGB", () => {
+    const wild: ThemePreset = {
+      id: "x",
+      name: "Wild",
+      overrides: { light: { palette: { primary: "oklch(0.5 1 0)" } }, dark: {} },
+    };
+    const back = imported(exportPreset(wild));
+    expect(back.adjustments).toContain("softened");
+    expect(parseOklch(back.overrides.light!.palette!.primary!).c).toBeLessThan(1);
+  });
+
+  it("is stable once serialised: a stored import reads back unchanged", () => {
+    const edgy: ThemePreset = {
+      id: "x",
+      name: "Edgy",
+      overrides: {
+        light: { palette: { primary: "oklch(0.5 1 0)" } },
+        // Hue 311.811 rounds to 311.81 on write, which used to fall out of gamut on re-read.
+        dark: { palette: { primary: "oklch(0.806 0.3402 311.811)" } },
+      },
+    };
+    const first = imported(exportPreset(edgy));
+    const [stored] = readImportedPresets(JSON.parse(JSON.stringify([first])));
+    expect(stored!.overrides).toEqual(first.overrides);
+    expect(imported(exportPreset(first)).overrides).toEqual(first.overrides);
   });
 });
 

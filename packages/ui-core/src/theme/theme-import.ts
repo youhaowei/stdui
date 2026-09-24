@@ -132,6 +132,7 @@ export function clampModeOverrides(mode: ResolvedMode, input: unknown) {
     if (primary) {
       const fixed = fixAccent(mode, primary, out.neutralHue ?? 0, out.neutralChroma ?? 0);
       if (fixed.adjusted) adjustments.add("contrast");
+      if (fixed.softened) adjustments.add("softened");
       palette.primary = fixed.value;
     }
     for (const name of STATUS_COLORS) {
@@ -305,14 +306,16 @@ function fixAccent(mode: ResolvedMode, color: Oklch, neutralHue: number, neutral
     contrastRatio(value, ground) >= AA && contrastRatio(value, contrastFg(value)) >= AA;
 
   let l = color.l;
-  let value = formatOklch(l, fitChroma(l, color.c, color.h), color.h);
+  let c = fitChroma(l, color.c, color.h);
+  let value = formatOklch(l, c, color.h);
   let steps = 0;
   while (steps < 100 && !passes(value)) {
     steps++;
     l = clamp(l + step, 0, 1);
-    value = formatOklch(l, fitChroma(l, color.c, color.h), color.h);
+    c = fitChroma(l, color.c, color.h);
+    value = formatOklch(l, c, color.h);
   }
-  return { value, adjusted: steps > 0 };
+  return { value, adjusted: steps > 0, softened: c < round(color.c, 4) };
 }
 
 /** Our lightness and at most our chroma, at the imported hue when it is close to ours. */
@@ -320,20 +323,29 @@ function fitStatus(mode: ResolvedMode, name: StatusColor, color: Oklch) {
   const ours = parseOklch(tokens.palette[name][mode].value);
   if (hueDistance(color.h, ours.h) > STATUS_HUE_TOLERANCE) return undefined;
   const c = fitChroma(ours.l, Math.min(color.c, ours.c), color.h);
-  return { value: formatOklch(ours.l, c, color.h), softened: round(c, 4) < round(color.c, 4) };
+  return { value: formatOklch(ours.l, c, color.h), softened: c < round(color.c, 4) };
 }
 
-/** The highest chroma up to `c` that stays inside sRGB at this lightness and hue. */
+/**
+ * The highest chroma up to `c` that stays inside sRGB at this lightness and
+ * hue. Works at the precision `formatOklch` writes (L and C to 4 places, H to
+ * 2), so reading a fitted colour back and fitting it again changes nothing.
+ */
 function fitChroma(l: number, c: number, h: number) {
-  if (isInSrgbGamut(l, c, h)) return c;
+  const L = round(l, 4);
+  const H = round(h, 2);
+  let fitted = round(c, 4);
+  if (isInSrgbGamut(L, fitted, H)) return fitted;
   let lo = 0;
-  let hi = c;
+  let hi = fitted;
   for (let i = 0; i < 20; i++) {
     const mid = (lo + hi) / 2;
-    if (isInSrgbGamut(l, mid, h)) lo = mid;
+    if (isInSrgbGamut(L, mid, H)) lo = mid;
     else hi = mid;
   }
-  return Math.floor(lo * 1e4) / 1e4;
+  fitted = Math.floor(lo * 1e4) / 1e4;
+  while (fitted > 0 && !isInSrgbGamut(L, fitted, H)) fitted = round(fitted - 1e-4, 4);
+  return fitted;
 }
 
 /** Chroma-weighted circular mean hue and plain mean chroma. */
@@ -448,7 +460,9 @@ function parseSimpleYaml(text: string): Record<string, unknown> | undefined {
   let section: Record<string, unknown> | undefined;
   let matched = 0;
   for (const line of text.split(/\r?\n/)) {
-    if (!line.trim() || line.trim().startsWith("#")) continue;
+    const trimmed = line.trim();
+    // Skip blanks, comments, and YAML document markers (`---`, `...`).
+    if (!trimmed || trimmed.startsWith("#") || /^(---|\.\.\.)(\s|$)/.test(trimmed)) continue;
     const m = line.match(/^(\s*)([A-Za-z0-9_-]+)\s*:\s*(.*)$/);
     if (!m) return undefined;
     matched++;
