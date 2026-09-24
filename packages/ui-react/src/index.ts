@@ -24,6 +24,7 @@ export {
   DialogPortal,
   DialogOverlay,
   DialogClose,
+  DialogPopup,
   DialogTrigger,
   DialogContent,
   DialogHeader,

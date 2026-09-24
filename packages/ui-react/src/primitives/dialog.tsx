@@ -12,6 +12,9 @@ const DialogPortal = DialogPrimitive.Portal;
 
 const DialogClose = DialogPrimitive.Close;
 
+/** The unstyled popup, for dialogs that need their own shape (see `CommandDialog`). */
+const DialogPopup = DialogPrimitive.Popup;
+
 function DialogOverlay({
   className,
   ref,
@@ -122,6 +125,7 @@ export {
   DialogPortal,
   DialogOverlay,
   DialogClose,
+  DialogPopup,
   DialogTrigger,
   DialogContent,
   DialogHeader,
