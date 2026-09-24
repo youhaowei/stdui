@@ -2,19 +2,35 @@
 // toolchain (@wystack/ui-react, and future @wystack/ui-* siblings).
 
 // OKLCH utilities
-export { parseOklch, formatOklch, oklchToHex, hexToOklch } from "./oklch";
+export {
+  parseOklch,
+  formatOklch,
+  oklchToHex,
+  hexToOklch,
+  isInSrgbGamut,
+  relativeLuminance,
+  contrastRatio,
+} from "./oklch";
 
 // Token types and definitions
 export type {
   ThemeMode,
   ResolvedMode,
-  SurfaceTintStyle,
   PaletteColor,
   ModeOverrides,
   ThemeOverrides,
+  ThemePreset,
+  ThemeAdjustment,
   NeutralTokenDef,
 } from "./tokens";
-export { NEUTRAL_TOKENS, NEUTRAL_TOKEN_NAMES, PALETTE_COLORS } from "./tokens";
+export {
+  NEUTRAL_TOKENS,
+  NEUTRAL_TOKEN_NAMES,
+  PALETTE_COLORS,
+  SURFACE_TINT_BOUNDS,
+  NEUTRAL_CHROMA_MAX,
+  contrastFg,
+} from "./tokens";
 
 // Theme defaults
 export {
@@ -22,17 +38,20 @@ export {
   DEFAULT_PALETTE_DARK,
   DEFAULT_SURFACE_LIGHT,
   DEFAULT_SURFACE_DARK,
-  PREVIEW_LEVELS_LIGHT,
-  PREVIEW_LEVELS_DARK,
 } from "./defaults";
 
-// Theme store
+// Presets, import, and export
+export { THEME_PRESETS, findPreset, selectedPreset, presetSwatch } from "./presets";
 export {
-  createThemeStore,
-  resolveIsDark,
-  safeOklchToHex,
-  hasModeOverrides,
-  getRecentColors,
-  addRecentColor,
-} from "./store";
+  importTheme,
+  exportPreset,
+  describeAdjustments,
+  clampModeOverrides,
+  readImportedPresets,
+  THEME_EXPORT_PREFIX,
+} from "./theme-import";
+export type { ThemeImportResult } from "./theme-import";
+
+// Theme store
+export { createThemeStore, resolveIsDark } from "./store";
 export type { ThemeStoreConfig } from "./store";

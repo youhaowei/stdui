@@ -47,6 +47,35 @@ export function hexToOklch(hex: string) {
   return { l: L, c, h };
 }
 
+// -- Gamut and contrast ---------------------------------------------------
+
+/** Whether the colour is displayable in sRGB without clipping a channel. */
+export function isInSrgbGamut(l: number, c: number, h: number) {
+  const hRad = (h * Math.PI) / 180;
+  const eps = 1e-4;
+  return oklabToSrgb(l, c * Math.cos(hRad), c * Math.sin(hRad)).every(
+    (v) => v >= -eps && v <= 1 + eps,
+  );
+}
+
+/** WCAG 2 relative luminance of an OKLCH colour, after clipping to sRGB. */
+export function relativeLuminance(l: number, c: number, h: number) {
+  const hRad = (h * Math.PI) / 180;
+  const [r, g, b] = oklabToSrgb(l, c * Math.cos(hRad), c * Math.sin(hRad)).map((v) =>
+    srgbToLinear(clamp01(v)),
+  ) as [number, number, number];
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+/** WCAG 2 contrast ratio between two `oklch(...)` strings. */
+export function contrastRatio(a: string, b: string) {
+  const pa = parseOklch(a);
+  const pb = parseOklch(b);
+  const la = relativeLuminance(pa.l, pa.c, pa.h);
+  const lb = relativeLuminance(pb.l, pb.c, pb.h);
+  return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+}
+
 // -- Internal: OKLab <-> linear sRGB --------------------------------------
 
 function oklabToSrgb(L: number, a: number, b: number): [number, number, number] {

@@ -1,16 +1,19 @@
 import { tokens } from "../tokens/schema";
 import { createStore } from "zustand/vanilla";
-import { formatOklch, parseOklch, oklchToHex } from "./oklch";
+import { formatOklch, parseOklch } from "./oklch";
 import {
   type ThemeMode,
   type ResolvedMode,
-  type SurfaceTintStyle,
   type ModeOverrides,
   type ThemeOverrides,
+  type ThemePreset,
   NEUTRAL_TOKENS,
   NEUTRAL_TOKEN_NAMES,
   PALETTE_COLORS,
+  SURFACE_TINT_BOUNDS,
+  contrastFg,
 } from "./tokens";
+import { readImportedPresets } from "./theme-import";
 
 // -- Config ----------------------------------------------------------------
 
@@ -22,19 +25,44 @@ export interface ThemeStoreConfig {
 interface ThemeState {
   mode: ThemeMode;
   overrides: ThemeOverrides;
-  previewMode: ResolvedMode | null;
+  /** Presets the user imported; built-ins live in `THEME_PRESETS`. */
+  importedPresets: ThemePreset[];
+  /** Id of the preset last applied, so identical presets stay distinguishable. */
+  presetId: string | null;
   setMode: (mode: ThemeMode) => void;
-  setOverrides: (overrides: ThemeOverrides) => void;
+  /** Applies overrides; pass the preset id when they come from a preset. */
+  setOverrides: (overrides: ThemeOverrides, presetId?: string) => void;
   resetOverrides: () => void;
-  setPreviewMode: (preview: ResolvedMode | null) => void;
+  /**
+   * Adds an imported preset, replacing one with the same id. State updates
+   * even when storage fails; `persisted: false` means it lasts this session only.
+   */
+  addImportedPreset: (preset: ThemePreset) => { persisted: boolean };
 }
-
-const MAX_RECENT_COLORS = 12;
 
 // -- Helpers ---------------------------------------------------------------
 
 function getStorageKey(prefix: string, suffix: string) {
   return `${prefix}-${suffix}`;
+}
+
+/** Writes to localStorage (or removes when `value` is null); false when storage is unavailable. */
+function persist(key: string, value: string | null) {
+  try {
+    if (value == null) localStorage.removeItem(key);
+    else localStorage.setItem(key, value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function getStoredPresetId(prefix: string): string | null {
+  try {
+    return localStorage.getItem(getStorageKey(prefix, "theme-preset"));
+  } catch {
+    return null;
+  }
 }
 
 function getStoredTheme(prefix: string): ThemeMode {
@@ -57,28 +85,28 @@ function getStoredOverrides(prefix: string): ThemeOverrides {
   return {};
 }
 
+function getStoredPresets(prefix: string): ThemePreset[] {
+  try {
+    const stored = localStorage.getItem(getStorageKey(prefix, "theme-presets"));
+    if (stored) return readImportedPresets(JSON.parse(stored));
+  } catch {
+    /* ignore */
+  }
+  return [];
+}
+
 function getSystemPrefersDark() {
   return typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches;
 }
 
-export function resolveIsDark(mode: ThemeMode, previewMode?: ResolvedMode | null) {
-  if (previewMode != null) return previewMode === "dark";
+export function resolveIsDark(mode: ThemeMode) {
   return mode === "dark" || (mode === "system" && getSystemPrefersDark());
-}
-
-function contrastFg(oklchStr: string) {
-  try {
-    const { l } = parseOklch(oklchStr);
-    return l > 0.6 ? tokens.contrastFg.onLight : tokens.contrastFg.onDark;
-  } catch {
-    return tokens.contrastFg.onDark;
-  }
 }
 
 // -- Apply functions -------------------------------------------------------
 
-function applyTheme(target: HTMLElement, mode: ThemeMode, previewMode?: ResolvedMode | null) {
-  const isDark = resolveIsDark(mode, previewMode);
+function applyTheme(target: HTMLElement, mode: ThemeMode) {
+  const isDark = resolveIsDark(mode);
   target.classList.toggle("dark", isDark);
 }
 
@@ -124,24 +152,10 @@ function applyNeutralOverrides(
   }
 }
 
-function buildSurfaceBg(
-  tintStyle: SurfaceTintStyle,
-  start: string,
-  mid: string,
-  end: string,
-): string {
-  const dir = "to bottom";
-  if (tintStyle === "gradient3")
-    return `linear-gradient(${dir}, ${start} 0%, ${mid} 50%, ${end} 100%)`;
-  if (tintStyle === "gradient2") return `linear-gradient(${dir}, ${start} 0%, ${end} 100%)`;
-  return start;
-}
-
 function applySurfaceOverrides(
   style: CSSStyleDeclaration,
   isDark: boolean,
   surfaceBase: string | undefined,
-  surfaceTintStyle: SurfaceTintStyle | undefined,
 ) {
   if (!surfaceBase) {
     style.removeProperty("--surface-base");
@@ -159,42 +173,24 @@ function applySurfaceOverrides(
     /* keep null */
   }
 
-  const tintStyle = surfaceTintStyle ?? "solid";
+  const bounds = SURFACE_TINT_BOUNDS[isDark ? "dark" : "light"];
   const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));
-  const rawL = parsedSurface?.l ?? (isDark ? 0.3 : 0.8);
-  const rawC = parsedSurface?.c ?? 0;
-  const rawH = parsedSurface?.h ?? 0;
-  const minL = isDark ? 0.16 : 0.88;
-  const maxL = isDark ? 0.42 : 0.96;
-  const maxC = isDark ? 0.07 : 0.04;
-  const baseL = clamp(rawL, minL, maxL);
-  const baseC = clamp(rawC, 0, maxC);
-  const baseH = rawH;
-  // All variants start from the same color (top anchor), gradients go darker toward bottom
-  const topL = clamp(baseL - (isDark ? 0.03 : 0.02), isDark ? 0.1 : 0.82, maxL);
-  const midL = clamp(baseL - (isDark ? 0.06 : 0.04), isDark ? 0.1 : 0.82, maxL);
-  const endL = clamp(baseL - (isDark ? 0.1 : 0.06), isDark ? 0.1 : 0.82, maxL);
-  const start = formatOklch(topL, baseC, baseH);
-  const mid = formatOklch(midL, baseC, baseH);
-  const end = formatOklch(endL, baseC, baseH);
-
-  style.setProperty("--shell-bg", buildSurfaceBg(tintStyle, start, mid, end));
+  const baseL = clamp(parsedSurface?.l ?? (isDark ? 0.3 : 0.8), bounds.minL, bounds.maxL);
+  const baseC = clamp(parsedSurface?.c ?? 0, 0, bounds.maxC);
+  // The shell sits a step below the surface it frames.
+  const shellL = clamp(baseL - (isDark ? 0.03 : 0.02), isDark ? 0.1 : 0.82, bounds.maxL);
+  style.setProperty("--shell-bg", formatOklch(shellL, baseC, parsedSurface?.h ?? 0));
 }
 
-function applyOverrides(
-  target: HTMLElement,
-  overrides: ThemeOverrides,
-  mode: ThemeMode,
-  previewMode?: ResolvedMode | null,
-) {
+function applyOverrides(target: HTMLElement, overrides: ThemeOverrides, mode: ThemeMode) {
   const style = target.style;
-  const isDark = resolveIsDark(mode, previewMode);
+  const isDark = resolveIsDark(mode);
   const modeKey: ResolvedMode = isDark ? "dark" : "light";
   const modeOverrides = overrides[modeKey] ?? {};
 
   applyPaletteOverrides(style, modeOverrides.palette);
   applyNeutralOverrides(style, modeKey, modeOverrides.neutralHue, modeOverrides.neutralChroma);
-  applySurfaceOverrides(style, isDark, modeOverrides.surfaceBase, modeOverrides.surfaceTintStyle);
+  applySurfaceOverrides(style, isDark, modeOverrides.surfaceBase);
 }
 
 function clearAllOverrideStyles(target: HTMLElement) {
@@ -228,8 +224,7 @@ export function createThemeStore(config: ThemeStoreConfig = {}) {
 
       const mq = window.matchMedia("(prefers-color-scheme: dark)");
       mq.addEventListener("change", () => {
-        const { mode, overrides, previewMode } = get();
-        if (previewMode != null) return;
+        const { mode, overrides } = get();
         applyTheme(target, mode);
         if (mode === "system") {
           applyOverrides(target, overrides, "system");
@@ -240,88 +235,48 @@ export function createThemeStore(config: ThemeStoreConfig = {}) {
     return {
       mode: initialMode,
       overrides: initialOverrides,
-      previewMode: null,
+      importedPresets: getStoredPresets(prefix),
+      presetId: getStoredPresetId(prefix),
 
       setMode: (mode) => {
-        localStorage.setItem(getStorageKey(prefix, "theme"), mode);
-        const preview = get().previewMode;
         if (target) {
-          applyTheme(target, mode, preview);
-          applyOverrides(target, get().overrides, mode, preview);
+          applyTheme(target, mode);
+          applyOverrides(target, get().overrides, mode);
         }
         set({ mode });
+        persist(getStorageKey(prefix, "theme"), mode);
       },
 
-      setOverrides: (overrides) => {
-        localStorage.setItem(getStorageKey(prefix, "theme-overrides"), JSON.stringify(overrides));
-        const { mode, previewMode } = get();
+      setOverrides: (overrides, presetId) => {
         if (target) {
-          applyOverrides(target, overrides, mode, previewMode);
+          applyOverrides(target, overrides, get().mode);
         }
-        set({ overrides });
+        set({ overrides, presetId: presetId ?? null });
+        persist(getStorageKey(prefix, "theme-overrides"), JSON.stringify(overrides));
+        persist(getStorageKey(prefix, "theme-preset"), presetId ?? null);
       },
 
       resetOverrides: () => {
-        localStorage.removeItem(getStorageKey(prefix, "theme-overrides"));
         if (target) {
           clearAllOverrideStyles(target);
         }
-        set({ overrides: {} });
+        set({ overrides: {}, presetId: null });
+        persist(getStorageKey(prefix, "theme-overrides"), null);
+        persist(getStorageKey(prefix, "theme-preset"), null);
       },
 
-      setPreviewMode: (preview) => {
-        const { mode, overrides } = get();
-        if (target) {
-          applyTheme(target, mode, preview);
-          applyOverrides(target, overrides, mode, preview);
-        }
-        set({ previewMode: preview });
+      addImportedPreset: (preset) => {
+        const importedPresets = [
+          ...get().importedPresets.filter((p) => p.id !== preset.id),
+          preset,
+        ];
+        set({ importedPresets });
+        const persisted = persist(
+          getStorageKey(prefix, "theme-presets"),
+          JSON.stringify(importedPresets),
+        );
+        return { persisted };
       },
     };
   });
-}
-
-// -- Exported helpers ------------------------------------------------------
-
-export function safeOklchToHex(oklchStr: string) {
-  try {
-    const { l, c, h } = parseOklch(oklchStr);
-    return oklchToHex(l, c, h);
-  } catch {
-    return "#808080";
-  }
-}
-
-export function hasModeOverrides(mo: ModeOverrides | undefined) {
-  if (!mo) return false;
-  return (
-    (mo.palette != null && Object.keys(mo.palette).length > 0) ||
-    mo.neutralHue != null ||
-    mo.neutralChroma != null ||
-    mo.surfaceBase != null ||
-    mo.surfaceTintStyle != null
-  );
-}
-
-// -- Recent colors (localStorage-backed) -----------------------------------
-
-export function getRecentColors(prefix = "stdui"): string[] {
-  try {
-    const stored = localStorage.getItem(getStorageKey(prefix, "recent-colors"));
-    if (stored) return JSON.parse(stored);
-  } catch {
-    /* ignore */
-  }
-  return [];
-}
-
-export function addRecentColor(oklch: string, prefix = "stdui") {
-  const recent = getRecentColors(prefix).filter((c) => c !== oklch);
-  recent.unshift(oklch);
-  if (recent.length > MAX_RECENT_COLORS) recent.length = MAX_RECENT_COLORS;
-  try {
-    localStorage.setItem(getStorageKey(prefix, "recent-colors"), JSON.stringify(recent));
-  } catch {
-    /* ignore */
-  }
 }

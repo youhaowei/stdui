@@ -73,7 +73,7 @@ Code: 12px, SF Mono / Fira Code / ui-monospace.
 - **Primitives** (`src/primitives/`): Base components from Radix UI foundations. Simple, unstyled or lightly styled.
 - **Components** (`src/components/`): Enhanced versions that shadow primitives. Feature-rich, opinionated.
 - **Fields** (`src/fields/`): Form field wrappers combining label + input + error state.
-- **Views** (`src/views/`): Larger composed views (ThemePanel, ColorPicker).
+- **Views** (`src/views/`): Larger composed views (ThemePanel).
 
 ### Pattern: CVA Variants
 
@@ -173,14 +173,14 @@ For the full token reference with all CSS custom properties, consult **`referenc
 The theme is managed by a Zustand store that writes CSS custom properties to `document.documentElement.style`:
 
 - **Mode**: system / light / dark (persisted to localStorage)
-- **Overrides**: Per-mode palette colors, neutral hue/chroma, surface tint
+- **Overrides**: Per-mode palette colors, neutral hue/chroma, surface tint (solid). Users change them only through presets: `THEME_PRESETS` (built-in, both modes) plus imported presets, which the store persists as `importedPresets`
+- **Import / export**: `importTheme(text)` reads base16 / tinted-theming YAML or JSON, VS Code colour themes, and `wystack-theme-v1:` strings from `exportPreset`, then clamps the result so the app keeps its look (hue and chroma from imported greys, our lightness ramp, tint within `SURFACE_TINT_BOUNDS`, accent shifted to WCAG AA). There is deliberately no free colour picker
 - **Provider**: `<StduiProvider storageKey="app-name">` — idempotent (detects parent and skips)
-- **Hook**: `useTheme()` returns mode, overrides, isDark, and setters
-- **Shell background**: `--shell-bg` supports solid + gradient (use `[background:var(--shell-bg)]`, not `bg-shell-bg`)
+- **Hook**: `useTheme()` returns mode, overrides, importedPresets, isDark, and setters
+- **Shell background**: `--shell-bg` is a solid colour one step below `--surface-base`
 
 ## Gotchas
 
-- **`bg-*` vs `[background:*]`**: Tailwind's `bg-*` maps to `background-color`, which cannot hold CSS gradients. For `--shell-bg` (which may be a gradient), always use `[background:var(--shell-bg)]`.
 - **StduiProvider nesting**: `StduiProvider` is idempotent — if a parent already provides ThemeContext, it skips creating a new store. Safe to use in both library and app code.
 - **SSR hydration**: Never read `localStorage` in `useState` initializers. Use `useState(false)` + `useEffect` to sync. The sidebar collapsed state follows this pattern.
 - **Clerk + theme**: Clerk's `variables` API does not resolve CSS custom properties. Use CSS overrides with `!important` targeting `.dark .cl-*` classes for dark mode support.
