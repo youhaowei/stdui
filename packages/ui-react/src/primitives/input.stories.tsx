@@ -83,3 +83,16 @@ export const GhostPropertyRows: Story = {
     </div>
   ),
 };
+
+// The default is a well: recessed, borderless, with an inset shadow and a
+// hairline ring. Toggle's default uses the same well; see
+// Components/Toggle > Beside Input.
+export const Well: Story = {
+  render: () => (
+    <div className="flex flex-col gap-3 w-[300px]">
+      <Input size="default" placeholder="Default well (h-10)" />
+      <Input size="sm" placeholder="Small well (h-8)" />
+      <Input size="sm" defaultValue="With a value" />
+    </div>
+  ),
+};

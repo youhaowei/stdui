@@ -4,10 +4,20 @@ import { cn } from "../lib/utils";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../primitives/tabs";
 import { Badge } from "../primitives/badge";
 
-function TriggerWithTooltip({ tooltip, children }: { tooltip: string; children: ReactNode }) {
+function TriggerWithTooltip({
+  tooltip,
+  className,
+  children,
+}: {
+  tooltip: string;
+  className?: string;
+  children: ReactNode;
+}) {
   return (
     <TooltipPrimitive.Root>
-      <TooltipPrimitive.Trigger render={<span className="inline-flex">{children}</span>} />
+      <TooltipPrimitive.Trigger
+        render={<span className={cn("inline-flex", className)}>{children}</span>}
+      />
       <TooltipPrimitive.Portal>
         <TooltipPrimitive.Positioner>
           <TooltipPrimitive.Popup className="z-50 overflow-hidden rounded-md border bg-neutral-bg-emphasis px-3 py-1.5 text-sm text-neutral-fg shadow-md">
@@ -103,7 +113,13 @@ export function Toggle<T extends string>({
   return (
     <Tabs value={value} onValueChange={(v) => onValueChange(v as T)}>
       <TabsList
-        className={cn("h-auto", size === "sm" ? "p-0.5 rounded-lg" : "p-1 rounded-xl", className)}
+        className={cn(
+          // The same well as Input's default: tone, inset shadow, hairline
+          // ring, radius, and outer height all match Input at the same size.
+          "gap-0.5 rounded-md bg-neutral-bg-subtle p-0.5 shadow-inner ring-[0.5px] ring-neutral-border",
+          size === "sm" ? "h-8" : "h-10",
+          className,
+        )}
       >
         {options.map((option) => {
           const trigger = (
@@ -112,10 +128,17 @@ export function Toggle<T extends string>({
               value={option.value}
               disabled={option.disabled}
               aria-label={option.ariaLabel || option.tooltip || option.label}
+              // Flat segments inside the well: the active one is tinted, never
+              // raised (no shadow, no border).
+              activeClassName="data-[active]:bg-neutral-fg/[0.06] data-[active]:text-neutral-fg data-[active]:shadow-none"
               className={cn(
-                size === "sm"
-                  ? "px-2 py-1 text-xs gap-1 rounded-md"
-                  : "px-4 py-2 text-sm gap-2 rounded-lg",
+                "h-full flex-none rounded-sm border-0 py-0 transition-colors duration-150 motion-reduce:transition-none",
+                "not-data-[active]:hover:bg-neutral-fg/[0.035] not-data-[active]:hover:text-neutral-fg",
+                option.label || option.badge !== undefined
+                  ? size === "sm"
+                    ? "px-2 text-xs gap-1"
+                    : "px-3 text-sm gap-1.5"
+                  : "aspect-square px-0",
               )}
             >
               {option.icon && (
@@ -134,7 +157,8 @@ export function Toggle<T extends string>({
 
           if (option.tooltip) {
             return (
-              <TriggerWithTooltip key={option.value} tooltip={option.tooltip}>
+              // h-full so the segment inside still fills the well.
+              <TriggerWithTooltip key={option.value} tooltip={option.tooltip} className="h-full">
                 {trigger}
               </TriggerWithTooltip>
             );

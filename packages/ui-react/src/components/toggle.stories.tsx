@@ -1,7 +1,8 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Toggle } from "./toggle";
-import { ChartIcon, TableIcon, ListIcon, GridIcon } from "../icons";
+import { Input } from "../primitives/input";
+import { ChartIcon, TableIcon, ListIcon, GridIcon, SearchIcon } from "../icons";
 
 const meta = {
   title: "Components/Toggle",
@@ -112,6 +113,56 @@ export const WithDisabledOption: Story = {
           { value: "archived", label: "Archived", disabled: true },
         ]}
       />
+    );
+  },
+};
+
+export const IconOnlySmall: Story = {
+  args: defaultArgs,
+  render: () => {
+    const [value, setValue] = useState("grid");
+    return (
+      <Toggle
+        size="sm"
+        value={value}
+        onValueChange={setValue}
+        options={[
+          { value: "grid", icon: <GridIcon className="h-4 w-4" />, ariaLabel: "Grid view" },
+          { value: "list", icon: <ListIcon className="h-4 w-4" />, ariaLabel: "List view" },
+        ]}
+      />
+    );
+  },
+};
+
+// Input and Toggle share the well, so a search field and a view switch on
+// one toolbar read as the same family: same tone, inset, hairline, radius,
+// and height.
+export const BesideInput: Story = {
+  args: defaultArgs,
+  render: () => {
+    const [value, setValue] = useState("grid");
+    return (
+      <div className="flex items-center gap-2 w-[360px]">
+        <div className="relative flex-1">
+          <SearchIcon className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-neutral-fg-subtle" />
+          <Input
+            size="sm"
+            aria-label="Search reports"
+            placeholder="Search reports"
+            className="pl-8"
+          />
+        </div>
+        <Toggle
+          size="sm"
+          value={value}
+          onValueChange={setValue}
+          options={[
+            { value: "grid", icon: <GridIcon className="h-4 w-4" />, tooltip: "Grid view" },
+            { value: "list", icon: <ListIcon className="h-4 w-4" />, tooltip: "List view" },
+          ]}
+        />
+      </div>
     );
   },
 };
