@@ -1,10 +1,16 @@
 import * as React from "react";
-import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 import { Command as CommandPrimitive } from "cmdk";
 import { SearchIcon } from "../icons";
 
 import { cn } from "../lib/utils";
-import { Dialog, DialogDescription, DialogOverlay, DialogPortal, DialogTitle } from "./dialog";
+import {
+  Dialog,
+  DialogDescription,
+  DialogOverlay,
+  DialogPopup,
+  DialogPortal,
+  DialogTitle,
+} from "./dialog";
 
 function Command({ className, ...props }: React.ComponentProps<typeof CommandPrimitive>) {
   return (
@@ -19,10 +25,13 @@ function Command({ className, ...props }: React.ComponentProps<typeof CommandPri
 }
 
 /**
- * Content `CommandDialog` hands to the `CommandInput` inside it. The input is
- * rendered by the caller, so the dialog's `leading` slot reaches it this way.
+ * What `CommandDialog` hands to the `CommandInput` and `CommandList` the caller
+ * renders inside it: the `leading` slot, and the taller default list height.
  */
-const CommandDialogContext = React.createContext<{ leading?: React.ReactNode }>({});
+const CommandDialogContext = React.createContext<{
+  inDialog: boolean;
+  leading?: React.ReactNode;
+}>({ inDialog: false });
 
 function CommandDialog({
   children,
@@ -45,7 +54,7 @@ function CommandDialog({
   /** Class names for the palette panel. */
   className?: string;
 }) {
-  const context = React.useMemo(() => ({ leading }), [leading]);
+  const context = React.useMemo(() => ({ inDialog: true, leading }), [leading]);
   const popupRef = React.useRef<HTMLDivElement>(null);
   // Focus the search input on open, not the first tabbable node (which may be
   // a control inside the `leading` slot).
@@ -57,32 +66,35 @@ function CommandDialog({
     <Dialog {...props}>
       <DialogPortal>
         <DialogOverlay />
-        <DialogPrimitive.Popup
+        <DialogPopup
           ref={popupRef}
           initialFocus={focusInput}
           className={cn(
             // Top-anchored so the panel does not jump as the result count changes.
-            "fixed left-1/2 top-[12vh] z-50 w-[calc(100%-2rem)] max-w-[640px] -translate-x-1/2 overflow-hidden rounded-[var(--surface-radius)] bg-neutral-bg text-neutral-fg shadow-[var(--shadow-lg)] outline-none",
-            "transition-[opacity,transform] duration-200 ease-out motion-reduce:transition-none data-[starting-style]:-translate-y-1 data-[starting-style]:opacity-0 data-[ending-style]:-translate-y-1 data-[ending-style]:opacity-0",
+            // The height cap keeps the footer on screen in short viewports; the
+            // list is the part that shrinks.
+            "fixed left-1/2 top-[12vh] z-50 flex max-h-[calc(88vh-1rem)] w-[calc(100%-2rem)] max-w-[640px] -translate-x-1/2 flex-col overflow-hidden rounded-[var(--surface-radius)] bg-neutral-bg text-neutral-fg shadow-[var(--shadow-lg)] outline-none",
+            "transition-[opacity,translate] duration-200 ease-out motion-reduce:transition-none data-[starting-style]:-translate-y-1 data-[starting-style]:opacity-0 data-[ending-style]:-translate-y-1 data-[ending-style]:opacity-0",
             className,
           )}
         >
           <DialogTitle className="sr-only">{title}</DialogTitle>
           <DialogDescription className="sr-only">{description}</DialogDescription>
           <CommandDialogContext.Provider value={context}>
-            <Command className="rounded-none bg-neutral-bg [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-neutral-fg-subtle [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5 [&_[cmdk-list]]:max-h-[60vh]">
+            <Command className="min-h-0 flex-1 rounded-none bg-neutral-bg [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-neutral-fg-subtle [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
               {children}
-              {footer != null && (
-                <div
-                  data-slot="command-footer"
-                  className="flex items-center justify-between gap-2 border-t border-neutral-border-subtle px-3 py-2 text-xs text-neutral-fg-subtle"
-                >
-                  {footer}
-                </div>
-              )}
             </Command>
           </CommandDialogContext.Provider>
-        </DialogPrimitive.Popup>
+          {/* Outside cmdk's root, whose Enter handler would run the highlighted item. */}
+          {footer ? (
+            <div
+              data-slot="command-footer"
+              className="flex shrink-0 items-center justify-between gap-2 border-t border-neutral-border-subtle px-3 py-2 text-xs text-neutral-fg-subtle"
+            >
+              {footer}
+            </div>
+          ) : null}
+        </DialogPopup>
       </DialogPortal>
     </Dialog>
   );
@@ -104,11 +116,17 @@ function CommandInput({
       cmdk-input-wrapper=""
     >
       <SearchIcon className="mr-2 h-4 w-4 shrink-0 opacity-50" />
-      {leadingContent != null && (
-        <div data-slot="command-input-leading" className="mr-2 flex shrink-0 items-center">
+      {leadingContent ? (
+        <div
+          data-slot="command-input-leading"
+          className="mr-2 flex shrink-0 items-center"
+          // cmdk's root handles Enter and arrow keys for the list. A control in
+          // this slot (such as a chip's clear button) must keep its own keys.
+          onKeyDown={(event) => event.stopPropagation()}
+        >
           {leadingContent}
         </div>
-      )}
+      ) : null}
       <CommandPrimitive.Input
         className={cn(
           "flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-neutral-fg-subtle disabled:cursor-not-allowed disabled:opacity-50",
@@ -121,9 +139,14 @@ function CommandInput({
 }
 
 function CommandList({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.List>) {
+  const { inDialog } = React.useContext(CommandDialogContext);
   return (
     <CommandPrimitive.List
-      className={cn("max-h-[300px] overflow-y-auto overflow-x-hidden", className)}
+      className={cn(
+        inDialog ? "max-h-[60vh]" : "max-h-[300px]",
+        "overflow-y-auto overflow-x-hidden",
+        className,
+      )}
       {...props}
     />
   );
@@ -164,7 +187,7 @@ function CommandItem({ className, ...props }: React.ComponentProps<typeof Comman
   return (
     <CommandPrimitive.Item
       className={cn(
-        "relative flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none transition-colors duration-150 motion-reduce:transition-none data-[selected=true]:bg-neutral-bg-muted data-[selected=true]:text-neutral-fg data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+        "relative flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none transition-colors duration-150 motion-reduce:transition-none data-[selected=true]:bg-neutral-bg-emphasis data-[selected=true]:text-neutral-fg data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
         className,
       )}
       {...props}
