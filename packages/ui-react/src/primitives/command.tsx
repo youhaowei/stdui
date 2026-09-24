@@ -100,6 +100,21 @@ function CommandDialog({
   );
 }
 
+/**
+ * cmdk's root handles these keys for the list (including its Ctrl+N/P/J/K
+ * bindings), so a control in the input's `leading` slot, such as a chip's
+ * clear button, would run the highlighted item instead of its own action.
+ * Other keys, Escape and Tab in particular, still reach the dialog.
+ */
+const LIST_KEYS = new Set(["Enter", "ArrowUp", "ArrowDown", "Home", "End"]);
+const LIST_CTRL_KEYS = new Set(["n", "p", "j", "k"]);
+
+function stopListKeys(event: React.KeyboardEvent) {
+  if (LIST_KEYS.has(event.key) || (event.ctrlKey && LIST_CTRL_KEYS.has(event.key))) {
+    event.stopPropagation();
+  }
+}
+
 function CommandInput({
   className,
   leading,
@@ -120,9 +135,7 @@ function CommandInput({
         <div
           data-slot="command-input-leading"
           className="mr-2 flex shrink-0 items-center"
-          // cmdk's root handles Enter and arrow keys for the list. A control in
-          // this slot (such as a chip's clear button) must keep its own keys.
-          onKeyDown={(event) => event.stopPropagation()}
+          onKeyDown={stopListKeys}
         >
           {leadingContent}
         </div>

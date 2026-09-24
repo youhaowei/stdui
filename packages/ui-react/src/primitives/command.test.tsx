@@ -152,7 +152,17 @@ describe("CommandDialog", () => {
     expect(onOpenChange.mock.calls[0][0]).toBe(false);
   });
 
-  it("uses the tall list default in the dialog and still honours a caller's max height", async () => {
+  it("defaults the list to the tall height inside the dialog", async () => {
+    const { findByRole } = render(
+      <CommandDialog open>
+        <CommandList />
+      </CommandDialog>,
+    );
+    const dialog = await findByRole("dialog");
+    expect(dialog.querySelector("[cmdk-list]")!.className).toContain("max-h-[60vh]");
+  });
+
+  it("lets a caller's list max height win inside the dialog", async () => {
     const { findByRole } = render(
       <CommandDialog open>
         <CommandInput />
@@ -165,12 +175,24 @@ describe("CommandDialog", () => {
     const list = dialog.querySelector("[cmdk-list]")!;
     expect(list.className).toContain("max-h-40");
     expect(list.className).not.toContain("max-h-[60vh]");
-    const { container } = render(
-      <CommandDialog open>
-        <CommandList />
+  });
+
+  it("closes on Escape while a control in the leading slot has focus", async () => {
+    const onOpenChange = vi.fn();
+    const { findByRole } = render(
+      <CommandDialog
+        open
+        onOpenChange={onOpenChange}
+        leading={<button type="button">Clear scope</button>}
+      >
+        <CommandInput />
+        <Items />
       </CommandDialog>,
     );
-    void container;
-    expect(document.querySelectorAll("[cmdk-list]")[1]!.className).toContain("max-h-[60vh]");
+    const clear = await findByRole("button", { name: "Clear scope" });
+    clear.focus();
+    fireEvent.keyDown(clear, { key: "Escape" });
+    await waitFor(() => expect(onOpenChange).toHaveBeenCalled());
+    expect(onOpenChange.mock.calls[0][0]).toBe(false);
   });
 });
