@@ -6,6 +6,7 @@ import {
   type ThemeMode,
   type ResolvedMode,
   type ThemeOverrides,
+  type ThemePreset,
 } from "@wystack/ui-core";
 
 // -- Types -----------------------------------------------------------------
@@ -15,11 +16,11 @@ interface ThemeContextValue {
   resolvedMode: ResolvedMode;
   isDark: boolean;
   overrides: ThemeOverrides;
-  previewMode: ResolvedMode | null;
+  importedPresets: ThemePreset[];
   setMode: (mode: ThemeMode) => void;
   setOverrides: (overrides: ThemeOverrides) => void;
   resetOverrides: () => void;
-  setPreviewMode: (preview: ResolvedMode | null) => void;
+  addImportedPreset: (preset: ThemePreset) => void;
 }
 
 interface StduiProviderProps {
@@ -74,18 +75,18 @@ function StduiProviderInner({ children, defaultMode, storageKey }: StduiProvider
     }
   }, []);
 
-  const isDark = resolveIsDark(state.mode, state.previewMode);
+  const isDark = resolveIsDark(state.mode);
 
   const value: ThemeContextValue = {
     mode: state.mode,
     resolvedMode: isDark ? "dark" : "light",
     isDark,
     overrides: state.overrides,
-    previewMode: state.previewMode,
+    importedPresets: state.importedPresets,
     setMode: state.setMode,
     setOverrides: state.setOverrides,
     resetOverrides: state.resetOverrides,
-    setPreviewMode: state.setPreviewMode,
+    addImportedPreset: state.addImportedPreset,
   };
 
   return <ThemeContext value={value}>{children}</ThemeContext>;

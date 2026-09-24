@@ -180,11 +180,11 @@ Use `text-code font-code` for code. `--font-code` is `"SF Mono", "Fira Code", ui
 
 ## Layout
 
-| Token             | Value                                        | Use                               |
-| ----------------- | -------------------------------------------- | --------------------------------- |
-| `--shell-bg`      | oklch(0.95 0.006 70) / oklch(0.18 0.005 250) | Shell ground (supports gradients) |
-| `--surface-base`  | oklch(0.95 0.006 70) / oklch(0.2 0.005 250)  | Surface base color                |
-| `--topbar-height` | 40px                                         | Top bar height                    |
+| Token             | Value                                        | Use                |
+| ----------------- | -------------------------------------------- | ------------------ |
+| `--shell-bg`      | oklch(0.95 0.006 70) / oklch(0.18 0.005 250) | Shell ground       |
+| `--surface-base`  | oklch(0.95 0.006 70) / oklch(0.2 0.005 250)  | Surface base color |
+| `--topbar-height` | 40px                                         | Top bar height     |
 
 ## Utility
 

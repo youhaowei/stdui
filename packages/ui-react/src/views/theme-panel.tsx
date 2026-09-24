@@ -1,51 +1,44 @@
 /**
- * ThemePanel - Right-side panel for live theme customization.
- *
- * Mode-aware: System shows Light+Dark tabs, Light/Dark shows just that mode.
+ * ThemePanel — the Appearance panel: theme mode, a grid of curated style
+ * presets, and import/copy of portable themes. There is no free colour
+ * picking; every look is a preset that sets both light and dark.
  */
 
-import { useState, useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import {
-  CloseIcon,
-  ResetIcon,
-  LightModeIcon,
-  DarkModeIcon,
-  SystemModeIcon,
-  ChevronRightIcon,
-} from "../icons";
-import { Button } from "../primitives/button";
-import { Surface } from "../primitives/surface";
-import { useTheme } from "../theme/provider";
-import {
-  hasModeOverrides,
-  type ThemeMode,
-  type PaletteColor,
-  type ModeOverrides,
+  THEME_PRESETS,
+  describeAdjustments,
+  exportPreset,
+  findPreset,
+  importTheme,
+  presetSwatch,
   type ResolvedMode,
-  type SurfaceTintStyle,
-  type ThemeOverrides,
+  type ThemeMode,
+  type ThemePreset,
 } from "@wystack/ui-core";
-import { ColorPicker } from "./color-picker";
-import { NeutralPicker } from "./neutral-picker";
 import {
-  DEFAULT_PALETTE_LIGHT,
-  DEFAULT_PALETTE_DARK,
-  DEFAULT_SURFACE_LIGHT,
-  DEFAULT_SURFACE_DARK,
-  PREVIEW_LEVELS_LIGHT,
-  PREVIEW_LEVELS_DARK,
-} from "./theme-defaults";
-
-// ── Constants ────────────────────────────────────────────────────────────────
-
-const PALETTE_ENTRIES: { key: PaletteColor; label: string }[] = [
-  { key: "primary", label: "Primary" },
-  { key: "secondary", label: "Secondary" },
-  { key: "success", label: "Success" },
-  { key: "danger", label: "Danger" },
-  { key: "warning", label: "Warning" },
-  { key: "info", label: "Info" },
-];
+  CheckIcon,
+  CloseIcon,
+  CopyIcon,
+  DarkModeIcon,
+  ImportIcon,
+  LightModeIcon,
+  ResetIcon,
+  SystemModeIcon,
+} from "../icons";
+import { cn } from "../lib/utils";
+import { Button } from "../primitives/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../primitives/dialog";
+import { Surface } from "../primitives/surface";
+import { Textarea } from "../primitives/textarea";
+import { useTheme } from "../theme/provider";
 
 const MODE_OPTIONS: { value: ThemeMode; icon: typeof LightModeIcon; label: string }[] = [
   { value: "system", icon: SystemModeIcon, label: "System" },
@@ -53,14 +46,8 @@ const MODE_OPTIONS: { value: ThemeMode; icon: typeof LightModeIcon; label: strin
   { value: "dark", icon: DarkModeIcon, label: "Dark" },
 ];
 
-const SURFACE_TINT_STYLES: { value: SurfaceTintStyle; label: string }[] = [
-  { value: "solid", label: "Solid" },
-  { value: "gradient2", label: "2-Stop" },
-  { value: "gradient3", label: "3-Stop" },
-];
-const SURFACE_TINT_STYLE_ORDER: SurfaceTintStyle[] = ["solid", "gradient2", "gradient3"];
-
-// ── Component ────────────────────────────────────────────────────────────────
+const DEFAULT_PRESET_ID = "default";
+const COPY_FEEDBACK_MS = 1500;
 
 export interface ThemePanelProps {
   isOpen: boolean;
@@ -74,57 +61,47 @@ export interface ThemePanelProps {
 }
 
 export function ThemePanel({ isOpen, onClose, bare = false }: ThemePanelProps) {
-  const { mode, overrides, setMode, setOverrides, resetOverrides, setPreviewMode } = useTheme();
+  const {
+    mode,
+    overrides,
+    importedPresets,
+    setMode,
+    setOverrides,
+    resetOverrides,
+    addImportedPreset,
+  } = useTheme();
+  const [importOpen, setImportOpen] = useState(false);
+  const styleLabelId = useId();
+  const modeLabelId = useId();
 
-  // For system mode, which variant tab is active
-  const [activeVariantTab, setActiveVariantTab] = useState<ResolvedMode>(() => {
-    if (mode === "dark") return "dark";
-    if (mode === "light") return "light";
-    return typeof window !== "undefined" &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
-  });
+  const presets = useMemo(() => [...THEME_PRESETS, ...importedPresets], [importedPresets]);
+  // Persisted overrides that match no preset leave the grid with nothing selected.
+  const selected = useMemo(() => findPreset(overrides, presets), [overrides, presets]);
+  const [copyState, copy] = useCopyFeedback();
 
-  // Preview mode: temporarily show the selected variant when in system mode
-  const handleVariantTab = useCallback(
-    (v: ResolvedMode) => {
-      setActiveVariantTab(v);
-      setPreviewMode(v);
+  const applyImport = useCallback(
+    (preset: ThemePreset) => {
+      addImportedPreset(preset);
+      setOverrides(preset.overrides);
+      setImportOpen(false);
     },
-    [setPreviewMode],
+    [addImportedPreset, setOverrides],
   );
-
-  // Clear preview mode when panel closes
-  useEffect(() => {
-    if (!isOpen) setPreviewMode(null);
-  }, [isOpen, setPreviewMode]);
-
-  // Clear preview when leaving system mode
-  useEffect(() => {
-    if (mode !== "system") setPreviewMode(null);
-  }, [mode, setPreviewMode]);
-
-  const hasAnyOverrides = hasModeOverrides(overrides.light) || hasModeOverrides(overrides.dark);
-
-  // Which modes to show controls for
-  const visibleModes: ResolvedMode[] =
-    mode === "system" ? ["light", "dark"] : [mode as ResolvedMode];
 
   if (!isOpen) return null;
 
   const content = (
     <>
-      {/* Header */}
       <div className="flex items-center h-10 px-3 gap-2 shrink-0">
         <h2 className="text-sm font-semibold text-neutral-fg flex-1 select-none">Appearance</h2>
-        {hasAnyOverrides && (
+        {selected?.id !== DEFAULT_PRESET_ID && (
           <Button
             variant="ghost"
             size="icon"
             className="h-6 w-6 shrink-0 text-neutral-fg-subtle hover:text-neutral-fg"
             onClick={resetOverrides}
-            aria-label="Reset to defaults"
+            aria-label="Reset to Default"
+            title="Reset to Default"
           >
             <ResetIcon className="h-3.5 w-3.5" />
           </Button>
@@ -140,13 +117,11 @@ export function ThemePanel({ isOpen, onClose, bare = false }: ThemePanelProps) {
         </Button>
       </div>
 
-      {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto min-h-0 text-sm">
-        <div className="p-3 space-y-4">
-          {/* ── Theme Mode ────────────────────────────── */}
+        <div className="p-3 space-y-5">
           <div>
-            <SectionLabel>Theme</SectionLabel>
-            <div className="flex gap-1 mt-1">
+            <SectionLabel id={modeLabelId}>Theme</SectionLabel>
+            <div className="flex gap-1 mt-1.5" role="group" aria-labelledby={modeLabelId}>
               {MODE_OPTIONS.map(({ value, icon: Icon, label }) => (
                 <Button
                   key={value}
@@ -154,6 +129,7 @@ export function ThemePanel({ isOpen, onClose, bare = false }: ThemePanelProps) {
                   color={mode === value ? "primary" : "secondary"}
                   size="sm"
                   className="flex-1 gap-1.5"
+                  aria-pressed={mode === value}
                   onClick={() => setMode(value)}
                 >
                   <Icon className="h-3 w-3" />
@@ -163,47 +139,56 @@ export function ThemePanel({ isOpen, onClose, bare = false }: ThemePanelProps) {
             </div>
           </div>
 
-          {/* ── Variant tabs (system mode only) ───────── */}
-          {mode === "system" && (
-            <>
-              <div className="flex gap-1">
-                {(["light", "dark"] as ResolvedMode[]).map((v) => {
-                  const Icon = v === "light" ? LightModeIcon : DarkModeIcon;
-                  return (
-                    <Button
-                      key={v}
-                      variant={activeVariantTab === v ? "soft" : "ghost"}
-                      color="secondary"
-                      size="sm"
-                      className="flex-1 gap-1"
-                      onClick={() => handleVariantTab(v)}
-                    >
-                      <Icon className="h-3 w-3" />
-                      {v === "light" ? "Light" : "Dark"}
-                    </Button>
-                  );
-                })}
-              </div>
-              <ModeControls
-                modeKey={activeVariantTab}
-                overrides={overrides}
-                setOverrides={setOverrides}
-              />
-            </>
-          )}
-
-          {/* ── Single mode controls ──────────────────── */}
-          {mode !== "system" &&
-            visibleModes.map((modeKey) => (
-              <ModeControls
-                key={modeKey}
-                modeKey={modeKey}
-                overrides={overrides}
-                setOverrides={setOverrides}
-              />
-            ))}
+          <div>
+            <div className="flex items-center gap-1">
+              <SectionLabel id={styleLabelId} className="flex-1">
+                Style
+              </SectionLabel>
+              <Button
+                variant="ghost"
+                size="xs"
+                className="text-neutral-fg-subtle hover:text-neutral-fg"
+                disabled={!selected}
+                title={selected ? `Copy ${selected.name} as text` : "Pick a style to copy it"}
+                onClick={() => selected && copy(exportPreset(selected))}
+              >
+                {copyState === "copied" ? <CheckIcon /> : <CopyIcon />}
+                {copyState === "copied"
+                  ? "Copied"
+                  : copyState === "failed"
+                    ? "Couldn't copy"
+                    : "Copy theme"}
+              </Button>
+              <Button
+                variant="ghost"
+                size="xs"
+                className="-mr-1.5 text-neutral-fg-subtle hover:text-neutral-fg"
+                aria-haspopup="dialog"
+                onClick={() => setImportOpen(true)}
+              >
+                <ImportIcon />
+                Import theme…
+              </Button>
+            </div>
+            <div
+              className="mt-2 grid grid-cols-3 gap-x-2 gap-y-3"
+              role="group"
+              aria-labelledby={styleLabelId}
+            >
+              {presets.map((preset) => (
+                <PresetCard
+                  key={preset.id}
+                  preset={preset}
+                  pressed={selected?.id === preset.id}
+                  onSelect={() => setOverrides(preset.overrides)}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
+
+      <ImportThemeDialog open={importOpen} onOpenChange={setImportOpen} onApply={applyImport} />
     </>
   );
 
@@ -214,197 +199,214 @@ export function ThemePanel({ isOpen, onClose, bare = false }: ThemePanelProps) {
   return (
     <Surface
       elevation="raised"
-      className="flex-shrink-0 flex flex-col select-none w-72 animate-[panel-in_200ms_ease-out]"
+      className="flex-shrink-0 flex flex-col select-none w-72 animate-[panel-in_200ms_ease-out] motion-reduce:animate-none"
     >
       {content}
     </Surface>
   );
 }
 
-// ── ModeControls — the color settings for a single light/dark mode ───────────
+// ── Preset card ──────────────────────────────────────────────────────────────
 
-function ModeControls({
-  modeKey,
-  overrides,
-  setOverrides,
+function PresetCard({
+  preset,
+  pressed,
+  onSelect,
 }: {
-  modeKey: ResolvedMode;
-  overrides: ThemeOverrides;
-  setOverrides: (o: ThemeOverrides) => void;
+  preset: ThemePreset;
+  pressed?: boolean;
+  /** Omit for a static preview (the import dialog). */
+  onSelect?: () => void;
 }) {
-  const [expandedSection, setExpandedSection] = useState<string | null>(null);
-
-  const modeOverrides = overrides[modeKey] ?? {};
-  const defaultPalette = modeKey === "light" ? DEFAULT_PALETTE_LIGHT : DEFAULT_PALETTE_DARK;
-  const defaultSurface = modeKey === "light" ? DEFAULT_SURFACE_LIGHT : DEFAULT_SURFACE_DARK;
-  const previewLevels = modeKey === "light" ? PREVIEW_LEVELS_LIGHT : PREVIEW_LEVELS_DARK;
-  const surfaceTintStyle = modeOverrides.surfaceTintStyle ?? "solid";
-  const surfaceTintBounds =
-    modeKey === "dark"
-      ? { maxChroma: 0.07, hueStripChroma: 0.06, minLightness: 0.16, maxLightness: 0.42 }
-      : { maxChroma: 0.04, hueStripChroma: 0.03, minLightness: 0.88, maxLightness: 0.96 };
-  const surfaceTintPreviewBackground = "var(--shell-bg)";
-
-  const neutralHue = modeOverrides.neutralHue ?? 0;
-  const neutralChroma = modeOverrides.neutralChroma ?? 0;
-
-  // Only colors the user has actually customized (overrides only, not defaults)
-  const usedColors = useMemo(() => {
-    const result: { light: string[]; dark: string[] } = { light: [], dark: [] };
-    for (const m of ["light", "dark"] as const) {
-      const mo = overrides[m] ?? {};
-      if (mo.palette) {
-        for (const v of Object.values(mo.palette)) {
-          if (v) result[m].push(v);
-        }
-      }
-      if (mo.surfaceBase) result[m].push(mo.surfaceBase);
-    }
-    return result;
-  }, [overrides]);
-
-  const updateModeOverride = useCallback(
-    (patch: Partial<ModeOverrides>) => {
-      const currentMode = overrides[modeKey] ?? {};
-      setOverrides({ ...overrides, [modeKey]: { ...currentMode, ...patch } });
-    },
-    [modeKey, overrides, setOverrides],
+  const note = describeAdjustments(preset.adjustments);
+  const body = (
+    <>
+      <PresetThumbnail preset={preset} pressed={pressed} />
+      <span
+        className={cn(
+          "truncate px-0.5 text-xs text-neutral-fg-subtle transition-colors duration-150 motion-reduce:transition-none",
+          onSelect && "group-hover:text-neutral-fg",
+          pressed && "font-medium text-neutral-fg",
+        )}
+      >
+        {preset.name}
+      </span>
+      {preset.imported && (
+        <span className="-mt-1 flex flex-col items-start gap-0.5 px-0.5 text-[10px] leading-tight text-neutral-fg-subtle">
+          <span className="rounded-sm bg-neutral-bg-muted px-1 font-medium leading-4">
+            Imported
+          </span>
+          {note && onSelect && <span>{note}</span>}
+        </span>
+      )}
+    </>
   );
 
-  const updatePalette = useCallback(
-    (color: PaletteColor, value: string) => {
-      const currentMode = overrides[modeKey] ?? {};
-      setOverrides({
-        ...overrides,
-        [modeKey]: { ...currentMode, palette: { ...currentMode.palette, [color]: value } },
-      });
-    },
-    [modeKey, overrides, setOverrides],
-  );
-
-  const toggleSection = useCallback((section: string) => {
-    setExpandedSection((prev) => (prev === section ? null : section));
-  }, []);
-  const cycleSurfaceTintStyle = useCallback(() => {
-    const currentIndex = SURFACE_TINT_STYLE_ORDER.indexOf(surfaceTintStyle);
-    const next = SURFACE_TINT_STYLE_ORDER[(currentIndex + 1) % SURFACE_TINT_STYLE_ORDER.length];
-    updateModeOverride({ surfaceTintStyle: next });
-  }, [surfaceTintStyle, updateModeOverride]);
+  if (!onSelect) return <div className="flex min-w-0 flex-col gap-1.5">{body}</div>;
 
   return (
-    <div className="space-y-4">
-      {/* ── Accent Colors ─────────────────────────── */}
-      <CollapsibleSection
-        label="Accent Colors"
-        expanded={expandedSection === "palette"}
-        onToggle={() => toggleSection("palette")}
-      >
-        <div className="space-y-2">
-          {PALETTE_ENTRIES.map(({ key, label }) => (
-            <ColorPicker
-              key={key}
-              label={label}
-              value={modeOverrides.palette?.[key] ?? defaultPalette[key]}
-              onChange={(v) => updatePalette(key, v)}
-              usedColors={usedColors}
-            />
-          ))}
-        </div>
-      </CollapsibleSection>
-
-      {/* ── Neutral Tones ─────────────────────────── */}
-      <CollapsibleSection
-        label="Neutral Tones"
-        expanded={expandedSection === "neutrals"}
-        onToggle={() => toggleSection("neutrals")}
-      >
-        <NeutralPicker
-          hue={neutralHue}
-          chroma={neutralChroma}
-          onHueChange={(v) => updateModeOverride({ neutralHue: v })}
-          onChromaChange={(v) => updateModeOverride({ neutralChroma: v })}
-          onBatchChange={(h, c) => updateModeOverride({ neutralHue: h, neutralChroma: c })}
-          previewLevels={previewLevels}
-          isDark={modeKey === "dark"}
-        />
-      </CollapsibleSection>
-
-      {/* ── Surface Tint ──────────────────────────── */}
-      <div>
-        <SectionLabel>Surface Tint</SectionLabel>
-        <div className="mt-1">
-          <ColorPicker
-            value={modeOverrides.surfaceBase ?? defaultSurface}
-            onChange={(v) => updateModeOverride({ surfaceBase: v })}
-            previewBackground={surfaceTintPreviewBackground}
-            onPreviewClick={cycleSurfaceTintStyle}
-            maxChroma={surfaceTintBounds.maxChroma}
-            hueStripChroma={surfaceTintBounds.hueStripChroma}
-            minLightness={surfaceTintBounds.minLightness}
-            maxLightness={surfaceTintBounds.maxLightness}
-            showUsedColors={false}
-            showRecentColors={false}
-            showHexValue={false}
-            usedColors={usedColors}
-          />
-        </div>
-        <div className="mt-2 flex gap-1">
-          {SURFACE_TINT_STYLES.map(({ value, label }) => (
-            <Button
-              key={value}
-              variant={surfaceTintStyle === value ? "soft" : "outline"}
-              color={surfaceTintStyle === value ? "primary" : "secondary"}
-              size="sm"
-              className="flex-1"
-              onClick={() => updateModeOverride({ surfaceTintStyle: value })}
-            >
-              {label}
-            </Button>
-          ))}
-        </div>
-      </div>
-    </div>
+    <button
+      type="button"
+      aria-pressed={pressed}
+      title={note ? `${preset.name}. ${note}` : preset.name}
+      onClick={onSelect}
+      className="group flex min-w-0 cursor-pointer flex-col gap-1.5 rounded-[var(--inner-radius)] text-left outline-none"
+    >
+      {body}
+    </button>
   );
 }
 
-// ── Sub-components ───────────────────────────────────────────────────────────
-
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return <label className="text-xs font-medium text-neutral-fg-subtle">{children}</label>;
+/** Two halves, light then dark: the tint ground, a panel, a text line, and the accent. */
+function PresetThumbnail({ preset, pressed }: { preset: ThemePreset; pressed?: boolean }) {
+  return (
+    <span
+      aria-hidden
+      className={cn(
+        "flex h-12 overflow-hidden rounded-[var(--inner-radius)] shadow-[var(--shadow-sm)] ring-offset-2 ring-offset-neutral-bg transition-[box-shadow] duration-150 motion-reduce:transition-none",
+        "group-hover:shadow-[var(--shadow-md)] group-focus-visible:ring-2 group-focus-visible:ring-neutral-ring",
+        pressed && "ring-2 ring-neutral-fg group-focus-visible:ring-neutral-fg",
+      )}
+    >
+      {(["light", "dark"] as ResolvedMode[]).map((mode) => {
+        const swatch = presetSwatch(preset, mode);
+        return (
+          <span key={mode} className="relative flex-1" style={{ background: swatch.surface }}>
+            <span
+              className="absolute bottom-0 left-2 right-0 top-2 flex flex-col gap-1 rounded-tl-[4px] p-1.5 shadow-[var(--shadow-xs)]"
+              style={{ background: swatch.panel }}
+            >
+              <span
+                className="h-1 w-3/5 rounded-full opacity-60"
+                style={{ background: swatch.line }}
+              />
+              <span
+                className="mt-auto h-1.5 w-4 rounded-sm"
+                style={{ background: swatch.accent }}
+              />
+            </span>
+          </span>
+        );
+      })}
+    </span>
+  );
 }
 
-function CollapsibleSection({
-  label,
-  expanded,
-  onToggle,
+// ── Import dialog ────────────────────────────────────────────────────────────
+
+function ImportThemeDialog({
+  open,
+  onOpenChange,
+  onApply,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onApply: (preset: ThemePreset) => void;
+}) {
+  const [text, setText] = useState("");
+  const fieldId = useId();
+  const result = useMemo(() => (text.trim() ? importTheme(text) : undefined), [text]);
+  const preset = result?.ok ? result.preset : undefined;
+  const note = describeAdjustments(preset?.adjustments);
+
+  useEffect(() => {
+    if (!open) setText("");
+  }, [open]);
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="gap-4 p-5 sm:max-w-md motion-reduce:animate-none">
+        <DialogHeader>
+          <DialogTitle className="text-base">Import theme</DialogTitle>
+          <DialogDescription className="text-xs">
+            Paste a base16 scheme, a VS Code colour theme, or a theme copied from this panel. It is
+            added as a style; colours are adjusted to fit the app.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-1.5">
+          <label htmlFor={fieldId} className="text-xs font-medium text-neutral-fg-subtle">
+            Theme to import
+          </label>
+          <Textarea
+            id={fieldId}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            spellCheck={false}
+            placeholder={'scheme: "Nord"\npalette:\n  base00: "#2E3440"\n  …'}
+            className="h-36 resize-none border-0 bg-neutral-bg-subtle font-mono text-xs shadow-[var(--inner-shadow)] md:text-xs"
+          />
+        </div>
+
+        <div className="min-h-[76px]" aria-live="polite">
+          {result && !result.ok && <p className="text-xs text-palette-danger">{result.error}</p>}
+          {preset && (
+            <div className="flex items-center gap-3">
+              <div className="w-24 shrink-0">
+                <PresetCard preset={preset} />
+              </div>
+              <div className="min-w-0 space-y-1 text-xs text-neutral-fg-subtle">
+                <p>
+                  Adds a style named{" "}
+                  <span className="font-medium text-neutral-fg">{preset.name}</span>.
+                </p>
+                {note && <p>{note}.</p>}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <DialogFooter className="gap-2 sm:space-x-0">
+          <Button variant="soft" color="secondary" size="sm" onClick={() => onOpenChange(false)}>
+            Cancel
+          </Button>
+          <Button
+            variant="solid"
+            size="sm"
+            disabled={!preset}
+            onClick={() => preset && onApply(preset)}
+          >
+            Apply
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
+function SectionLabel({
+  id,
+  className,
   children,
 }: {
-  label: string;
-  expanded: boolean;
-  onToggle: () => void;
+  id?: string;
+  className?: string;
   children: React.ReactNode;
 }) {
   return (
-    <div>
-      <button
-        type="button"
-        onClick={onToggle}
-        className="flex items-center gap-1.5 w-full py-1 text-xs font-medium text-neutral-fg-subtle cursor-pointer hover:text-neutral-fg transition-colors"
-      >
-        <ChevronRightIcon
-          className={`h-3 w-3 transition-transform duration-150 ${expanded ? "rotate-90" : ""}`}
-        />
-        {label}
-      </button>
-      <div
-        className={`grid transition-[grid-template-rows] duration-200 ease-in-out ${
-          expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-        }`}
-      >
-        <div className="overflow-hidden">
-          <div className="pt-1 pb-2">{children}</div>
-        </div>
-      </div>
-    </div>
+    <span id={id} className={cn("block text-xs font-medium text-neutral-fg-subtle", className)}>
+      {children}
+    </span>
   );
+}
+
+/** Writes text to the clipboard and reports the outcome for a short while. */
+function useCopyFeedback() {
+  const [state, setState] = useState<"idle" | "copied" | "failed">("idle");
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(() => () => clearTimeout(timer.current), []);
+  const copy = useCallback(async (text: string) => {
+    let next: "copied" | "failed" = "copied";
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      next = "failed";
+    }
+    setState(next);
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => setState("idle"), COPY_FEEDBACK_MS);
+  }, []);
+  return [state, copy] as const;
 }
