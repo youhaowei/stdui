@@ -39,4 +39,13 @@ describe("modal overlays", () => {
     expect(classes.filter((name) => name.startsWith("bg-"))).toEqual(["bg-overlay-scrim"]);
     unmount();
   });
+
+  it.each(Object.entries(overlays))("%s lifts its surface one step in dark mode", (_, ui) => {
+    const { baseElement, unmount } = render(ui);
+    const popup = baseElement.querySelector<HTMLElement>('[role="dialog"], [role="alertdialog"]');
+    expect(popup, "popup should render while open").not.toBeNull();
+    const classes = popup!.className.split(/\s+/);
+    expect(classes).toEqual(expect.arrayContaining(["bg-neutral-bg", "dark:bg-neutral-bg-subtle"]));
+    unmount();
+  });
 });
