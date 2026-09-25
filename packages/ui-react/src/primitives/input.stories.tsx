@@ -12,7 +12,7 @@ const meta = {
       control: "select",
       options: ["text", "email", "password", "number", "search"],
     },
-    variant: { control: "inline-radio", options: ["default", "ghost"] },
+    variant: { control: "inline-radio", options: ["default", "outline", "ghost"] },
     size: { control: "inline-radio", options: ["default", "sm"] },
     disabled: { control: "boolean" },
   },
@@ -54,6 +54,15 @@ export const Types: Story = {
       <Input type="search" placeholder="Search input" />
     </div>
   ),
+};
+
+// For surfaces that are already recessed: a solid border on the plain
+// background instead of the well. See Primitives/Select > On Recessed Panel.
+export const Outline: Story = {
+  args: {
+    variant: "outline",
+    placeholder: "Search reports",
+  },
 };
 
 export const Ghost: Story = {
