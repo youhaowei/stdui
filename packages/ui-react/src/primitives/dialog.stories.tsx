@@ -133,3 +133,76 @@ export const NoCloseButton: Story = {
     </Dialog>
   ),
 };
+
+const tones = [
+  "bg-neutral-bg-subtle",
+  "bg-neutral-bg-muted",
+  "bg-neutral-bg-emphasis",
+  "bg-surface-base",
+  "bg-neutral-bg-bold",
+  "bg-neutral-bg-strongest",
+];
+const accents = [
+  "bg-palette-primary",
+  "bg-palette-info",
+  "bg-palette-success",
+  "bg-palette-warning",
+  "bg-palette-danger",
+  "bg-palette-secondary",
+];
+
+/** Opens over a dense page so the scrim can be judged: the page should dim, not vanish. */
+export const OverBusyPage: Story = {
+  render: () => (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <h1 className="text-display">Quarterly overview</h1>
+        <Dialog defaultOpen>
+          <DialogTrigger
+            render={
+              <Button variant="soft" color="primary">
+                Open Dialog
+              </Button>
+            }
+          />
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Rename report</DialogTitle>
+              <DialogDescription>
+                The page behind should stay faintly legible while this surface lifts off it.
+              </DialogDescription>
+            </DialogHeader>
+            <p className="text-sm">Dialog body content goes here.</p>
+            <DialogFooter>
+              <Button variant="soft" color="primary">
+                Save
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
+      <div className="grid grid-cols-3 gap-4">
+        {tones.map((tone, index) => (
+          <div
+            key={tone}
+            className={`${tone} flex flex-col gap-2 rounded-surface p-4 shadow-surface`}
+          >
+            <div className="flex items-center gap-2">
+              <span className={`${accents[index]} size-3 rounded-full`} />
+              <span className="text-heading">Metric {index + 1}</span>
+            </div>
+            <span className="text-display">{(index + 3) * 1284}</span>
+            <p className="text-body text-neutral-fg-subtle">
+              Sessions grew week over week across every channel, led by organic search and returning
+              visitors from the newsletter.
+            </p>
+          </div>
+        ))}
+      </div>
+      <p className="text-body">
+        Revenue, retention and acquisition are summarised above. Each card uses a different neutral
+        step so the scrim can be judged against light and dark regions of the page at once.
+      </p>
+    </div>
+  ),
+};

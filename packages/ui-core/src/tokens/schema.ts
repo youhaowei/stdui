@@ -17,7 +17,12 @@ export interface TokenSchema {
   shadows: Record<"xs" | "sm" | "md" | "lg" | "inner", Modes<string>> & { surface: "md" };
   zIndex: Record<string, number>;
   chart: Record<1 | 2 | 3 | 4 | 5, Modes<string>>;
-  utility: { scrollbar: Modes<string>; "code-bg": Modes<string> };
+  utility: {
+    scrollbar: Modes<string>;
+    "code-bg": Modes<string>;
+    /** Backdrop behind modal overlays: dims the page without blacking it out. */
+    "overlay-scrim": Modes<string>;
+  };
 }
 
 // Palette literals match the installed Tailwind theme; CSS is the migration authority.
@@ -272,6 +277,10 @@ export const tokens = {
     "code-bg": {
       light: "oklch(0.16 0 0)",
       dark: "oklch(0.1 0 0)",
+    },
+    "overlay-scrim": {
+      light: "oklch(0 0 0 / 0.5)",
+      dark: "oklch(0 0 0 / 0.6)",
     },
   },
 } as const satisfies TokenSchema;
