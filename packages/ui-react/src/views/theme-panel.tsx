@@ -143,7 +143,8 @@ export function ThemePanel({ isOpen, onClose, bare = false, inline = false }: Th
       </div>
 
       <div className={inline ? "@container" : undefined}>
-        <div className="flex items-center gap-1">
+        {/* Inline, the row may be narrower than its actions: let it wrap. */}
+        <div className={cn("flex items-center gap-1", inline && "flex-wrap")}>
           <SectionLabel id={styleLabelId} className="flex-1">
             Style
           </SectionLabel>
