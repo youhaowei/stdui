@@ -9,7 +9,7 @@ const meta = {
   title: "Primitives/Select",
   component: SelectTrigger,
   argTypes: {
-    variant: { control: "inline-radio", options: ["default", "ghost"] },
+    variant: { control: "inline-radio", options: ["default", "outline", "ghost"] },
     size: { control: "inline-radio", options: ["default", "sm"] },
     disabled: { control: "boolean" },
   },
@@ -76,6 +76,13 @@ export const Placeholder: Story = {
   ),
 };
 
+// For surfaces that are already recessed. With no value, the solid border
+// turns dashed until keyboard focus.
+export const Outline: Story = {
+  args: { variant: "outline" },
+  render: Placeholder.render,
+};
+
 export const Ghost: Story = {
   args: { variant: "ghost", size: "sm" },
   render: Default.render,
@@ -123,4 +130,59 @@ export const BesideInput: Story = {
       </div>
     );
   },
+};
+
+const recessedPanel = "bg-neutral-bg-muted rounded-[var(--surface-radius)] p-2 shadow-inner";
+
+function FieldRow({ variant }: { variant: "default" | "outline" }) {
+  return (
+    <div className="flex items-center gap-2">
+      <div className="relative flex-1">
+        <SearchIcon className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-neutral-fg-subtle" />
+        <Input
+          variant={variant}
+          size="sm"
+          aria-label={`Search reports (${variant})`}
+          placeholder="Search reports"
+          className="pl-8"
+        />
+      </div>
+      <div className="w-[160px]">
+        <Select defaultValue="updated" items={sortItems}>
+          <SelectTrigger variant={variant} size="sm" aria-label={`Sort by (${variant})`}>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {sortItems.map((item) => (
+              <SelectItem key={item.value} value={item.value}>
+                {item.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
+  );
+}
+
+// Why outline exists: inside a panel that is already recessed, the well sinks
+// a second time and blurs into the panel; the outline variant lifts the field
+// back out instead.
+export const OnRecessedPanel: Story = {
+  render: () => (
+    <div className="flex flex-col gap-4 w-[420px]">
+      <div className="flex flex-col gap-1.5">
+        <span className="text-xs text-neutral-fg-subtle">Default (well)</span>
+        <div className={recessedPanel}>
+          <FieldRow variant="default" />
+        </div>
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <span className="text-xs text-neutral-fg-subtle">Outline</span>
+        <div className={recessedPanel}>
+          <FieldRow variant="outline" />
+        </div>
+      </div>
+    </div>
+  ),
 };

@@ -42,4 +42,27 @@ describe("Input", () => {
     expect(classes).toContain("bg-transparent");
     expect(classes).not.toContain("shadow-inner");
   });
+
+  it("offers an outline variant: bordered, raised, no well", () => {
+    const { getByRole } = render(<Input aria-label="Search" variant="outline" size="sm" />);
+    const classes = classesOf(getByRole("textbox"));
+
+    expect(classes).toEqual(
+      expect.arrayContaining([
+        "border",
+        "border-neutral-border",
+        "bg-neutral-bg",
+        "shadow-none",
+        "placeholder:text-neutral-fg-subtle",
+        "focus-visible:ring-2",
+        "focus-visible:ring-neutral-ring",
+        "h-8",
+        "px-2",
+      ]),
+    );
+    expect(classes).not.toContain("shadow-inner");
+    expect(classes).not.toContain("bg-neutral-bg-subtle");
+    expect(classes).not.toContain("ring-[0.5px]");
+    expect(classes.some((c) => c.startsWith("focus-visible:ring-offset"))).toBe(false);
+  });
 });

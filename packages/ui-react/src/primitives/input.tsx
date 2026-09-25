@@ -14,6 +14,11 @@ const inputVariants = cva(
         // the full focus ring.
         default:
           "border-0 bg-neutral-bg-subtle shadow-inner ring-[0.5px] ring-neutral-border focus-visible:ring-2 focus-visible:ring-neutral-ring",
+        // For surfaces that are already recessed (a search field inside a
+        // muted panel): a well there would sink twice, so this raises the
+        // field instead with a solid border on the plain background.
+        outline:
+          "border border-neutral-border bg-neutral-bg shadow-none focus-visible:ring-2 focus-visible:ring-neutral-ring",
         // Borderless, reads as plain text; reveals border + subtle bg on
         // hover/focus. For inline-editable property fields (Linear/Notion style).
         // Keyboard focus additionally gets a ring: without it, focus and hover

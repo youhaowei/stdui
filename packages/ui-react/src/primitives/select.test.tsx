@@ -122,4 +122,38 @@ describe("SelectTrigger", () => {
     expect(classes).not.toContain("shadow-inner");
     expect(classes.some((c) => c.includes("outline-dashed"))).toBe(false);
   });
+
+  it("offers an outline variant: bordered, raised, no well", () => {
+    const classes = classesOf(renderTrigger({ variant: "outline" }));
+
+    expect(classes).toEqual(
+      expect.arrayContaining([
+        "border",
+        "border-neutral-border",
+        "bg-neutral-bg",
+        "shadow-none",
+        "hover:bg-neutral-bg-subtle",
+        "focus-visible:ring-2",
+        "focus-visible:ring-neutral-ring",
+        "h-10",
+        "px-3",
+      ]),
+    );
+    expect(classes).not.toContain("shadow-inner");
+    expect(classes).not.toContain("bg-neutral-bg-subtle");
+    expect(classes).not.toContain("ring-[0.5px]");
+    expect(classes.some((c) => c.startsWith("focus-visible:ring-offset"))).toBe(false);
+  });
+
+  it("turns the outline border dashed while unset and unfocused", () => {
+    const trigger = renderTrigger({ variant: "outline" }, null);
+
+    expect(trigger.hasAttribute("data-placeholder")).toBe(true);
+    expect(classesOf(trigger)).toEqual(
+      expect.arrayContaining([
+        "data-[placeholder]:text-neutral-fg-subtle",
+        "data-[placeholder]:not-focus-visible:border-dashed",
+      ]),
+    );
+  });
 });
