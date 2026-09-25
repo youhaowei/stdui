@@ -44,3 +44,21 @@ export const Default: Story = {
     );
   },
 };
+
+/**
+ * One section of a settings page: the page names the section, so the panel
+ * drops its title row, close button, and scroll area, and the style grid
+ * takes one row when there is room.
+ */
+export const Inline: Story = {
+  args: { inline: true },
+  render: (args) => (
+    <div className="-m-6 min-h-screen p-2 [background:var(--shell-bg)]">
+      <main className="max-w-[720px] rounded-[var(--surface-radius)] bg-neutral-bg p-6 shadow-[var(--surface-shadow)]">
+        <h2 className="text-[15px] font-semibold text-neutral-fg">Appearance</h2>
+        <p className="mb-4 text-sm text-neutral-fg-subtle">How DashFrame looks on this computer.</p>
+        <ThemePanel {...args} />
+      </main>
+    </div>
+  ),
+};
