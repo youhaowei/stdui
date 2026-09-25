@@ -51,16 +51,27 @@ const COPY_FEEDBACK_MS = 1500;
 
 export interface ThemePanelProps {
   isOpen: boolean;
-  onClose: () => void;
+  /**
+   * Closes the panel. The title row shows a close button only when this is
+   * given; `inline` has no title row, so it ignores this.
+   */
+  onClose?: () => void;
   /**
    * Render without the standalone Surface chrome and fixed width — for hosting
    * inside a Dock (or another shell slot) that owns the panel's surface and
    * size. Default is the self-contained floating panel.
    */
   bare?: boolean;
+  /**
+   * Render as one section of a larger page, such as a settings page that
+   * names the section itself: no title row or close button, no scroll area or
+   * padding of its own, Reset beside Copy theme, and the style grid widens to
+   * six columns when its container is at least `@lg` (32rem). Implies `bare`.
+   */
+  inline?: boolean;
 }
 
-export function ThemePanel({ isOpen, onClose, bare = false }: ThemePanelProps) {
+export function ThemePanel({ isOpen, onClose, bare = false, inline = false }: ThemePanelProps) {
   const {
     mode,
     overrides,
@@ -95,110 +106,132 @@ export function ThemePanel({ isOpen, onClose, bare = false }: ThemePanelProps) {
 
   if (!isOpen) return null;
 
+  const resetButton = selected?.id !== DEFAULT_PRESET_ID && (
+    <Button
+      variant="ghost"
+      size={inline ? "xs" : "icon"}
+      className={cn("shrink-0 text-neutral-fg-subtle hover:text-neutral-fg", !inline && "h-6 w-6")}
+      onClick={resetOverrides}
+      aria-label="Reset to Default"
+      title="Reset to Default"
+    >
+      <ResetIcon className={inline ? undefined : "h-3.5 w-3.5"} />
+      {inline && "Reset"}
+    </Button>
+  );
+
+  const controls = (
+    <div className={inline ? "space-y-5 text-sm" : "p-3 space-y-5"}>
+      <div>
+        <SectionLabel id={modeLabelId}>Theme</SectionLabel>
+        <div className="flex gap-1 mt-1.5" role="group" aria-labelledby={modeLabelId}>
+          {MODE_OPTIONS.map(({ value, icon: Icon, label }) => (
+            <Button
+              key={value}
+              variant={mode === value ? "solid" : "outline"}
+              color={mode === value ? "primary" : "secondary"}
+              size="sm"
+              className="flex-1 gap-1.5"
+              aria-pressed={mode === value}
+              onClick={() => setMode(value)}
+            >
+              <Icon className="h-3 w-3" />
+              {label}
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      <div className={inline ? "@container" : undefined}>
+        {/* Inline, the row may be narrower than its actions: let it wrap. */}
+        <div className={cn("flex items-center gap-1", inline && "flex-wrap")}>
+          <SectionLabel id={styleLabelId} className="flex-1">
+            Style
+          </SectionLabel>
+          {inline && resetButton}
+          <Button
+            variant="ghost"
+            size="xs"
+            className="text-neutral-fg-subtle hover:text-neutral-fg"
+            disabled={!selected}
+            title={selected ? `Copy ${selected.name} as text` : "Pick a style to copy it"}
+            onClick={() => selected && copy(exportPreset(selected))}
+          >
+            {copyState === "copied" ? <CheckIcon /> : <CopyIcon />}
+            {copyState === "copied"
+              ? "Copied"
+              : copyState === "failed"
+                ? "Couldn't copy"
+                : "Copy theme"}
+          </Button>
+          <Button
+            variant="ghost"
+            size="xs"
+            className="-mr-1.5 text-neutral-fg-subtle hover:text-neutral-fg"
+            aria-haspopup="dialog"
+            onClick={() => setImportOpen(true)}
+          >
+            <ImportIcon />
+            Import theme…
+          </Button>
+        </div>
+        <div
+          className={cn("mt-2 grid grid-cols-3 gap-x-2 gap-y-3", inline && "@lg:grid-cols-6")}
+          role="group"
+          aria-labelledby={styleLabelId}
+        >
+          {presets.map((preset) => (
+            <PresetCard
+              key={preset.id}
+              preset={preset}
+              pressed={selected?.id === preset.id}
+              onSelect={() => setOverrides(preset.overrides, preset.id)}
+            />
+          ))}
+        </div>
+        {storageFailed && (
+          <p className="mt-3 text-xs text-neutral-fg-subtle" role="status">
+            Imported styles can't be saved here, so they last until you close the app.
+          </p>
+        )}
+      </div>
+    </div>
+  );
+
+  const dialog = (
+    <ImportThemeDialog open={importOpen} onOpenChange={setImportOpen} onApply={applyImport} />
+  );
+
+  if (inline) {
+    return (
+      <div className="select-none">
+        {controls}
+        {dialog}
+      </div>
+    );
+  }
+
   const content = (
     <>
       <div className="flex items-center h-10 px-3 gap-2 shrink-0">
         <h2 className="text-sm font-semibold text-neutral-fg flex-1 select-none">Appearance</h2>
-        {selected?.id !== DEFAULT_PRESET_ID && (
+        {resetButton}
+        {onClose && (
           <Button
             variant="ghost"
             size="icon"
             className="h-6 w-6 shrink-0 text-neutral-fg-subtle hover:text-neutral-fg"
-            onClick={resetOverrides}
-            aria-label="Reset to Default"
-            title="Reset to Default"
+            onClick={onClose}
+            aria-label="Close theme panel"
           >
-            <ResetIcon className="h-3.5 w-3.5" />
+            <CloseIcon className="h-3.5 w-3.5" />
           </Button>
         )}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-6 w-6 shrink-0 text-neutral-fg-subtle hover:text-neutral-fg"
-          onClick={onClose}
-          aria-label="Close theme panel"
-        >
-          <CloseIcon className="h-3.5 w-3.5" />
-        </Button>
       </div>
 
-      <div className="flex-1 overflow-y-auto min-h-0 text-sm">
-        <div className="p-3 space-y-5">
-          <div>
-            <SectionLabel id={modeLabelId}>Theme</SectionLabel>
-            <div className="flex gap-1 mt-1.5" role="group" aria-labelledby={modeLabelId}>
-              {MODE_OPTIONS.map(({ value, icon: Icon, label }) => (
-                <Button
-                  key={value}
-                  variant={mode === value ? "solid" : "outline"}
-                  color={mode === value ? "primary" : "secondary"}
-                  size="sm"
-                  className="flex-1 gap-1.5"
-                  aria-pressed={mode === value}
-                  onClick={() => setMode(value)}
-                >
-                  <Icon className="h-3 w-3" />
-                  {label}
-                </Button>
-              ))}
-            </div>
-          </div>
+      <div className="flex-1 overflow-y-auto min-h-0 text-sm">{controls}</div>
 
-          <div>
-            <div className="flex items-center gap-1">
-              <SectionLabel id={styleLabelId} className="flex-1">
-                Style
-              </SectionLabel>
-              <Button
-                variant="ghost"
-                size="xs"
-                className="text-neutral-fg-subtle hover:text-neutral-fg"
-                disabled={!selected}
-                title={selected ? `Copy ${selected.name} as text` : "Pick a style to copy it"}
-                onClick={() => selected && copy(exportPreset(selected))}
-              >
-                {copyState === "copied" ? <CheckIcon /> : <CopyIcon />}
-                {copyState === "copied"
-                  ? "Copied"
-                  : copyState === "failed"
-                    ? "Couldn't copy"
-                    : "Copy theme"}
-              </Button>
-              <Button
-                variant="ghost"
-                size="xs"
-                className="-mr-1.5 text-neutral-fg-subtle hover:text-neutral-fg"
-                aria-haspopup="dialog"
-                onClick={() => setImportOpen(true)}
-              >
-                <ImportIcon />
-                Import theme…
-              </Button>
-            </div>
-            <div
-              className="mt-2 grid grid-cols-3 gap-x-2 gap-y-3"
-              role="group"
-              aria-labelledby={styleLabelId}
-            >
-              {presets.map((preset) => (
-                <PresetCard
-                  key={preset.id}
-                  preset={preset}
-                  pressed={selected?.id === preset.id}
-                  onSelect={() => setOverrides(preset.overrides, preset.id)}
-                />
-              ))}
-            </div>
-            {storageFailed && (
-              <p className="mt-3 text-xs text-neutral-fg-subtle" role="status">
-                Imported styles can't be saved here, so they last until you close the app.
-              </p>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <ImportThemeDialog open={importOpen} onOpenChange={setImportOpen} onApply={applyImport} />
+      {dialog}
     </>
   );
 
