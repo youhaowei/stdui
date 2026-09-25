@@ -48,7 +48,7 @@ export const Default: Story = {
 /**
  * One section of a settings page: the page names the section, so the panel
  * drops its title row, close button, and scroll area, and the style grid
- * takes one row when there is room.
+ * widens to six columns when there is room.
  */
 export const Inline: Story = {
   args: { inline: true },

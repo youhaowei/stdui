@@ -18,6 +18,12 @@ describe("ThemePanel", () => {
     expect(screen.getByRole("button", { name: "Close theme panel" })).toBeTruthy();
   });
 
+  it("shows no close button when nothing can close it", () => {
+    renderPanel();
+    expect(screen.getByRole("heading", { name: "Appearance" })).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Close theme panel" })).toBeNull();
+  });
+
   it("drops its title and close button inline, keeping every control", () => {
     renderPanel({ inline: true, onClose: () => {} });
     expect(screen.queryByRole("heading")).toBeNull();
@@ -34,8 +40,12 @@ describe("ThemePanel", () => {
     const other = [...styles.querySelectorAll("button")].find(
       (b) => b.getAttribute("aria-pressed") !== "true",
     );
+    expect(other).toBeDefined();
     fireEvent.click(other!);
-    fireEvent.click(screen.getByRole("button", { name: "Reset to Default" }));
+    const reset = screen.getByRole("button", { name: "Reset to Default" });
+    // Inline, Reset is a labelled button in the Style row, not a title-row icon.
+    expect(reset.textContent).toBe("Reset");
+    fireEvent.click(reset);
     expect(screen.queryByRole("button", { name: "Reset to Default" })).toBeNull();
   });
 });

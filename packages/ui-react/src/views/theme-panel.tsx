@@ -51,7 +51,10 @@ const COPY_FEEDBACK_MS = 1500;
 
 export interface ThemePanelProps {
   isOpen: boolean;
-  /** Closes the panel. Ignored when `inline`, which has no close button. */
+  /**
+   * Closes the panel. The title row shows a close button only when this is
+   * given; `inline` has no title row, so it ignores this.
+   */
   onClose?: () => void;
   /**
    * Render without the standalone Surface chrome and fixed width — for hosting
@@ -63,7 +66,7 @@ export interface ThemePanelProps {
    * Render as one section of a larger page, such as a settings page that
    * names the section itself: no title row or close button, no scroll area or
    * padding of its own, Reset beside Copy theme, and the style grid widens to
-   * one row when its container has room. Implies `bare`.
+   * six columns when its container is at least `@lg` (32rem). Implies `bare`.
    */
   inline?: boolean;
 }
