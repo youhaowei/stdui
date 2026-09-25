@@ -91,6 +91,8 @@ export const Ghost: Story = {
 // A select is a field, so it sits in Input's well; the chevron is the only
 // difference. Input, Toggle and Select at size sm share one height.
 export const BesideInput: Story = {
+  // Fixed composition: the variant and size controls do not apply here.
+  parameters: { controls: { disable: true } },
   render: () => {
     const [view, setView] = useState("grid");
     return (
@@ -169,6 +171,8 @@ function FieldRow({ variant }: { variant: "default" | "outline" }) {
 // a second time and blurs into the panel; the outline variant lifts the field
 // back out instead.
 export const OnRecessedPanel: Story = {
+  // Fixed composition: the variant and size controls do not apply here.
+  parameters: { controls: { disable: true } },
   render: () => (
     <div className="flex flex-col gap-4 w-[420px]">
       <div className="flex flex-col gap-1.5">

@@ -42,7 +42,7 @@ describe("SelectTrigger", () => {
     expect(classes).toEqual(
       expect.arrayContaining([
         ...WELL,
-        "hover:bg-neutral-bg-muted",
+        "enabled:hover:bg-neutral-bg-muted",
         "transition-colors",
         "duration-150",
         "motion-reduce:transition-none",
@@ -132,7 +132,7 @@ describe("SelectTrigger", () => {
         "border-neutral-border",
         "bg-neutral-bg",
         "shadow-none",
-        "hover:bg-neutral-bg-subtle",
+        "enabled:hover:bg-neutral-bg-subtle",
         "focus-visible:ring-2",
         "focus-visible:ring-neutral-ring",
         "h-10",

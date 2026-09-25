@@ -22,11 +22,11 @@ const selectTriggerVariants = cva(
         // With no value, a dashed outline replaces the hairline (the house
         // "choose" mark); keyboard focus drops it so the focus ring reads.
         default:
-          "border-0 bg-neutral-bg-subtle shadow-inner ring-[0.5px] ring-neutral-border duration-150 motion-reduce:transition-none hover:bg-neutral-bg-muted focus-visible:ring-2 focus-visible:ring-neutral-ring data-[placeholder]:not-focus-visible:ring-0 data-[placeholder]:not-focus-visible:outline-1 data-[placeholder]:not-focus-visible:outline-dashed data-[placeholder]:not-focus-visible:outline-neutral-ring data-[placeholder]:not-focus-visible:-outline-offset-1",
+          "border-0 bg-neutral-bg-subtle shadow-inner ring-[0.5px] ring-neutral-border duration-150 motion-reduce:transition-none enabled:hover:bg-neutral-bg-muted focus-visible:ring-2 focus-visible:ring-neutral-ring data-[placeholder]:not-focus-visible:ring-0 data-[placeholder]:not-focus-visible:outline-1 data-[placeholder]:not-focus-visible:outline-dashed data-[placeholder]:not-focus-visible:outline-neutral-ring data-[placeholder]:not-focus-visible:-outline-offset-1",
         // Input's outline variant, for surfaces that are already recessed.
         // With no value, the solid border turns dashed until keyboard focus.
         outline:
-          "border border-neutral-border bg-neutral-bg shadow-none duration-150 motion-reduce:transition-none hover:bg-neutral-bg-subtle focus-visible:ring-2 focus-visible:ring-neutral-ring data-[placeholder]:not-focus-visible:border-dashed data-[placeholder]:not-focus-visible:border-neutral-ring",
+          "border border-neutral-border bg-neutral-bg shadow-none duration-150 motion-reduce:transition-none enabled:hover:bg-neutral-bg-subtle focus-visible:ring-2 focus-visible:ring-neutral-ring data-[placeholder]:not-focus-visible:border-dashed data-[placeholder]:not-focus-visible:border-neutral-ring",
         // Borderless, reads as plain text; reveals border + subtle bg on
         // hover/focus. For inline-editable property fields (Linear/Notion style).
         // Keyboard focus additionally gets a ring: without it, focus and hover
