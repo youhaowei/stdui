@@ -90,6 +90,7 @@ describe("token schema contract", () => {
       "chart-1",
       "scrollbar",
       "code-bg",
+      "overlay-scrim",
     ];
     for (const name of representatives) {
       expect(declared.has(name), `--${name} must be declared in :root or .dark`).toBe(true);
